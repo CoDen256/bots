@@ -1,9 +1,10 @@
 #import PySimpleGUI as sg
-import PySimpleGUIQt as sg
+import PySimpleGUI as sg
 import os.path
 import PIL.Image
 import io
 import base64
+import vlc
 
 """
     Demo for displaying any format of image file.
@@ -54,7 +55,8 @@ def convert_to_bytes(file_or_bytes, resize=None):
 
 
 # --------------------------------- Define Layout ---------------------------------
-
+def btn(name):  # a PySimpleGUI "User Defined Element" (see docs)
+    return sg.Button(name, size=(6, 1), pad=(1, 1))
 # First the window layout...2 columns
 
 left_col = [[sg.Text('Folder'), sg.In(size=(25,1), enable_events=True ,key='-FOLDER-'), sg.FolderBrowse()],
@@ -64,18 +66,45 @@ left_col = [[sg.Text('Folder'), sg.In(size=(25,1), enable_events=True ,key='-FOL
 # For now will only show the name of the file that was chosen
 images_col = [[sg.Text('You choose from the list:')],
               [sg.Text(size=(40,1), key='-TOUT-')],
-              [sg.Image(key='-IMAGE-')]]
+              [sg.Image(key='-IMAGE-')],
+              [sg.Image('', size=(300, 170),key='-VID_OUT-')],
+              [btn('previous'), btn('play'), btn('next'), btn('pause'), btn('stop')]]
 
 # ----- Full layout -----
 layout = [[sg.Column(left_col, element_justification='c'), sg.VSeperator(),sg.Column(images_col, element_justification='c')]]
 
 # --------------------------------- Create Window ---------------------------------
-window = sg.Window('Multiple Format Image Viewer', layout,resizable=True)
+window = sg.Window('Multiple Format Image Viewer', layout,finalize=True, resizable=True)
+
+inst = vlc.Instance()
+list_player = inst.media_list_player_new()
+media_list = inst.media_list_new([])
+list_player.set_media_list(media_list)
+player = list_player.get_media_player()
+
+window['-VID_OUT-'].expand(True, True)
+player.set_xwindow(window['-VID_OUT-'].Widget.winfo_id())
+
 
 # ----- Run the Event Loop -----
 # --------------------------------- Event Loop ---------------------------------
 while True:
     event, values = window.read()
+
+    if event == 'play':
+        list_player.play()
+    if event == 'pause':
+        list_player.pause()
+    if event == 'stop':
+        list_player.stop()
+    if event == 'next':
+        list_player.next()
+        list_player.play()
+    if event == 'previous':
+        list_player.previous()      # first call causes current video to start over
+        list_player.previous()      # second call moves back 1 video from current
+        list_player.play()
+
     if event in (sg.WIN_CLOSED, 'Exit'):
         break
     if event == sg.WIN_CLOSED or event == 'Exit':
@@ -87,19 +116,26 @@ while True:
         except:
             file_list = []
         fnames = [f for f in file_list if os.path.isfile(
-            os.path.join(folder, f)) and f.lower().endswith((".png", ".jpg", "jpeg", ".tiff", ".bmp"))]
+            os.path.join(folder, f)) and f.lower().endswith((".png", ".jpg", "jpeg", ".tiff", ".bmp", ".mp4"))]
         window['-FILE LIST-'].update(fnames)
     elif event == '-FILE LIST-':    # A file was chosen from the listbox
         try:
             filename = os.path.join(values['-FOLDER-'], values['-FILE LIST-'][0])
             window['-TOUT-'].update(filename)
-            if values['-W-'] and values['-H-']:
-                new_size = int(values['-W-']), int(values['-H-'])
+
+            if filename.lower().endswith(".mp4"):
+                media_list.add_media(filename)
+                list_player.set_media_list(media_list)
             else:
-                new_size = None
-            window['-IMAGE-'].update(data=convert_to_bytes(filename, resize=new_size))
+                if values['-W-'] and values['-H-']:
+                    new_size = int(values['-W-']), int(values['-H-'])
+                else:
+                    new_size = None
+                window['-IMAGE-'].update(data=convert_to_bytes(filename, resize=new_size))
         except Exception as E:
             print(f'** Error {E} **')
             pass        # something weird happened making the full filename
+
+        
 # --------------------------------- Close & Exit ---------------------------------
 window.close()
