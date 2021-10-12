@@ -1,56 +1,7 @@
-#import PySimpleGUI as sg
 import PySimpleGUI as sg
 import os.path
-import PIL.Image
-import io
-import base64
-import vlc
-
-"""
-    Demo for displaying any format of image file.
-    
-    Normally tkinter only wants PNG and GIF files.  This program uses PIL to convert files
-    such as jpg files into a PNG format so that tkinter can use it.
-    
-    The key to the program is the function "convert_to_bytes" which takes a filename or a 
-    bytes object and converts (with optional resize) into a PNG formatted bytes object that
-    can then be passed to an Image Element's update method.  This function can also optionally
-    resize the image.
-    
-    Copyright 2020 PySimpleGUI.org
-"""
-
-
-
-def convert_to_bytes(file_or_bytes, resize=None):
-    '''
-    Will convert into bytes and optionally resize an image that is a file or a base64 bytes object.
-    Turns into  PNG format in the process so that can be displayed by tkinter
-    :param file_or_bytes: either a string filename or a bytes base64 image object
-    :type file_or_bytes:  (Union[str, bytes])
-    :param resize:  optional new size
-    :type resize: (Tuple[int, int] or None)
-    :return: (bytes) a byte-string object
-    :rtype: (bytes)
-    '''
-    if isinstance(file_or_bytes, str):
-        img = PIL.Image.open(file_or_bytes)
-    else:
-        try:
-            img = PIL.Image.open(io.BytesIO(base64.b64decode(file_or_bytes)))
-        except Exception as e:
-            dataBytesIO = io.BytesIO(file_or_bytes)
-            img = PIL.Image.open(dataBytesIO)
-
-    cur_width, cur_height = img.size
-    if resize:
-        new_width, new_height = resize
-        scale = min(new_height/cur_height, new_width/cur_width)
-        img = img.resize((int(cur_width*scale), int(cur_height*scale)), PIL.Image.ANTIALIAS)
-    with io.BytesIO() as bio:
-        img.save(bio, format="PNG")
-        del img
-        return bio.getvalue()
+from utils import *
+from player import Player
 
 
 
@@ -75,33 +26,57 @@ layout = [[sg.Column(left_col, element_justification='c'), sg.VSeperator(),sg.Co
 # --------------------------------- Create Window ---------------------------------
 window = sg.Window('Multiple Format Image Viewer', layout,finalize=True, resizable=True)
 
-inst = vlc.Instance()
-list_player = inst.media_list_player_new()
-media_list = inst.media_list_new([])
-list_player.set_media_list(media_list)
-player = list_player.get_media_player()
+
+player = Player(window['-IMAGE-'].Widget.winfo_id())
 
 
-player.set_xwindow(window['-IMAGE-'].Widget.winfo_id())
 
+class LambdaHandler:
+    def __init__(self, handle, handlable) -> None:
+        self.handle = handle
+        self.handlable = handlable
+    def handle(self, event, values):
+        self.handle(event, values)
+    def can_handle(self, event):
+        return self.handlable(event)
+        
+class EventHandler(LambdaHandler):
+    def __init__(self, handle, *events) -> None:
+        super().__init__(handle, lambda evt: evt in events)
 
+class Window:
+    def __init__(self, window) -> None:
+        self.running = True
+        self.window = window
+        self.handlers = \
+            [
+                EventHandler(self.destroy, sg.WIN_CLOSED, 'Exit'),
+                LambdaHandler(, sg.WIN_CLOSED, 'Exit')
+                Handler(player.stop, sg.WIN_CLOSED, 'Exit')
+                Handler(self.destroy, sg.WIN_CLOSED, 'Exit')
+                Handler(self.destroy, sg.WIN_CLOSED, 'Exit')
+                Handler(self.destroy, sg.WIN_CLOSED, 'Exit')
+                Handler(self.destroy, sg.WIN_CLOSED, 'Exit')
+            ]
+        
+    def run(self):
+        while self.running:
+            event, values = window.read()
+            for handler in self.handlers:
+                if handler.can_handle(event):
+                    handler.handle(event, values)
+
+    def destroy(self, evt, values):
+        self.running = False
+
+    def player_method(self, evt, values):
+        getattr(player, evt)()
 # ----- Run the Event Loop -----
 # --------------------------------- Event Loop ---------------------------------
-actualVideo = False
 while True:
     event, values = window.read()
-
-    if actualVideo:
-        if event == 'play':
-            list_player.play()
-        if event == 'pause':
-            list_player.pause()
-        if event == 'stop':
-            list_player.stop()
-
+    if player.playing(): getattr(player, event)() # ooooh fuck its dirty
     if event in (sg.WIN_CLOSED, 'Exit'):
-        break
-    if event == sg.WIN_CLOSED or event == 'Exit':
         break
     if event == '-FOLDER-':                         # Folder name was filled in, make a list of files in the folder
         folder = values['-FOLDER-']
@@ -118,22 +93,15 @@ while True:
             window['-TOUT-'].update(filename)
 
             if filename.lower().endswith(".mp4"):
-                list_player.pause()
-                list_player.stop()
+                player.pause()
+                player.stop()
                 window['-IMAGE-'].update(data=None)
-                media_list.add_media(filename)
-                print(filename)
-                list_player.set_media_list(media_list)
-                list_player.play()
-                actualVideo = True
+                player.add(filename)
+                player.play()
             else:
-                if values['-W-'] and values['-H-']:
-                    new_size = int(values['-W-']), int(values['-H-'])
-                else:
-                    new_size = 500, 500
+                new_size = int(values['-W-']), int(values['-H-']) if values['-W-'] and values['-H-'] else 500, 500
                 window['-IMAGE-'].update(data=convert_to_bytes(filename, resize=new_size))
-                list_player.stop()
-                actualVideo = False
+                player.stop()
         except Exception as E:
             print(f'** Error {E} **')
             pass        # something weird happened making the full filename
