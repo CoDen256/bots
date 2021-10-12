@@ -66,8 +66,7 @@ left_col = [[sg.Text('Folder'), sg.In(size=(25,1), enable_events=True ,key='-FOL
 # For now will only show the name of the file that was chosen
 images_col = [[sg.Text('You choose from the list:')],
               [sg.Text(size=(40,1), key='-TOUT-')],
-              [sg.Image(key='-IMAGE-')],
-              [sg.Image('', size=(300, 170),key='-VID_OUT-')],
+              [sg.Image(key='-IMAGE-', size=(300, 170))],
               [btn('previous'), btn('play'), btn('next'), btn('pause'), btn('stop')]]
 
 # ----- Full layout -----
@@ -82,28 +81,23 @@ media_list = inst.media_list_new([])
 list_player.set_media_list(media_list)
 player = list_player.get_media_player()
 
-window['-VID_OUT-'].expand(True, True)
-player.set_xwindow(window['-VID_OUT-'].Widget.winfo_id())
+
+player.set_xwindow(window['-IMAGE-'].Widget.winfo_id())
 
 
 # ----- Run the Event Loop -----
 # --------------------------------- Event Loop ---------------------------------
+actualVideo = False
 while True:
     event, values = window.read()
 
-    if event == 'play':
-        list_player.play()
-    if event == 'pause':
-        list_player.pause()
-    if event == 'stop':
-        list_player.stop()
-    if event == 'next':
-        list_player.next()
-        list_player.play()
-    if event == 'previous':
-        list_player.previous()      # first call causes current video to start over
-        list_player.previous()      # second call moves back 1 video from current
-        list_player.play()
+    if actualVideo:
+        if event == 'play':
+            list_player.play()
+        if event == 'pause':
+            list_player.pause()
+        if event == 'stop':
+            list_player.stop()
 
     if event in (sg.WIN_CLOSED, 'Exit'):
         break
@@ -124,14 +118,22 @@ while True:
             window['-TOUT-'].update(filename)
 
             if filename.lower().endswith(".mp4"):
+                list_player.pause()
+                list_player.stop()
+                window['-IMAGE-'].update(data=None)
                 media_list.add_media(filename)
+                print(filename)
                 list_player.set_media_list(media_list)
+                list_player.play()
+                actualVideo = True
             else:
                 if values['-W-'] and values['-H-']:
                     new_size = int(values['-W-']), int(values['-H-'])
                 else:
-                    new_size = None
+                    new_size = 500, 500
                 window['-IMAGE-'].update(data=convert_to_bytes(filename, resize=new_size))
+                list_player.stop()
+                actualVideo = False
         except Exception as E:
             print(f'** Error {E} **')
             pass        # something weird happened making the full filename
