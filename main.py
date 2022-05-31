@@ -38,7 +38,6 @@ def text(message):
 log.info(f"Setting up shedule to run at {time} every day...")
 schedule.every().day.at(time).do(reminder.check_and_send_reminder)
 
-
 polling_thread = threading.Thread(target=reminder_bot.start_polling)
 polling_thread.daemon = True
 polling_thread.start()
