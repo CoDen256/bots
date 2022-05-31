@@ -3,7 +3,7 @@ from util import read_token
 
 log.basicConfig(format="%(asctime)s %(levelname)s %(message)s", level=log.INFO)
 id = 283382228
-time = "14:42"
+time = "14:50"
 token = read_token("token")
 notion_token = read_token("notion_token")
 notion_database_id = "c14f4828-2090-4e5b-aa64-e290a18a181d"

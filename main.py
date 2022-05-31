@@ -35,9 +35,8 @@ def text(message):
             message.chat.id, f"Diary entry already exists: \n{result}")
 
 
-log.info(f"Setting up shedule to run at {time} every day...")
-#schedule.every().day.at(time).do(reminder.check_and_send_reminder)
-schedule.every().minute.do(reminder.check_and_send_reminder)
+log.info(f"Setting up shedule to run every tuesday at {time}...")
+schedule.every().tuesday.at(time).do(reminder.check_and_send_reminder)
 
 
 polling_thread = threading.Thread(target=reminder_bot.start_polling)
