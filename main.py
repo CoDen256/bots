@@ -1,14 +1,15 @@
 from reminder_bot import ReminderBot
 from reminder import Reminder
-from config import token, db_name, time, id
+from notion_api import NotionAPI
+from config import token, notion_token, notion_database_id, db_name, time, id
 from time import sleep
 import logging as log
 import threading
 import schedule
 
-
+notion_client = NotionAPI(notion_token, notion_database_id)
 reminder_bot = ReminderBot(id, token)
-reminder = Reminder(db_name, lambda text: reminder_bot.send(id, text))
+reminder = Reminder(notion_client, db_name, lambda text: reminder_bot.send(id, text))
 bot = reminder_bot.bot
 
 @bot.message_handler(commands=['start', 'help'])

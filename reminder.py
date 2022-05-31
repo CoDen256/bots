@@ -1,12 +1,15 @@
+from calendar import month
 import logging as log
-from datetime import datetime
+from datetime import datetime, timedelta
 from db import ReminderDatabase
 
+
 class Reminder:
-    def __init__(self, db_name, notify):
+    def __init__(self, notion_client, db_name, notify):
         ReminderDatabase.setup(db_name)
         self.db_name = db_name
         self.notify = notify
+        self.notion_client = notion_client
 
     def check_month(self, db):
         (last_date_str, last_text) = db.get_last_reminder()
@@ -30,11 +33,21 @@ class Reminder:
         with ReminderDatabase(self.db_name) as db:
             new = self.check_month(db)
             if new:
-                current_date = datetime.today()
-                month = '0'+str(current_date.month - 1) if current_date.month - \
-                    1 < 10 else str(current_date.month-1)
-                date = f"{current_date.year}-{month}-01"
-                log.info(f"Check successful, inserting for date {date}")
-
-                db.insert_reminder(date, entry)
+                date = self.get_previous_month()
+                log.info(f"Check successful, inserting for previous month: {date}")
+                
+                self.publish(db, date, entry)
             return (new, " -> ".join(list(db.get_last_reminder())))
+
+    def get_previous_month(self):
+        today = datetime.today()
+        first = today.replace(day=1)
+        lastMonth = first - timedelta(days=1)
+        return lastMonth.strftime("%Y-%m-%d")
+
+    def publish(self, db, date, text):
+        try :
+            self.notion_client.updatePage("title", date, text)
+            db.insert_reminder(date, text)
+        except Exception as ex:
+            self.notify(f"Error: {ex}")
