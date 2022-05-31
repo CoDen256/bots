@@ -1,5 +1,5 @@
-def read_token():
+def read_token(filename):
     token = None
-    with open("token", "r") as f:
+    with open(filename, "r") as f:
         token = f.readline()
         return token

@@ -1,12 +1,16 @@
 from reminder_bot import ReminderBot
 from reminder import Reminder
 from util import read_token
+from time import sleep
+import logging as log
 import threading
 import schedule
 
+
+log.basicConfig(level=log.INFO)
 id = 283382228
 db_name = "db"
-time = "11:05"
+time = "11:28"
 token = read_token("token")
 
 reminder_bot = ReminderBot(id, token)
@@ -21,7 +25,11 @@ def start(message):
 
 @bot.message_handler(content_types=["text"])
 def text(message):
-    reminder.process_entry(message.text)
+    (new, result) = reminder.process_entry(message.text)
+    if (new):
+        reminder_bot.send(message.chat.id, f"Diary entry was successfully saved: {result}")
+    else: 
+        reminder_bot.send(message.chat.id, f"Diary entry already exists: {result}")
 
 
 polling_thread = threading.Thread(target=reminder_bot.start_polling)
@@ -34,4 +42,4 @@ schedule.every().day.at(time).do(reminder.check_and_send_reminder)
 
 while reminder_bot.alive:
     schedule.run_pending()
-    time.sleep(1)
+    sleep(1)
