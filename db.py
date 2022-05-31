@@ -1,56 +1,31 @@
-import sqlite3
+from notion_api import NotionAPI
 import logging as log
 
 class ReminderDatabase(object):
 
-    def __init__(self, db):
-        log.info(f"Created Database {db}")
-        self.db = db
-        self.con = None
+    def __init__(self, config):
+        log.info(f"Created database client instance {config}")
+        self.config = config
+        self.client = NotionAPI(config["token"], config["database"])
 
     def __enter__(self):
-        log.info(f"Connected to {self.db}")
-        self.con = sqlite3.connect(f"{self.db}.db")
+        log.info(f"Connected to Notion API: {self.config}")
         return self
   
     def __exit__(self, exc_type, exc_val, exc_tb):
-        log.info(f"Closed connection to {self.db}")
-        self.con.close()
+        log.info(f"Closed connection to Notion API")
 
     def insert_reminder(self, date, text):
-        log.info(f"Inserting {date}, {text} to {self.db}")
-        cur = self.con.cursor()
-        cur.execute("INSERT INTO reminders VALUES (?, ?)", (date, text))
-        self.con.commit()
+        log.info(f"Inserting {date}, {text}")
+        (status, response) = self.client.update_page(date, text)
+        log.info(f"Status: {status}")
+        log.info(f"Response: {response}")
+        if (status != 200):
+            raise Exception(f"Failed to insert Reminder:\n{status}\n:{response}")
 
 
     def get_last_reminder(self):
         log.info(f"Querying last reminder")
-        cur = self.con.cursor()
-        cur.execute("SELECT * FROM reminders ORDER BY date DESC LIMIT 1")
-        value = cur.fetchone()
+        value = (date, description) = self.client.get_last_entry()
         log.info(f"Query Result:{value}")
-        return value
-
-
-    def create_db(self):
-        log.info(f"Creating table reminders in {self.db}")
-        cur = self.con.cursor()
-        cur.execute("CREATE TABLE IF NOT EXISTS reminders(date text, message text)")
-        self.con.commit()
-
-
-    def drop_db(self):
-        log.info(f"Deleting table reminders in {self.db}")
-        cur = self.con.cursor()
-        cur.execute("DROP TABLE IF EXISTS reminders")
-        self.con.commit()
-
-    @staticmethod
-    def setup(db):
-        log.info("Setting up the database")
-        with ReminderDatabase(db) as database:
-            database.drop_db()
-            database.create_db()
-
-            database.insert_reminder("2022-03-01", "Text message for 2022-03-01")
+        return (date, description)

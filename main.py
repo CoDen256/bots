@@ -1,30 +1,38 @@
 from reminder_bot import ReminderBot
 from reminder import Reminder
-from notion_api import NotionAPI
-from config import token, notion_token, notion_database_id, db_name, time, id
+from config import token, notion_token, notion_database_id, time, id
 from time import sleep
 import logging as log
 import threading
 import schedule
 
-notion_client = NotionAPI(notion_token, notion_database_id)
 reminder_bot = ReminderBot(id, token)
-reminder = Reminder(notion_client, db_name, lambda text: reminder_bot.send(id, text))
+reminder = Reminder(
+    config = {
+        "token": notion_token, 
+        "database": notion_database_id
+    },
+    notify = lambda text: reminder_bot.send(id, text))
+
 bot = reminder_bot.bot
+
 
 @bot.message_handler(commands=['start', 'help'])
 def start(message):
     reminder_bot.send(
-        message.chat.id, 
+        message.chat.id,
         "Hello, I'll send you reminder every month to fill in the diary")
+
 
 @bot.message_handler(content_types=["text"])
 def text(message):
     (new, result) = reminder.process_entry(message.text)
     if (new):
-        reminder_bot.send(message.chat.id, f"Diary entry was successfully saved: \n{result}")
-    else: 
-        reminder_bot.send(message.chat.id, f"Diary entry already exists: \n{result}")
+        reminder_bot.send(
+            message.chat.id, f"Diary entry was successfully saved: \n{result}")
+    else:
+        reminder_bot.send(
+            message.chat.id, f"Diary entry already exists: \n{result}")
 
 
 log.info(f"Setting up shedule to run at {time} every day...")

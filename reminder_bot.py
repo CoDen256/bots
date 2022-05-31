@@ -1,4 +1,5 @@
 import logging as log
+import traceback
 import telebot
 from time import sleep
 
@@ -23,6 +24,7 @@ class ReminderBot:
             except Exception as ex:
                 self.log_error("Bot polling failed, restarting in {}sec. Error:\n{}"
                                .format(ReminderBot.BOT_TIMEOUT, ex))
+                log.error(traceback.format_exc())
                 self.bot.stop_polling()
                 sleep(ReminderBot.BOT_TIMEOUT)
             else:
