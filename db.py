@@ -48,7 +48,7 @@ class ReminderDatabase(object):
 
     @staticmethod
     def setup(db):
-        log.info("Setupping the database")
+        log.info("Setting up the database")
         with ReminderDatabase(db) as database:
             database.drop_db()
             database.create_db()

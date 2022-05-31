@@ -4,7 +4,7 @@ from db import ReminderDatabase
 
 class Reminder:
     def __init__(self, db_name, notify):
-        # ReminderDatabase.setup(db)
+        ReminderDatabase.setup(db_name)
         self.db_name = db_name
         self.notify = notify
 
@@ -12,8 +12,8 @@ class Reminder:
         (last_date_str, last_text) = db.get_last_reminder()
         current_date = datetime.today()
         last_date = datetime.strptime(last_date_str, "%Y-%m-%d")
-        log.info(f"Checking: {current_date} > {last_date} + 60 days ?",)
-        return (current_date - last_date).days >= 60
+        log.info(f"Checking: {current_date} > {last_date} + 62 days ?",)
+        return (current_date - last_date).days >= 62
 
     def check_and_send_reminder(self):
         log.info("Checking reminder...")
@@ -37,4 +37,4 @@ class Reminder:
                 log.info(f"Check successful, inserting for date {date}")
 
                 db.insert_reminder(date, entry)
-            return (new, db.get_last_reminder())
+            return (new, " -> ".join(list(db.get_last_reminder())))

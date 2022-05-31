@@ -10,7 +10,7 @@ import schedule
 log.basicConfig(level=log.INFO)
 id = 283382228
 db_name = "db"
-time = "11:28"
+time = "11:58"
 token = read_token("token")
 
 reminder_bot = ReminderBot(id, token)
@@ -27,17 +27,18 @@ def start(message):
 def text(message):
     (new, result) = reminder.process_entry(message.text)
     if (new):
-        reminder_bot.send(message.chat.id, f"Diary entry was successfully saved: {result}")
+        reminder_bot.send(message.chat.id, f"Diary entry was successfully saved: \n{result}")
     else: 
-        reminder_bot.send(message.chat.id, f"Diary entry already exists: {result}")
+        reminder_bot.send(message.chat.id, f"Diary entry already exists: \n{result}")
+
+
+log.info(f"Setting up shedule to run at {time} every day...")
+schedule.every().day.at(time).do(reminder.check_and_send_reminder)
 
 
 polling_thread = threading.Thread(target=reminder_bot.start_polling)
 polling_thread.daemon = True
 polling_thread.start()
-
-
-schedule.every().day.at(time).do(reminder.check_and_send_reminder)
 
 
 while reminder_bot.alive:
