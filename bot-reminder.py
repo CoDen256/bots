@@ -1,47 +1,17 @@
 import telebot
-import sqlite3
+from db import ReminderDatabase
 # from apscheduler.schedulers.blocking import BlockingScheduler
 from datetime import datetime
 
+from util import read_token
+
 id = 283382228
 bot = telebot.TeleBot(
-    "5275116671:AAHL57AYGqpkBQ3dWQuQlPkMW_2goFdebeE", threaded=True)
+    read_token(), threaded=True)
 bot.send_message(id, "Starting Dairy Reminder")
 
 db = "db"
 
-
-def insert_reminder(name, date, text):
-    con = sqlite3.connect(f"{name}.db")
-    cur = con.cursor()
-    cur.execute("INSERT INTO reminders VALUES (?, ?)", (date, text))
-    con.commit()
-    con.close()
-
-
-def get_last_reminder(name):
-    con = sqlite3.connect(f"{name}.db")
-    cur = con.cursor()
-    cur.execute("SELECT * FROM reminders ORDER BY date DESC LIMIT 1")
-    value = cur.fetchone()
-    con.close()
-    return value
-
-
-def create_db(name):
-    con = sqlite3.connect(f"{name}.db")
-    cur = con.cursor()
-    cur.execute("CREATE TABLE IF NOT EXISTS reminders(date text, message text)")
-    con.commit()
-    con.close()
-
-
-def drop_db(name):
-    con = sqlite3.connect(f"{name}.db")
-    cur = con.cursor()
-    cur.execute("DROP TABLE IF EXISTS reminders")
-    con.commit()
-    con.close()
 
 
 def check_month():
@@ -108,11 +78,5 @@ def log(text):
 
 # schedule.every().day.at("16:31").do(check_and_send_reminder)
 
-if 1:
-    drop_db(db)
-    create_db(db)
-
-    insert_reminder(db, "2022-03-01", "Text message for 2022-04-01")
 
 bot.polling()
-print("after polling")
