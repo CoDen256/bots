@@ -17,12 +17,7 @@ class ReminderDatabase(object):
 
     def insert_reminder(self, date, text):
         log.info(f"Inserting {date}, {text}")
-        (status, response) = self.client.update_page(date, text)
-        log.info(f"Status: {status}")
-        log.info(f"Response: {response}")
-        if (status != 200):
-            raise Exception(f"Failed to insert Reminder:\n{status}\n:{response}")
-
+        self.client.update_page(date, text)
 
     def get_last_reminder(self):
         log.info(f"Querying last reminder")

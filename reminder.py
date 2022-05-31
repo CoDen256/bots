@@ -23,7 +23,7 @@ class Reminder:
                 next_month = self.get_next_month(last_month)
                 log.info("Check successful, sending the reminder...")
                 self.notify(
-                    f"It's time to send an entry to your diary: {next_month}")
+                    f"It's time to send an entry to your diary for {next_month}")
             else:
                 log.info("Check failed, skipping...")
 
@@ -37,6 +37,8 @@ class Reminder:
                     f"Check successful, inserting for next not filled month: {next_month}")
 
                 self.publish(db, next_month, entry)
+            else:
+                log.info("Check failed, skipping...")
             return (too_old, " -> ".join(list(db.get_last_reminder())))
 
     def get_next_month(self, month):
