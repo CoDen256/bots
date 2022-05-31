@@ -1,17 +1,11 @@
 from reminder_bot import ReminderBot
 from reminder import Reminder
-from util import read_token
+from config import token, db_name, time, id
 from time import sleep
 import logging as log
 import threading
 import schedule
 
-
-log.basicConfig(level=log.INFO)
-id = 283382228
-db_name = "db"
-time = "11:58"
-token = read_token("token")
 
 reminder_bot = ReminderBot(id, token)
 reminder = Reminder(db_name, lambda text: reminder_bot.send(id, text))
