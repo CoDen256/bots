@@ -26,14 +26,18 @@ def get_info(c):
     ]
     res = {}
     for field in fields:
-        res[field] = c[field]
+        try:
+            res[field] = c[field]
+        except:
+            pass
     return res
 
 def get_contact_info(c):
+
     return {
         "Name": f"{c['contactPerson']['salutationAndTitle']} {c['contactPerson']['firstName']} {c['contactPerson']['lastName']}",
-        "Number": c["phoneNumbers"]["phoneNumber"]["contactNumber"],
-        "Cell": c["phoneNumbers"]["cellPhoneNumber"]["contactNumber"],
+        # "Number": c["phoneNumbers"]["phoneNumber"]["contactNumber"],
+        # "Cell": c["phoneNumbers"]["cellPhoneNumber"]["contactNumber"],
         "Company": c["realtorInformation"]["companyName"]
     }
 
@@ -41,9 +45,11 @@ def additional_info(file):
     soup = BeautifulSoup(open(base+"\\"+file, encoding="utf8"), 'html.parser')
     frei = soup.findAll("dd", class_="is24qa-bezugsfrei-ab")[0].text.strip()
     heiz = soup.findAll("dd", class_="is24qa-heizkosten")[0].text.strip()
+    totalrent = soup.findAll("dd", class_="is24qa-gesamtmiete")[0].text.strip().split(" ")[0]
     return {
         "frei_ab": frei,
-        "extra": "nicht" in heiz
+        "extra": "nicht" in heiz,
+        "obj_totalRent": totalrent
     }
 
 def parse_full(file):
@@ -54,6 +60,4 @@ def parse_full(file):
     return res | contact | add
 
 def main():
-    print(parse_full("1.html"))
-
-main()
+    print(parse_full("4.html"))

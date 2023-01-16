@@ -36,9 +36,9 @@ class NotionAPI:
                 "Vermieter": {
                     "rich_text": [{"text": {"content": card["company"]}}]
                 },
-                "Phone": {
-                    "phone_number": card["phone"]
-                },
+                # "Phone": {
+                #     "phone_number": card["phone"]
+                # },
                 "URL": {
                     "url": card["url"]
                 },
