@@ -2,17 +2,26 @@ import requests
 import json
 import logging as log
 
+
 class NotionAPI:
     def __init__(self, token, databaseId):
         self.headers = {
             "Authorization": "Bearer " + token,
             "Content-Type": "application/json",
-            "Notion-Version": "2021-05-13"
+            "Notion-Version": "2022-06-28"
         }
         self.databaseId = databaseId
 
-    def update_page(self, month, description):
+    @staticmethod
+    def search(token):
+        headers = {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json",
+            "Notion-Version": "2022-06-28"
+        }
+        return requests.post("https://api.notion.com/v1/search", headers=headers).json()
 
+    def update_page(self, card):
         url = 'https://api.notion.com/v1/pages'
 
         data = {
@@ -21,18 +30,39 @@ class NotionAPI:
             },
             "properties": {
 
-                "Month": {
-                    "title": [{"text": {"content": month}}]
+                "Address": {
+                    "title": [{"text": {"content": card["address"]}}]
                 },
-                "Description": {
-                    "rich_text": [{"text": {"content": description}}]
+                "Vermieter": {
+                    "rich_text": [{"text": {"content": card["company"]}}]
+                },
+                "Phone": {
+                    "phone_number": card["phone"]
+                },
+                "URL": {
+                    "url": card["url"]
+                },
+                "Email": {
+                    "email": card["email"]
+                },
+                "Fläche": {
+                    "number": card["space"]
+                },
+                "EBK": {
+                    "select": {"name" : card["kitchen"]}
+                },
+                "Tier": {
+                    "select": {"name": card["animal"]}
+                },
+                "Bezug": {
+                    "date" : {"start": card["free"]}
                 }
-
             }
         }
-        (status, _) = self.post(url, data)
-        if (status != 200):
-            raise Exception(f"Failed to insert Reminder")
+        (status, res) = self.post(url, data)
+        if status != 200:
+            print(res)
+            raise Exception(f"Failed to insert a page")
 
     def post(self, url, data):
         res = requests.request("POST", url, headers=self.headers, data=json.dumps(data))
@@ -40,23 +70,3 @@ class NotionAPI:
         log.info(f"Status: {status}")
         log.info(f"Response: {body}")
         return response
-
-    def get_last_entry(self):
-        url = f"https://api.notion.com/v1/databases/{self.databaseId}/query"
-
-
-        data = {
-            "sorts": [{
-                "property": "Month",
-                "direction": "descending" 
-            }],
-            "page_size": 1
-        }
-
-        (status, res) = self.post(url, data)
-        if (status != 200): raise Exception(f"Failed to get last entry")
-
-        properties = res["results"][0]["properties"]
-        desc = properties["Description"]["rich_text"][0]["text"]["content"]
-        month = properties["Month"]["title"][0]["text"]["content"]
-        return (month, desc)
