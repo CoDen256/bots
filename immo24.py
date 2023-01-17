@@ -122,7 +122,7 @@ def parse_full(file):
     o = res | contact | add
     if 'obj_streetPlain' not in o or 'obj_zipCode' not in o: return
     addr = o['obj_streetPlain']+"."+none_to_empty(res, 'obj_houseNumber')
-    addr = addr.replace("..", ".")
+    addr = addr.replace("..", ".").replace("_", " ")
     if ("information" in addr):
         addr = o["obj_regio4"]
     return Wohnung(

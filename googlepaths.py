@@ -26,7 +26,7 @@ class Chrome:
 
     def check_internet(self, full_address, zip, tries=0):
         address, number = tuple(full_address.split("."))
-        address = (address + ".").replace("Straße", "Str").replace("straße", "str")
+        address = (address + ".").replace("_", " ").replace("Straße", "Str").replace("straße", "str")
         number = number.strip()
         url = "https://www.check24.de/dsl/input2/"
 
