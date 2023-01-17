@@ -28,7 +28,7 @@ def main():
             try:
                 info = parse_full(filename)
                 print(info)
-                publish(info)
+                # publish(info)
             except Exception as e:
                 logging.error("error", e)
 
