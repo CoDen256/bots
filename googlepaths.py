@@ -1,3 +1,5 @@
+import logging
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
@@ -22,7 +24,7 @@ class Chrome:
     def quit(self):
         self.driver.quit()
 
-    def check_internet(self, full_address, zip):
+    def check_internet(self, full_address, zip, tries=0):
         address, number = tuple(full_address.split("."))
         address = (address + ".").replace("Straße", "Str").replace("straße", "str")
         number = number.strip()
@@ -45,7 +47,14 @@ class Chrome:
         self.driver.find_element(By.CSS_SELECTOR, "input[placeholder='Nr.']").send_keys(number)
         self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         sleep(11)
-        self.driver.find_element(By.CSS_SELECTOR, "div[data-value='downstream']").click()
+        try:
+            self.driver.find_element(By.CSS_SELECTOR, "div[data-value='downstream']").click()
+        except Exception as e:
+            if tries >= 1:
+                logging.error("cannot submit? ", e)
+                return -1
+            else:
+                return self.check_internet(full_address.replace("Str", " Str").replace("str", " str"), zip, tries+1)
         sleep(10)
         internet = int(self.driver.find_elements(By.CLASS_NAME, "tko-flatrate-value")[0].text.split(" ")[0].replace(".", ""))
         print("internet:", internet)

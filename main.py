@@ -85,7 +85,6 @@ def main():
                 info = parse_full(filename)
                 print("Parsed full", info)
                 new_info = info.copy()
-                publish(new_info)
                 chrome = Chrome()
                 try:
                     print("Parsing OME Time")
@@ -108,13 +107,13 @@ def main():
                 publish(new_info)
 
                 try:
-                    if new_info.mobile:
+                    if new_info.mobile != "N/A":
                         contact_creator.send_contact(new_info.mobile, new_info.name, new_info.company, new_info.address)
-                    elif new_info.phone:
+                    elif new_info.phone != "N/A":
                         contact_creator.send_contact(new_info.phone, new_info.name, new_info.company, new_info.address)
                 except Exception as e:
                     logging.error("error contact", e)
-                    
+
                 chrome.quit()
                 Chrome(True).open_markets(new_info.address)
             except Exception as e:
@@ -142,4 +141,4 @@ def check_manual_full(addr, plz):
 
 main()
 #
-# check_manual_full("Engertstraße.27", "04275")
+# check_manual("Linkelstraße.36", "04159")
