@@ -1,0 +1,855 @@
+{
+  "data": [
+    {
+      "uuid": "bf70a472-55dd-4216-be90-2c2ceb05633d",
+      "memoOwnerId": 8381066,
+      "name": "default",
+      "owners": [
+        {
+          "userId": 8381066,
+          "nickName": "Immo-Merker 8381066",
+          "profilePhotoUrl": "https://ms.immowelt.org/1c78ddcd-b278-4b51-83bc-287437c205a1/8cfeb585-8c6c-4547-975f-7b3cf85b6364"
+        }
+      ],
+      "pendingCollaborationInvites": [],
+      "entries": [
+        {
+          "objectMemoUuid": "bf70a472-55dd-4216-be90-2c2ceb05633d",
+          "objectKey": "0e457cb2-8dc0-4a1b-82ea-5065b602b83a",
+          "addedDate": "2023-01-13T17:28:39.392Z",
+          "contactedDate": "2023-01-13T17:33:12.534Z",
+          "immoObject": {
+            "distributionType": "ZUR_MIETE",
+            "estateType": "WOHNUNG",
+            "listImage": null,
+            "listImages": [],
+            "brokerObjectKey": "159.2.10",
+            "title": "\"Gute Adresse\" mit Einbauküche",
+            "objectOwnerId": 12982,
+            "address": {
+              "zipcode": "04209",
+              "city": "Leipzig",
+              "street": "Dahlienstr. 79",
+              "houseNumber": ""
+            },
+            "keyFacts": [
+              {
+                "type": "PRICE",
+                "label": "Kaltmiete zzgl. NK",
+                "value": "272,50 €",
+                "displayValue": "272,50 €",
+                "referenceType": "KALTMIETE",
+                "valueNumber": 272.5,
+                "valueString": null,
+                "unit": "EUR"
+              },
+              {
+                "type": "PRIMARY_AREA",
+                "label": "Wohnfläche (ca.)",
+                "value": "46,64 m²",
+                "displayValue": "46,64 m²",
+                "referenceType": "WOHNFLAECHE",
+                "valueNumber": 46.64,
+                "valueString": null,
+                "unit": "QUADRATMETER"
+              },
+              {
+                "type": "ROOM",
+                "label": "Zimmer",
+                "value": "2",
+                "displayValue": "2",
+                "referenceType": "ZIMMER",
+                "valueNumber": 2.0,
+                "valueString": null,
+                "unit": null
+              }
+            ],
+            "deletedDate": "2023-01-16T07:52:52.303Z",
+            "createdDate": "2023-01-13T17:03:19.877Z",
+            "modifiedDate": "2023-01-16T07:52:55.485Z",
+            "unavailableSince": "2023-01-16T07:52:52.303Z",
+            "active": false
+          },
+          "rating": {
+            "average": null,
+            "totalCount": 0,
+            "details": []
+          },
+          "note": null,
+          "addedByUserId": null,
+          "contactedByUserId": 8381066,
+          "phoneContactedDate": "2023-01-13T17:28:39.698Z",
+          "phoneContactedByUserId": 8381066
+        },
+        {
+          "objectMemoUuid": "bf70a472-55dd-4216-be90-2c2ceb05633d",
+          "objectKey": "dadb3f18-9b00-4a95-8f9d-6fa4b56aa6f0",
+          "addedDate": "2023-01-16T13:42:01.062995Z",
+          "contactedDate": "2023-01-16T13:42:05.220Z",
+          "immoObject": {
+            "distributionType": "ZUR_MIETE",
+            "estateType": "WOHNUNG",
+            "listImage": null,
+            "listImages": [],
+            "brokerObjectKey": "",
+            "title": "2-Zi.-Whg. in Leipzig-Connewitz",
+            "objectOwnerId": 274676,
+            "address": {
+              "zipcode": "04277",
+              "city": "Leipzig",
+              "street": "Brandstraße 32",
+              "houseNumber": ""
+            },
+            "keyFacts": [
+              {
+                "type": "PRICE",
+                "label": "Kaltmiete zzgl. NK",
+                "value": "231 €",
+                "displayValue": "231 €",
+                "referenceType": "KALTMIETE",
+                "valueNumber": 231.0,
+                "valueString": null,
+                "unit": "EUR"
+              },
+              {
+                "type": "PRIMARY_AREA",
+                "label": "Wohnfläche (ca.)",
+                "value": "33 m²",
+                "displayValue": "33 m²",
+                "referenceType": "WOHNFLAECHE",
+                "valueNumber": 33.0,
+                "valueString": null,
+                "unit": "QUADRATMETER"
+              },
+              {
+                "type": "ROOM",
+                "label": "Zimmer",
+                "value": "2",
+                "displayValue": "2",
+                "referenceType": "ZIMMER",
+                "valueNumber": 2.0,
+                "valueString": null,
+                "unit": null
+              }
+            ],
+            "deletedDate": null,
+            "createdDate": "2023-01-14T13:02:22.773Z",
+            "modifiedDate": "2023-01-14T14:55:50.098Z",
+            "unavailableSince": null,
+            "active": true
+          },
+          "rating": {
+            "average": null,
+            "totalCount": 0,
+            "details": []
+          },
+          "note": null,
+          "addedByUserId": 8381066,
+          "contactedByUserId": 8381066,
+          "phoneContactedDate": null,
+          "phoneContactedByUserId": null
+        },
+        {
+          "objectMemoUuid": "bf70a472-55dd-4216-be90-2c2ceb05633d",
+          "objectKey": "f879e535-ac4c-4d45-8b5b-2fe10adc7bbd",
+          "addedDate": "2023-01-16T15:09:56.417594Z",
+          "contactedDate": "2023-01-16T15:07:26.913Z",
+          "immoObject": {
+            "distributionType": "ZUR_MIETE",
+            "estateType": "WOHNUNG",
+            "listImage": {
+              "smallUrl": "https://ms.immowelt.org/06d37f11-78cc-4e6d-b063-1b4c1404c410/ffa54bdf-8e98-410f-9298-b83a9b29e495/100x0",
+              "mediumUrl": "https://ms.immowelt.org/06d37f11-78cc-4e6d-b063-1b4c1404c410/ffa54bdf-8e98-410f-9298-b83a9b29e495/270x0",
+              "largeUrl": "https://ms.immowelt.org/06d37f11-78cc-4e6d-b063-1b4c1404c410/ffa54bdf-8e98-410f-9298-b83a9b29e495/400x0",
+              "extraLargeUrl": "https://ms.immowelt.org/06d37f11-78cc-4e6d-b063-1b4c1404c410/ffa54bdf-8e98-410f-9298-b83a9b29e495/690x0"
+            },
+            "listImages": [
+              {
+                "smallUrl": "https://ms.immowelt.org/06d37f11-78cc-4e6d-b063-1b4c1404c410/ffa54bdf-8e98-410f-9298-b83a9b29e495/100x0",
+                "mediumUrl": "https://ms.immowelt.org/06d37f11-78cc-4e6d-b063-1b4c1404c410/ffa54bdf-8e98-410f-9298-b83a9b29e495/270x0",
+                "largeUrl": "https://ms.immowelt.org/06d37f11-78cc-4e6d-b063-1b4c1404c410/ffa54bdf-8e98-410f-9298-b83a9b29e495/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/06d37f11-78cc-4e6d-b063-1b4c1404c410/ffa54bdf-8e98-410f-9298-b83a9b29e495/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/adbd1897-0ca0-4574-9368-9d679e1204d4/66db29c6-f368-4efa-be1c-e9ef7f75e572/100x0",
+                "mediumUrl": "https://ms.immowelt.org/adbd1897-0ca0-4574-9368-9d679e1204d4/66db29c6-f368-4efa-be1c-e9ef7f75e572/270x0",
+                "largeUrl": "https://ms.immowelt.org/adbd1897-0ca0-4574-9368-9d679e1204d4/66db29c6-f368-4efa-be1c-e9ef7f75e572/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/adbd1897-0ca0-4574-9368-9d679e1204d4/66db29c6-f368-4efa-be1c-e9ef7f75e572/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/8b78d9aa-8c8f-4a26-8f4c-d45cee4554de/e83aaf83-0344-4ac3-8410-2b61481d2c97/100x0",
+                "mediumUrl": "https://ms.immowelt.org/8b78d9aa-8c8f-4a26-8f4c-d45cee4554de/e83aaf83-0344-4ac3-8410-2b61481d2c97/270x0",
+                "largeUrl": "https://ms.immowelt.org/8b78d9aa-8c8f-4a26-8f4c-d45cee4554de/e83aaf83-0344-4ac3-8410-2b61481d2c97/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/8b78d9aa-8c8f-4a26-8f4c-d45cee4554de/e83aaf83-0344-4ac3-8410-2b61481d2c97/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/967f5989-be1d-4623-b9cd-2a8e09235978/05312dc5-070d-441b-ab27-76b9892a62c1/100x0",
+                "mediumUrl": "https://ms.immowelt.org/967f5989-be1d-4623-b9cd-2a8e09235978/05312dc5-070d-441b-ab27-76b9892a62c1/270x0",
+                "largeUrl": "https://ms.immowelt.org/967f5989-be1d-4623-b9cd-2a8e09235978/05312dc5-070d-441b-ab27-76b9892a62c1/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/967f5989-be1d-4623-b9cd-2a8e09235978/05312dc5-070d-441b-ab27-76b9892a62c1/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/9e2335bb-0fb2-4803-84a7-93e867e35320/a8123b1e-7238-44b3-a872-54a0dee0a3a6/100x0",
+                "mediumUrl": "https://ms.immowelt.org/9e2335bb-0fb2-4803-84a7-93e867e35320/a8123b1e-7238-44b3-a872-54a0dee0a3a6/270x0",
+                "largeUrl": "https://ms.immowelt.org/9e2335bb-0fb2-4803-84a7-93e867e35320/a8123b1e-7238-44b3-a872-54a0dee0a3a6/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/9e2335bb-0fb2-4803-84a7-93e867e35320/a8123b1e-7238-44b3-a872-54a0dee0a3a6/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/4ba9c6a8-8ab4-4526-a0ed-6148b221e6d4/273b60af-7986-4ce8-86a3-51f57a82eff3/100x0",
+                "mediumUrl": "https://ms.immowelt.org/4ba9c6a8-8ab4-4526-a0ed-6148b221e6d4/273b60af-7986-4ce8-86a3-51f57a82eff3/270x0",
+                "largeUrl": "https://ms.immowelt.org/4ba9c6a8-8ab4-4526-a0ed-6148b221e6d4/273b60af-7986-4ce8-86a3-51f57a82eff3/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/4ba9c6a8-8ab4-4526-a0ed-6148b221e6d4/273b60af-7986-4ce8-86a3-51f57a82eff3/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/822b0363-f365-400b-ba7c-6a15d85953dd/7fd5624d-d6a0-4604-9c20-a6069f59f3a5/100x0",
+                "mediumUrl": "https://ms.immowelt.org/822b0363-f365-400b-ba7c-6a15d85953dd/7fd5624d-d6a0-4604-9c20-a6069f59f3a5/270x0",
+                "largeUrl": "https://ms.immowelt.org/822b0363-f365-400b-ba7c-6a15d85953dd/7fd5624d-d6a0-4604-9c20-a6069f59f3a5/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/822b0363-f365-400b-ba7c-6a15d85953dd/7fd5624d-d6a0-4604-9c20-a6069f59f3a5/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/d2a11347-8223-42be-93ef-ababb855280a/f49def75-e8f7-4af6-8242-28b79cba21e6/100x0",
+                "mediumUrl": "https://ms.immowelt.org/d2a11347-8223-42be-93ef-ababb855280a/f49def75-e8f7-4af6-8242-28b79cba21e6/270x0",
+                "largeUrl": "https://ms.immowelt.org/d2a11347-8223-42be-93ef-ababb855280a/f49def75-e8f7-4af6-8242-28b79cba21e6/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/d2a11347-8223-42be-93ef-ababb855280a/f49def75-e8f7-4af6-8242-28b79cba21e6/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/2c90ad9a-2e64-4ef5-b3b0-79d9a110f31d/28fc428d-ab65-4cfe-a0a7-5c6a9e0a3e93/100x0",
+                "mediumUrl": "https://ms.immowelt.org/2c90ad9a-2e64-4ef5-b3b0-79d9a110f31d/28fc428d-ab65-4cfe-a0a7-5c6a9e0a3e93/270x0",
+                "largeUrl": "https://ms.immowelt.org/2c90ad9a-2e64-4ef5-b3b0-79d9a110f31d/28fc428d-ab65-4cfe-a0a7-5c6a9e0a3e93/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/2c90ad9a-2e64-4ef5-b3b0-79d9a110f31d/28fc428d-ab65-4cfe-a0a7-5c6a9e0a3e93/690x0"
+              }
+            ],
+            "brokerObjectKey": "",
+            "title": "Helle 2-Raumwohnung mit Wintergarten im schönen Bülowviertel",
+            "objectOwnerId": 8364088,
+            "address": {
+              "zipcode": "04315",
+              "city": "Leipzig",
+              "street": "Bautzmannstr. 15",
+              "houseNumber": ""
+            },
+            "keyFacts": [
+              {
+                "type": "PRICE",
+                "label": "Kaltmiete zzgl. NK",
+                "value": "350 €",
+                "displayValue": "350 €",
+                "referenceType": "KALTMIETE",
+                "valueNumber": 350.0,
+                "valueString": null,
+                "unit": "EUR"
+              },
+              {
+                "type": "PRIMARY_AREA",
+                "label": "Wohnfläche (ca.)",
+                "value": "44 m²",
+                "displayValue": "44 m²",
+                "referenceType": "WOHNFLAECHE",
+                "valueNumber": 44.0,
+                "valueString": null,
+                "unit": "QUADRATMETER"
+              },
+              {
+                "type": "ROOM",
+                "label": "Zimmer",
+                "value": "2",
+                "displayValue": "2",
+                "referenceType": "ZIMMER",
+                "valueNumber": 2.0,
+                "valueString": null,
+                "unit": null
+              }
+            ],
+            "deletedDate": null,
+            "createdDate": "2023-01-03T10:42:30.177Z",
+            "modifiedDate": "2023-01-03T11:45:35.930Z",
+            "unavailableSince": null,
+            "active": true
+          },
+          "rating": {
+            "average": null,
+            "totalCount": 0,
+            "details": []
+          },
+          "note": null,
+          "addedByUserId": 8381066,
+          "contactedByUserId": 8381066,
+          "phoneContactedDate": null,
+          "phoneContactedByUserId": null
+        },
+        {
+          "objectMemoUuid": "bf70a472-55dd-4216-be90-2c2ceb05633d",
+          "objectKey": "4a3f849d-d380-4ebc-a02a-3ccdf342b5e7",
+          "addedDate": "2023-01-16T15:16:43.606534Z",
+          "contactedDate": "2023-01-16T15:14:57.937Z",
+          "immoObject": {
+            "distributionType": "ZUR_MIETE",
+            "estateType": "WOHNUNG",
+            "listImage": {
+              "smallUrl": "https://ms.immowelt.org/14eb69b4-254f-4379-a15b-4f0e8b8c2927/8355840a-4791-4c71-9c83-d4f571980945/100x0",
+              "mediumUrl": "https://ms.immowelt.org/14eb69b4-254f-4379-a15b-4f0e8b8c2927/8355840a-4791-4c71-9c83-d4f571980945/270x0",
+              "largeUrl": "https://ms.immowelt.org/14eb69b4-254f-4379-a15b-4f0e8b8c2927/8355840a-4791-4c71-9c83-d4f571980945/400x0",
+              "extraLargeUrl": "https://ms.immowelt.org/14eb69b4-254f-4379-a15b-4f0e8b8c2927/8355840a-4791-4c71-9c83-d4f571980945/690x0"
+            },
+            "listImages": [
+              {
+                "smallUrl": "https://ms.immowelt.org/14eb69b4-254f-4379-a15b-4f0e8b8c2927/8355840a-4791-4c71-9c83-d4f571980945/100x0",
+                "mediumUrl": "https://ms.immowelt.org/14eb69b4-254f-4379-a15b-4f0e8b8c2927/8355840a-4791-4c71-9c83-d4f571980945/270x0",
+                "largeUrl": "https://ms.immowelt.org/14eb69b4-254f-4379-a15b-4f0e8b8c2927/8355840a-4791-4c71-9c83-d4f571980945/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/14eb69b4-254f-4379-a15b-4f0e8b8c2927/8355840a-4791-4c71-9c83-d4f571980945/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/3b9edc5f-0406-4112-a0a6-14c0917062db/33ce2a18-92d5-496c-9828-93587e2bd748/100x0",
+                "mediumUrl": "https://ms.immowelt.org/3b9edc5f-0406-4112-a0a6-14c0917062db/33ce2a18-92d5-496c-9828-93587e2bd748/270x0",
+                "largeUrl": "https://ms.immowelt.org/3b9edc5f-0406-4112-a0a6-14c0917062db/33ce2a18-92d5-496c-9828-93587e2bd748/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/3b9edc5f-0406-4112-a0a6-14c0917062db/33ce2a18-92d5-496c-9828-93587e2bd748/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/560b975e-71ca-4d36-8f41-6c1a74f148a1/ac76ae22-7be4-4f7c-90e0-0780f6b8b0e5/100x0",
+                "mediumUrl": "https://ms.immowelt.org/560b975e-71ca-4d36-8f41-6c1a74f148a1/ac76ae22-7be4-4f7c-90e0-0780f6b8b0e5/270x0",
+                "largeUrl": "https://ms.immowelt.org/560b975e-71ca-4d36-8f41-6c1a74f148a1/ac76ae22-7be4-4f7c-90e0-0780f6b8b0e5/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/560b975e-71ca-4d36-8f41-6c1a74f148a1/ac76ae22-7be4-4f7c-90e0-0780f6b8b0e5/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/94eb9417-585f-4092-93da-53559ef39c74/9c09885d-30c0-471d-a5d9-87a9ddd5dc42/100x0",
+                "mediumUrl": "https://ms.immowelt.org/94eb9417-585f-4092-93da-53559ef39c74/9c09885d-30c0-471d-a5d9-87a9ddd5dc42/270x0",
+                "largeUrl": "https://ms.immowelt.org/94eb9417-585f-4092-93da-53559ef39c74/9c09885d-30c0-471d-a5d9-87a9ddd5dc42/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/94eb9417-585f-4092-93da-53559ef39c74/9c09885d-30c0-471d-a5d9-87a9ddd5dc42/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/572108bb-bf09-4772-a611-564ed63e42f6/5fa45e1e-9d9c-46c6-84a3-9e0b3809ba45/100x0",
+                "mediumUrl": "https://ms.immowelt.org/572108bb-bf09-4772-a611-564ed63e42f6/5fa45e1e-9d9c-46c6-84a3-9e0b3809ba45/270x0",
+                "largeUrl": "https://ms.immowelt.org/572108bb-bf09-4772-a611-564ed63e42f6/5fa45e1e-9d9c-46c6-84a3-9e0b3809ba45/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/572108bb-bf09-4772-a611-564ed63e42f6/5fa45e1e-9d9c-46c6-84a3-9e0b3809ba45/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/e8464f1a-ca68-42b7-ad3b-0100e2bd262d/778642d4-ef86-4de1-adcd-61a01b4e044e/100x0",
+                "mediumUrl": "https://ms.immowelt.org/e8464f1a-ca68-42b7-ad3b-0100e2bd262d/778642d4-ef86-4de1-adcd-61a01b4e044e/270x0",
+                "largeUrl": "https://ms.immowelt.org/e8464f1a-ca68-42b7-ad3b-0100e2bd262d/778642d4-ef86-4de1-adcd-61a01b4e044e/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/e8464f1a-ca68-42b7-ad3b-0100e2bd262d/778642d4-ef86-4de1-adcd-61a01b4e044e/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/dcf6cb2a-866c-4821-9382-ecc56480c6d3/df090034-af86-440c-81e3-b4189cd78a51/100x0",
+                "mediumUrl": "https://ms.immowelt.org/dcf6cb2a-866c-4821-9382-ecc56480c6d3/df090034-af86-440c-81e3-b4189cd78a51/270x0",
+                "largeUrl": "https://ms.immowelt.org/dcf6cb2a-866c-4821-9382-ecc56480c6d3/df090034-af86-440c-81e3-b4189cd78a51/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/dcf6cb2a-866c-4821-9382-ecc56480c6d3/df090034-af86-440c-81e3-b4189cd78a51/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/af5816bb-d151-4c0b-8625-15389c1b65b7/f72b31b9-2c52-4629-9c79-f485ffb605d6/100x0",
+                "mediumUrl": "https://ms.immowelt.org/af5816bb-d151-4c0b-8625-15389c1b65b7/f72b31b9-2c52-4629-9c79-f485ffb605d6/270x0",
+                "largeUrl": "https://ms.immowelt.org/af5816bb-d151-4c0b-8625-15389c1b65b7/f72b31b9-2c52-4629-9c79-f485ffb605d6/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/af5816bb-d151-4c0b-8625-15389c1b65b7/f72b31b9-2c52-4629-9c79-f485ffb605d6/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/c9d7f796-9891-4caa-9b50-c0710127a310/18d54a9d-883f-4e2c-aa69-ffa1b6db19fc/100x0",
+                "mediumUrl": "https://ms.immowelt.org/c9d7f796-9891-4caa-9b50-c0710127a310/18d54a9d-883f-4e2c-aa69-ffa1b6db19fc/270x0",
+                "largeUrl": "https://ms.immowelt.org/c9d7f796-9891-4caa-9b50-c0710127a310/18d54a9d-883f-4e2c-aa69-ffa1b6db19fc/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/c9d7f796-9891-4caa-9b50-c0710127a310/18d54a9d-883f-4e2c-aa69-ffa1b6db19fc/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/59e03d10-9894-4344-9986-7b34b4bd7624/b235410e-9146-45e2-abc9-b364f199a0ac/100x0",
+                "mediumUrl": "https://ms.immowelt.org/59e03d10-9894-4344-9986-7b34b4bd7624/b235410e-9146-45e2-abc9-b364f199a0ac/270x0",
+                "largeUrl": "https://ms.immowelt.org/59e03d10-9894-4344-9986-7b34b4bd7624/b235410e-9146-45e2-abc9-b364f199a0ac/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/59e03d10-9894-4344-9986-7b34b4bd7624/b235410e-9146-45e2-abc9-b364f199a0ac/690x0"
+              }
+            ],
+            "brokerObjectKey": "51609.101504-P8-2.OG.li",
+            "title": "2-Zimmerwohnung perfekt für Singles oder Pärchen | renovierungsbedürftig - 1-2 NKM frei !!!",
+            "objectOwnerId": 7692415,
+            "address": {
+              "zipcode": "04229",
+              "city": "Leipzig",
+              "street": "Pörstener Straße 8",
+              "houseNumber": ""
+            },
+            "keyFacts": [
+              {
+                "type": "PRICE",
+                "label": "Kaltmiete zzgl. NK",
+                "value": "316,59 €",
+                "displayValue": "316,59 €",
+                "referenceType": "KALTMIETE",
+                "valueNumber": 316.59,
+                "valueString": null,
+                "unit": "EUR"
+              },
+              {
+                "type": "PRIMARY_AREA",
+                "label": "Wohnfläche (ca.)",
+                "value": "44,21 m²",
+                "displayValue": "44,21 m²",
+                "referenceType": "WOHNFLAECHE",
+                "valueNumber": 44.21,
+                "valueString": null,
+                "unit": "QUADRATMETER"
+              },
+              {
+                "type": "ROOM",
+                "label": "Zimmer",
+                "value": "2",
+                "displayValue": "2",
+                "referenceType": "ZIMMER",
+                "valueNumber": 2.0,
+                "valueString": null,
+                "unit": null
+              }
+            ],
+            "deletedDate": null,
+            "createdDate": "2022-10-19T14:59:40.137Z",
+            "modifiedDate": "2022-10-19T15:02:00.971Z",
+            "unavailableSince": null,
+            "active": true
+          },
+          "rating": {
+            "average": null,
+            "totalCount": 0,
+            "details": []
+          },
+          "note": null,
+          "addedByUserId": 8381066,
+          "contactedByUserId": 8381066,
+          "phoneContactedDate": null,
+          "phoneContactedByUserId": null
+        },
+        {
+          "objectMemoUuid": "bf70a472-55dd-4216-be90-2c2ceb05633d",
+          "objectKey": "e6329ffc-9ac8-41c4-af51-cf42c75adecc",
+          "addedDate": "2023-01-12T07:18:24.855Z",
+          "contactedDate": null,
+          "immoObject": {
+            "distributionType": "ZUR_MIETE",
+            "estateType": "WOHNUNG",
+            "listImage": null,
+            "listImages": [],
+            "brokerObjectKey": "121/2/14",
+            "title": "Wohnung in Leipzig",
+            "objectOwnerId": 13019,
+            "address": {
+              "zipcode": "04349",
+              "city": "Leipzig",
+              "street": "Freiberger Str. 6",
+              "houseNumber": ""
+            },
+            "keyFacts": [
+              {
+                "type": "PRICE",
+                "label": "Kaltmiete zzgl. NK",
+                "value": "286 €",
+                "displayValue": "286 €",
+                "referenceType": "KALTMIETE",
+                "valueNumber": 286.0,
+                "valueString": null,
+                "unit": "EUR"
+              },
+              {
+                "type": "PRIMARY_AREA",
+                "label": "Wohnfläche (ca.)",
+                "value": "47,43 m²",
+                "displayValue": "47,43 m²",
+                "referenceType": "WOHNFLAECHE",
+                "valueNumber": 47.43,
+                "valueString": null,
+                "unit": "QUADRATMETER"
+              },
+              {
+                "type": "ROOM",
+                "label": "Zimmer",
+                "value": "2",
+                "displayValue": "2",
+                "referenceType": "ZIMMER",
+                "valueNumber": 2.0,
+                "valueString": null,
+                "unit": null
+              }
+            ],
+            "deletedDate": "2023-01-16T20:13:32.337Z",
+            "createdDate": "2023-01-11T20:13:22.810Z",
+            "modifiedDate": "2023-01-16T20:13:46.175Z",
+            "unavailableSince": "2023-01-16T20:13:32.337Z",
+            "active": false
+          },
+          "rating": {
+            "average": null,
+            "totalCount": 0,
+            "details": []
+          },
+          "note": null,
+          "addedByUserId": null,
+          "contactedByUserId": null,
+          "phoneContactedDate": null,
+          "phoneContactedByUserId": null
+        },
+        {
+          "objectMemoUuid": "bf70a472-55dd-4216-be90-2c2ceb05633d",
+          "objectKey": "3f0c86f2-bb6c-4f64-b669-ce1425353217",
+          "addedDate": "2023-01-11T09:16:01.159Z",
+          "contactedDate": null,
+          "immoObject": {
+            "distributionType": "ZUR_MIETE",
+            "estateType": "WOHNUNG",
+            "listImage": {
+              "smallUrl": "https://ms.immowelt.org/269ed30c-e8e8-4d67-b804-70711427176c/7b0dbd29-ad5d-4691-b60e-71e9923755f2/100x0",
+              "mediumUrl": "https://ms.immowelt.org/269ed30c-e8e8-4d67-b804-70711427176c/7b0dbd29-ad5d-4691-b60e-71e9923755f2/270x0",
+              "largeUrl": "https://ms.immowelt.org/269ed30c-e8e8-4d67-b804-70711427176c/7b0dbd29-ad5d-4691-b60e-71e9923755f2/400x0",
+              "extraLargeUrl": "https://ms.immowelt.org/269ed30c-e8e8-4d67-b804-70711427176c/7b0dbd29-ad5d-4691-b60e-71e9923755f2/690x0"
+            },
+            "listImages": [
+              {
+                "smallUrl": "https://ms.immowelt.org/269ed30c-e8e8-4d67-b804-70711427176c/7b0dbd29-ad5d-4691-b60e-71e9923755f2/100x0",
+                "mediumUrl": "https://ms.immowelt.org/269ed30c-e8e8-4d67-b804-70711427176c/7b0dbd29-ad5d-4691-b60e-71e9923755f2/270x0",
+                "largeUrl": "https://ms.immowelt.org/269ed30c-e8e8-4d67-b804-70711427176c/7b0dbd29-ad5d-4691-b60e-71e9923755f2/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/269ed30c-e8e8-4d67-b804-70711427176c/7b0dbd29-ad5d-4691-b60e-71e9923755f2/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/2410b72c-1ba3-4e56-8a32-0b14ddb793e3/d7b8d95a-cd28-4b76-9027-bc592f0f7bfe/100x0",
+                "mediumUrl": "https://ms.immowelt.org/2410b72c-1ba3-4e56-8a32-0b14ddb793e3/d7b8d95a-cd28-4b76-9027-bc592f0f7bfe/270x0",
+                "largeUrl": "https://ms.immowelt.org/2410b72c-1ba3-4e56-8a32-0b14ddb793e3/d7b8d95a-cd28-4b76-9027-bc592f0f7bfe/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/2410b72c-1ba3-4e56-8a32-0b14ddb793e3/d7b8d95a-cd28-4b76-9027-bc592f0f7bfe/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/67cd50c1-b2f0-4012-a541-e3ddeb6a9072/16eb45b5-9320-4f0e-97d9-d9fcfb1a5220/100x0",
+                "mediumUrl": "https://ms.immowelt.org/67cd50c1-b2f0-4012-a541-e3ddeb6a9072/16eb45b5-9320-4f0e-97d9-d9fcfb1a5220/270x0",
+                "largeUrl": "https://ms.immowelt.org/67cd50c1-b2f0-4012-a541-e3ddeb6a9072/16eb45b5-9320-4f0e-97d9-d9fcfb1a5220/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/67cd50c1-b2f0-4012-a541-e3ddeb6a9072/16eb45b5-9320-4f0e-97d9-d9fcfb1a5220/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/224ac5cc-cb08-476e-934b-0adf0550e8a0/c1f4ed7b-0d29-4399-8209-c38b10dfd94a/100x0",
+                "mediumUrl": "https://ms.immowelt.org/224ac5cc-cb08-476e-934b-0adf0550e8a0/c1f4ed7b-0d29-4399-8209-c38b10dfd94a/270x0",
+                "largeUrl": "https://ms.immowelt.org/224ac5cc-cb08-476e-934b-0adf0550e8a0/c1f4ed7b-0d29-4399-8209-c38b10dfd94a/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/224ac5cc-cb08-476e-934b-0adf0550e8a0/c1f4ed7b-0d29-4399-8209-c38b10dfd94a/690x0"
+              }
+            ],
+            "brokerObjectKey": "Sch182; EGli",
+            "title": "Sanierte 2 RW mit Balkon*parkähnliches Wohnumfeld*",
+            "objectOwnerId": 906679,
+            "address": {
+              "zipcode": "04207",
+              "city": "Leipzig",
+              "street": "Schönauer Str. 182",
+              "houseNumber": ""
+            },
+            "keyFacts": [
+              {
+                "type": "PRICE",
+                "label": "Kaltmiete zzgl. NK",
+                "value": "345 €",
+                "displayValue": "345 €",
+                "referenceType": "KALTMIETE",
+                "valueNumber": 345.0,
+                "valueString": null,
+                "unit": "EUR"
+              },
+              {
+                "type": "PRIMARY_AREA",
+                "label": "Wohnfläche (ca.)",
+                "value": "40,55 m²",
+                "displayValue": "40,55 m²",
+                "referenceType": "WOHNFLAECHE",
+                "valueNumber": 40.55,
+                "valueString": null,
+                "unit": "QUADRATMETER"
+              },
+              {
+                "type": "ROOM",
+                "label": "Zimmer",
+                "value": "2",
+                "displayValue": "2",
+                "referenceType": "ZIMMER",
+                "valueNumber": 2.0,
+                "valueString": null,
+                "unit": null
+              }
+            ],
+            "deletedDate": null,
+            "createdDate": "2023-01-11T09:02:42.487Z",
+            "modifiedDate": "2023-01-11T09:05:58.915Z",
+            "unavailableSince": null,
+            "active": true
+          },
+          "rating": {
+            "average": null,
+            "totalCount": 0,
+            "details": []
+          },
+          "note": null,
+          "addedByUserId": null,
+          "contactedByUserId": null,
+          "phoneContactedDate": "2023-01-11T09:16:02.027Z",
+          "phoneContactedByUserId": 8381066
+        },
+        {
+          "objectMemoUuid": "bf70a472-55dd-4216-be90-2c2ceb05633d",
+          "objectKey": "681c7bfc-9d53-4ec4-8471-f4d42c648750",
+          "addedDate": "2023-01-11T09:39:09.711Z",
+          "contactedDate": null,
+          "immoObject": {
+            "distributionType": "ZUR_MIETE",
+            "estateType": "WOHNUNG",
+            "listImage": null,
+            "listImages": [],
+            "brokerObjectKey": "HH18-1",
+            "title": "geeignet als Erstwohnung oder für Singles - Balkon + EBK",
+            "objectOwnerId": 933073,
+            "address": {
+              "zipcode": "04318",
+              "city": "Leipzig",
+              "street": "Herrnhuter Str. 18",
+              "houseNumber": ""
+            },
+            "keyFacts": [
+              {
+                "type": "PRICE",
+                "label": "Kaltmiete zzgl. NK",
+                "value": "315 €",
+                "displayValue": "315 €",
+                "referenceType": "KALTMIETE",
+                "valueNumber": 315.0,
+                "valueString": null,
+                "unit": "EUR"
+              },
+              {
+                "type": "PRIMARY_AREA",
+                "label": "Wohnfläche (ca.)",
+                "value": "48 m²",
+                "displayValue": "48 m²",
+                "referenceType": "WOHNFLAECHE",
+                "valueNumber": 48.0,
+                "valueString": null,
+                "unit": "QUADRATMETER"
+              },
+              {
+                "type": "ROOM",
+                "label": "Zimmer",
+                "value": "2",
+                "displayValue": "2",
+                "referenceType": "ZIMMER",
+                "valueNumber": 2.0,
+                "valueString": null,
+                "unit": null
+              }
+            ],
+            "deletedDate": "2023-01-11T12:37:39.160Z",
+            "createdDate": "2023-01-11T09:28:52.890Z",
+            "modifiedDate": "2023-01-11T12:37:44.308Z",
+            "unavailableSince": "2023-01-11T12:37:39.160Z",
+            "active": false
+          },
+          "rating": {
+            "average": null,
+            "totalCount": 0,
+            "details": []
+          },
+          "note": null,
+          "addedByUserId": null,
+          "contactedByUserId": null,
+          "phoneContactedDate": "2023-01-11T09:39:10.550Z",
+          "phoneContactedByUserId": 8381066
+        },
+        {
+          "objectMemoUuid": "bf70a472-55dd-4216-be90-2c2ceb05633d",
+          "objectKey": "39edc8e0-2cb2-4fb3-9963-71351115bd7e",
+          "addedDate": "2023-01-12T07:58:58.069Z",
+          "contactedDate": null,
+          "immoObject": {
+            "distributionType": "ZUR_MIETE",
+            "estateType": "WOHNUNG",
+            "listImage": null,
+            "listImages": [],
+            "brokerObjectKey": "PC-3075",
+            "title": "2-Raumwohnung mit Balkon / Nähe BMW-Werk",
+            "objectOwnerId": 32541,
+            "address": {
+              "zipcode": "04356",
+              "city": "Leipzig",
+              "street": "Storchenweg 3",
+              "houseNumber": ""
+            },
+            "keyFacts": [
+              {
+                "type": "PRICE",
+                "label": "Kaltmiete zzgl. NK",
+                "value": "350 €",
+                "displayValue": "350 €",
+                "referenceType": "KALTMIETE",
+                "valueNumber": 350.0,
+                "valueString": null,
+                "unit": "EUR"
+              },
+              {
+                "type": "PRIMARY_AREA",
+                "label": "Wohnfläche (ca.)",
+                "value": "52,01 m²",
+                "displayValue": "52,01 m²",
+                "referenceType": "WOHNFLAECHE",
+                "valueNumber": 52.01,
+                "valueString": null,
+                "unit": "QUADRATMETER"
+              },
+              {
+                "type": "ROOM",
+                "label": "Zimmer",
+                "value": "2",
+                "displayValue": "2",
+                "referenceType": "ZIMMER",
+                "valueNumber": 2.0,
+                "valueString": null,
+                "unit": null
+              }
+            ],
+            "deletedDate": "2023-01-16T08:01:09.400Z",
+            "createdDate": "2023-01-12T07:42:08.983Z",
+            "modifiedDate": "2023-01-16T08:01:12.056Z",
+            "unavailableSince": "2023-01-16T08:01:09.400Z",
+            "active": false
+          },
+          "rating": {
+            "average": null,
+            "totalCount": 0,
+            "details": []
+          },
+          "note": null,
+          "addedByUserId": null,
+          "contactedByUserId": null,
+          "phoneContactedDate": "2023-01-12T07:58:59.178Z",
+          "phoneContactedByUserId": 8381066
+        },
+        {
+          "objectMemoUuid": "bf70a472-55dd-4216-be90-2c2ceb05633d",
+          "objectKey": "4f57f213-b4c1-454c-ae51-b9bb7591c899",
+          "addedDate": "2023-01-11T10:33:39.727Z",
+          "contactedDate": "2023-01-11T10:38:35.118Z",
+          "immoObject": {
+            "distributionType": "ZUR_MIETE",
+            "estateType": "WOHNUNG",
+            "listImage": {
+              "smallUrl": "https://ms.immowelt.org/27fdcbfe-e0d7-4ab0-96f0-bd867c7c4904/ef40346f-0781-467b-910b-93148243f080/100x0",
+              "mediumUrl": "https://ms.immowelt.org/27fdcbfe-e0d7-4ab0-96f0-bd867c7c4904/ef40346f-0781-467b-910b-93148243f080/270x0",
+              "largeUrl": "https://ms.immowelt.org/27fdcbfe-e0d7-4ab0-96f0-bd867c7c4904/ef40346f-0781-467b-910b-93148243f080/400x0",
+              "extraLargeUrl": "https://ms.immowelt.org/27fdcbfe-e0d7-4ab0-96f0-bd867c7c4904/ef40346f-0781-467b-910b-93148243f080/690x0"
+            },
+            "listImages": [
+              {
+                "smallUrl": "https://ms.immowelt.org/27fdcbfe-e0d7-4ab0-96f0-bd867c7c4904/ef40346f-0781-467b-910b-93148243f080/100x0",
+                "mediumUrl": "https://ms.immowelt.org/27fdcbfe-e0d7-4ab0-96f0-bd867c7c4904/ef40346f-0781-467b-910b-93148243f080/270x0",
+                "largeUrl": "https://ms.immowelt.org/27fdcbfe-e0d7-4ab0-96f0-bd867c7c4904/ef40346f-0781-467b-910b-93148243f080/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/27fdcbfe-e0d7-4ab0-96f0-bd867c7c4904/ef40346f-0781-467b-910b-93148243f080/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/edff8cdf-7647-43e6-a02f-74ae9ed38902/9baacdb8-318e-4bca-a9fc-6f2aadd1dea1/100x0",
+                "mediumUrl": "https://ms.immowelt.org/edff8cdf-7647-43e6-a02f-74ae9ed38902/9baacdb8-318e-4bca-a9fc-6f2aadd1dea1/270x0",
+                "largeUrl": "https://ms.immowelt.org/edff8cdf-7647-43e6-a02f-74ae9ed38902/9baacdb8-318e-4bca-a9fc-6f2aadd1dea1/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/edff8cdf-7647-43e6-a02f-74ae9ed38902/9baacdb8-318e-4bca-a9fc-6f2aadd1dea1/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/816c0e6a-4019-4f28-bf60-fbc97d82a915/00fe73ac-c1f6-4ece-b8fb-b345d2cf2307/100x0",
+                "mediumUrl": "https://ms.immowelt.org/816c0e6a-4019-4f28-bf60-fbc97d82a915/00fe73ac-c1f6-4ece-b8fb-b345d2cf2307/270x0",
+                "largeUrl": "https://ms.immowelt.org/816c0e6a-4019-4f28-bf60-fbc97d82a915/00fe73ac-c1f6-4ece-b8fb-b345d2cf2307/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/816c0e6a-4019-4f28-bf60-fbc97d82a915/00fe73ac-c1f6-4ece-b8fb-b345d2cf2307/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/b32c3cdf-0638-471f-b417-bf5d399d23e7/fb37bf89-5383-4ec8-bf49-f8cf81e35b14/100x0",
+                "mediumUrl": "https://ms.immowelt.org/b32c3cdf-0638-471f-b417-bf5d399d23e7/fb37bf89-5383-4ec8-bf49-f8cf81e35b14/270x0",
+                "largeUrl": "https://ms.immowelt.org/b32c3cdf-0638-471f-b417-bf5d399d23e7/fb37bf89-5383-4ec8-bf49-f8cf81e35b14/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/b32c3cdf-0638-471f-b417-bf5d399d23e7/fb37bf89-5383-4ec8-bf49-f8cf81e35b14/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/0757dd4a-890e-4e8c-a057-0dedcfbdce62/29c7f0d9-0e94-47d3-81e4-e9fc336faa9d/100x0",
+                "mediumUrl": "https://ms.immowelt.org/0757dd4a-890e-4e8c-a057-0dedcfbdce62/29c7f0d9-0e94-47d3-81e4-e9fc336faa9d/270x0",
+                "largeUrl": "https://ms.immowelt.org/0757dd4a-890e-4e8c-a057-0dedcfbdce62/29c7f0d9-0e94-47d3-81e4-e9fc336faa9d/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/0757dd4a-890e-4e8c-a057-0dedcfbdce62/29c7f0d9-0e94-47d3-81e4-e9fc336faa9d/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/a2d40d20-514c-4de8-9197-639d91085e96/c023a6ca-bfa5-47eb-95a2-6efb51040c5e/100x0",
+                "mediumUrl": "https://ms.immowelt.org/a2d40d20-514c-4de8-9197-639d91085e96/c023a6ca-bfa5-47eb-95a2-6efb51040c5e/270x0",
+                "largeUrl": "https://ms.immowelt.org/a2d40d20-514c-4de8-9197-639d91085e96/c023a6ca-bfa5-47eb-95a2-6efb51040c5e/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/a2d40d20-514c-4de8-9197-639d91085e96/c023a6ca-bfa5-47eb-95a2-6efb51040c5e/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/6f472e96-dd15-46dd-894f-31873978c780/5b47f000-4c96-437e-9196-1e9271f79336/100x0",
+                "mediumUrl": "https://ms.immowelt.org/6f472e96-dd15-46dd-894f-31873978c780/5b47f000-4c96-437e-9196-1e9271f79336/270x0",
+                "largeUrl": "https://ms.immowelt.org/6f472e96-dd15-46dd-894f-31873978c780/5b47f000-4c96-437e-9196-1e9271f79336/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/6f472e96-dd15-46dd-894f-31873978c780/5b47f000-4c96-437e-9196-1e9271f79336/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/f4c878fa-3d28-4beb-aff8-eb305b6c62fe/b120e525-1e69-454f-b565-3d11185b25a4/100x0",
+                "mediumUrl": "https://ms.immowelt.org/f4c878fa-3d28-4beb-aff8-eb305b6c62fe/b120e525-1e69-454f-b565-3d11185b25a4/270x0",
+                "largeUrl": "https://ms.immowelt.org/f4c878fa-3d28-4beb-aff8-eb305b6c62fe/b120e525-1e69-454f-b565-3d11185b25a4/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/f4c878fa-3d28-4beb-aff8-eb305b6c62fe/b120e525-1e69-454f-b565-3d11185b25a4/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/6f77d8b8-d2e1-4402-9f72-e3aba05cf462/e1262356-3ed3-47f6-9da9-7eb75238f09d/100x0",
+                "mediumUrl": "https://ms.immowelt.org/6f77d8b8-d2e1-4402-9f72-e3aba05cf462/e1262356-3ed3-47f6-9da9-7eb75238f09d/270x0",
+                "largeUrl": "https://ms.immowelt.org/6f77d8b8-d2e1-4402-9f72-e3aba05cf462/e1262356-3ed3-47f6-9da9-7eb75238f09d/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/6f77d8b8-d2e1-4402-9f72-e3aba05cf462/e1262356-3ed3-47f6-9da9-7eb75238f09d/690x0"
+              },
+              {
+                "smallUrl": "https://ms.immowelt.org/c0a3f6f8-53fc-4faa-9782-1838bcbd0545/de54f01b-0c47-40f0-99c3-933041457f35/100x0",
+                "mediumUrl": "https://ms.immowelt.org/c0a3f6f8-53fc-4faa-9782-1838bcbd0545/de54f01b-0c47-40f0-99c3-933041457f35/270x0",
+                "largeUrl": "https://ms.immowelt.org/c0a3f6f8-53fc-4faa-9782-1838bcbd0545/de54f01b-0c47-40f0-99c3-933041457f35/400x0",
+                "extraLargeUrl": "https://ms.immowelt.org/c0a3f6f8-53fc-4faa-9782-1838bcbd0545/de54f01b-0c47-40f0-99c3-933041457f35/690x0"
+              }
+            ],
+            "brokerObjectKey": "",
+            "title": "AngerCrottendorf, mitten im Grünen",
+            "objectOwnerId": 3419702,
+            "address": {
+              "zipcode": "04318",
+              "city": "Leipzig",
+              "street": "Klausener Str. 9",
+              "houseNumber": ""
+            },
+            "keyFacts": [
+              {
+                "type": "PRICE",
+                "label": "Kaltmiete zzgl. NK",
+                "value": "310 €",
+                "displayValue": "310 €",
+                "referenceType": "KALTMIETE",
+                "valueNumber": 310.0,
+                "valueString": null,
+                "unit": "EUR"
+              },
+              {
+                "type": "PRIMARY_AREA",
+                "label": "Wohnfläche (ca.)",
+                "value": "46,2 m²",
+                "displayValue": "46,2 m²",
+                "referenceType": "WOHNFLAECHE",
+                "valueNumber": 46.2,
+                "valueString": null,
+                "unit": "QUADRATMETER"
+              },
+              {
+                "type": "ROOM",
+                "label": "Zimmer",
+                "value": "2",
+                "displayValue": "2",
+                "referenceType": "ZIMMER",
+                "valueNumber": 2.0,
+                "valueString": null,
+                "unit": null
+              }
+            ],
+            "deletedDate": null,
+            "createdDate": "2023-01-11T10:08:35.107Z",
+            "modifiedDate": "2023-01-11T10:41:44.675Z",
+            "unavailableSince": "2023-01-11T10:41:44.675Z",
+            "active": false
+          },
+          "rating": {
+            "average": null,
+            "totalCount": 0,
+            "details": []
+          },
+          "note": null,
+          "addedByUserId": null,
+          "contactedByUserId": 8381066,
+          "phoneContactedDate": "2023-01-11T10:33:40.625Z",
+          "phoneContactedByUserId": 8381066
+        }
+      ],
+      "numberOfEntries": 9
+    }
+  ],
+  "totalCount": 1
+}

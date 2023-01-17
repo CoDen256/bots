@@ -21,8 +21,8 @@ def parse_contact(contents):
 
 def get_info(c):
     fields = [
-        "obj_hasKitchen", "obj_baseRent", "obj_livingSpace", "obj_zipCode", "obj_petsAllowed", "obj_street",
-        "obj_houseNumber", "obj_zipCode", "obj_floor", "obj_totalRent",
+        "obj_hasKitchen", "obj_livingSpace", "obj_zipCode", "obj_petsAllowed", "obj_street",
+        "obj_houseNumber", "obj_totalRent",
     ]
     res = {}
     for field in fields:
