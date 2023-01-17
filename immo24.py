@@ -43,8 +43,8 @@ def floatmap(val):
 
 def get_info(c):
     fields = [
-        "obj_hasKitchen", "obj_livingSpace", "obj_zipCode", "obj_petsAllowed", "obj_street",
-        "obj_houseNumber", "obj_totalRent",
+        "obj_hasKitchen", "obj_livingSpace", "obj_zipCode", "obj_petsAllowed", "obj_streetPlain",
+        "obj_houseNumber", "obj_totalRent", "obj_regio4",
     ]
     res = defaultdict(lambda: None)
     for field in fields:
@@ -115,9 +115,12 @@ def parse_full(file):
     url = parse_url(file_contents)
     add = additional_info(file)
     o = res | contact | add
-    if 'obj_street' not in o or 'obj_zipCode' not in o: return
+    if 'obj_streetPlain' not in o or 'obj_zipCode' not in o: return
+    addr = o['obj_streetPlain']+"."+none_to_empty(res, 'obj_houseNumber')
+    if ("information" in addr):
+        addr = o["obj_regio4"]
     return Wohnung(
-        address=o['obj_street']+none_to_empty(res, 'obj_houseNumber'),
+        address=addr,
         zip=o['obj_zipCode'],
         url = url,
         total_rent=o['obj_totalRent'],
