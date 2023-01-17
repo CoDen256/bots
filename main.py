@@ -15,6 +15,12 @@ api = NotionAPI(TOKEN, DB)
 
 
 def parse_move(move):
+    if ("ärz") in move:
+        move = "01.03.2023"
+    if ("ebruar") in move:
+        move = "01.02.2023"
+    if ("pril") in move:
+        move = "01.04.2023"
     if ("sofort") in move:
         move = "01.01.2023"
     if ("frei") in move:
