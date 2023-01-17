@@ -1,7 +1,7 @@
 import logging
 import os
 from dateutil.parser import parse
-
+import datetime
 import contact_creator
 from googlepaths import *
 from immo24 import *
@@ -19,11 +19,24 @@ def parse_move(move):
         move = "01.01.2023"
     if ("frei") in move:
         move = "01.01.2023"
-    return parse(move).strftime("%Y-%m-%dT00:00:00.000+01:00")
+    parsed = "01.01.2023"
+    try:
+        parsed = datetime.datetime.strptime(move, "%d.%m.%Y").astimezone().strftime("%Y-%m-%d")
+        return parsed
+    except Exception:
+        pass
+    try:
+        parsed = parse(move).astimezone().strftime("%Y-%m-%d")
+        return parsed
+    except Exception:
+        pass
+    return datetime.datetime.strptime(parsed, "%d.%m.%Y").astimezone().strftime("%Y-%m-%d")
 
 
 def parse_pets(pets):
     if "negoti" in pets: return "VB"
+    if "no_information" in pets: return "VB"
+    if pets == "n": return "No"
     if "n" in pets: return "No"
     if "y" in pets: return "Yes"
     return "VB"
@@ -60,18 +73,21 @@ def publish(o: Wohnung):
         pets=parse_pets(o.pets),
         move=parse_move(o.move),
         extra=o.extra,
-        internet=parse_int(o.internet)
+        internet=parse_int(o.internet),
+        zip=o.zip
     )
 
 
 def main():
     for filename in os.listdir(base):
-        chrome = Chrome()
         if filename.endswith(".html"):
             try:
                 info = parse_full(filename)
                 print("Parsed full", info)
                 new_info = info.copy()
+                publish(new_info)
+                break
+                chrome = Chrome()
                 try:
                     print("Parsing OME Time")
                     new_info.ome = int(chrome.find_work(info.address))

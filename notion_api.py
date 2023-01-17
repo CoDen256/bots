@@ -36,7 +36,8 @@ class NotionAPI:
                     pets,
                     move,
                     extra,
-                    internet
+                    internet,
+                    zip
                     ):
         url = 'https://api.notion.com/v1/pages'
 
@@ -51,6 +52,9 @@ class NotionAPI:
                 },
                 "Vermieter": {
                     "rich_text": [{"text": {"content": name}}]
+                },
+                "ZIP": {
+                    "rich_text": [{"text": {"content": zip}}]
                 },
                 "Company": {
                     "rich_text": [{"text": {"content": company}}]
