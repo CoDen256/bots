@@ -96,9 +96,32 @@ def main():
                     contact_creator.send_contact(new_info.mobile, new_info.name, new_info.company, new_info.address)
                 elif new_info.phone:
                     contact_creator.send_contact(new_info.phone, new_info.name, new_info.company, new_info.address)
+
                 chrome.quit()
+                Chrome(True).open_markets(new_info.address)
             except Exception as e:
                 logging.error("error", e)
 
 
+def check_manual(addr, plz):
+    Chrome(True).open_markets(addr)
+
+def check_manual_full(addr, plz):
+    chrom = Chrome(True)
+    try:
+        print("ome", int(chrom.find_work(addr)))
+    except:
+        pass
+    try:
+        print("htwk", int(chrom.find_htwk(addr)))
+    except:
+        pass
+    try:
+        print("internet", int(chrom.check_internet(addr, plz)))
+    except:
+        pass
+    check_manual(addr, plz)
+
 main()
+#
+# check_manual("Karl-Liebknecht-Str. 102", "04275")
