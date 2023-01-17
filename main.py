@@ -145,6 +145,6 @@ def check_manual_full(addr, plz):
         pass
     check_manual(addr, plz)
 
-main()
-#
-# check_manual_full("Roßbachstraße.3", "04315")
+# main()
+
+check_manual_full("Dahlienstr. 79", "04209")
