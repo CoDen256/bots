@@ -21,7 +21,22 @@ class NotionAPI:
         }
         return requests.post("https://api.notion.com/v1/search", headers=headers).json()
 
-    def update_page(self, card):
+    def update_page(self,
+                    address,
+                    name,
+                    company,
+                    obj_url,
+                    phone,
+                    mobile,
+                    space,
+                    total,
+                    ome,
+                    htwk,
+                    kitchen,
+                    pets,
+                    move,
+                    extra
+                    ):
         url = 'https://api.notion.com/v1/pages'
 
         data = {
@@ -31,31 +46,46 @@ class NotionAPI:
             "properties": {
 
                 "Address": {
-                    "title": [{"text": {"content": card["address"]}}]
+                    "title": [{"text": {"content": address}}]
                 },
                 "Vermieter": {
-                    "rich_text": [{"text": {"content": card["company"]}}]
+                    "rich_text": [{"text": {"content": name}}]
                 },
-                # "Phone": {
-                #     "phone_number": card["phone"]
-                # },
+                "Company": {
+                    "rich_text": [{"text": {"content": company}}]
+                },
+                "Phone": {
+                    "phone_number": phone
+                },
+                "Mobile": {
+                    "phone_number": mobile
+                },
                 "URL": {
-                    "url": card["url"]
-                },
-                "Email": {
-                    "email": card["email"]
+                    "url": obj_url
                 },
                 "Fläche": {
-                    "number": card["space"]
+                    "number": space
+                },
+                "Warm": {
+                    "number": total
+                },
+                "OME": {
+                    "number": ome
+                },
+                "HTWK": {
+                    "number": htwk
                 },
                 "EBK": {
-                    "select": {"name" : card["kitchen"]}
+                    "select": {"name" : kitchen}
                 },
                 "Tier": {
-                    "select": {"name": card["animal"]}
+                    "select": {"name": pets}
                 },
                 "Bezug": {
-                    "date" : {"start": card["free"]}
+                    "date" : {"start": move}
+                },
+                "Extra": {
+                    "checkbox": extra
                 }
             }
         }
@@ -70,3 +100,4 @@ class NotionAPI:
         log.info(f"Status: {status}")
         log.info(f"Response: {body}")
         return response
+
