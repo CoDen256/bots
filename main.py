@@ -107,11 +107,14 @@ def main():
                 print(new_info)
                 publish(new_info)
 
-                if new_info.mobile:
-                    contact_creator.send_contact(new_info.mobile, new_info.name, new_info.company, new_info.address)
-                elif new_info.phone:
-                    contact_creator.send_contact(new_info.phone, new_info.name, new_info.company, new_info.address)
-
+                try:
+                    if new_info.mobile:
+                        contact_creator.send_contact(new_info.mobile, new_info.name, new_info.company, new_info.address)
+                    elif new_info.phone:
+                        contact_creator.send_contact(new_info.phone, new_info.name, new_info.company, new_info.address)
+                except Exception as e:
+                    logging.error("error contact", e)
+                    
                 chrome.quit()
                 Chrome(True).open_markets(new_info.address)
             except Exception as e:
@@ -137,6 +140,6 @@ def check_manual_full(addr, plz):
         pass
     check_manual(addr, plz)
 
-# main()
-
-check_manual_full("Engertstraße.27", "04275")
+main()
+#
+# check_manual_full("Engertstraße.27", "04275")
