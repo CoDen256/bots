@@ -7,6 +7,7 @@ from googlepaths import *
 from immo24 import *
 from notion_api import *
 from contact_creator import *
+from immowelt import parse_immowelt_full, immowelt_base
 
 TOKEN = "secret_LZjYnWZZXpiQ0KUgT8vg6ph3afXj2j59yxRoZyw7k7I"
 DB = "3ca81a17-1dfe-4457-a5ea-3b3d6d687dd0"
@@ -85,12 +86,13 @@ def publish(o: Wohnung):
 
 
 def main():
-    for filename in os.listdir(base):
+    for filename in os.listdir(immowelt_base):
         if filename.endswith(".html"):
             try:
-                info = parse_full(filename)
+                info = parse_immowelt_full(filename)
                 print("Parsed full", info)
                 new_info = info.copy()
+                break
                 chrome = Chrome()
                 try:
                     print("Parsing OME Time")
@@ -145,6 +147,6 @@ def check_manual_full(addr, plz):
         pass
     check_manual(addr, plz)
 
-# main()
-
-check_manual_full("Dahlienstr. 79", "04209")
+main()
+#
+# check_manual_full("Dahlienstr. 79", "04209")

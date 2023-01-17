@@ -1,13 +1,13 @@
 import json
 from collections import defaultdict
-
+from model import Wohnung
 from bs4 import BeautifulSoup
 
-base = "C:\\Users\\denbl\\Downloads\\whs"
+immowelt_base = "C:\\Users\\denbl\\Downloads\\whs"
 
 
 def find_json(file):
-    soup = BeautifulSoup(open(base + "\\" + file, encoding="utf8"), 'html.parser')
+    soup = BeautifulSoup(open(immowelt_base + "\\" + file, encoding="utf8"), 'html.parser')
     resl = soup.findAll("script", id="serverApp-state")
     return json.loads(resl[0].text.replace("&q;", "\""))
 
@@ -17,14 +17,14 @@ def find_name(s):
             return n
 def find_total_and_extra(s):
     total = ""
-    extra = "No"
+    extra = False
     for entry in s:
         if entry["Key"] == "PRICE_RENT_WARM":
             total =  entry["NumberValue"]
         if entry["Key"] == "PRICE_HEATINGCOSTS":
             if "StringValue" in entry:
                 if "nicht " in entry["StringValue"]:
-                    extra = "Yes"
+                    extra = True
     return (total, extra)
 def find_eq(s):
     for e in s:
@@ -41,6 +41,14 @@ def find_kitchen_frei(s):
             frei = e["Value"]
 
     return kitchen, frei
+def key(map, key):
+    if key in map:
+        return map[key]
+    return None
+def none_to_empty(map, key):
+    if key not in map: return ''
+    if map[key] is None: return ''
+    return map[key]
 
 
 def get_info(s):
@@ -49,16 +57,18 @@ def get_info(s):
     url = f"https://www.immowelt.de/{name}"
     space = obj["General"]["LivingSpace"]
 
-    contact = defaultdict(lambda: "N/A")
+    contact = defaultdict(lambda: None)
     contact |= obj["Offerer"]["contactData"]
 
-    company = contact["companyName"]
-    name = f"{contact['firstName']} {contact['lastName']}"
-    mobile = contact["mobile"]
-    phone = contact["phone"]
+    company = key(contact,"companyName")
+    name = f"{none_to_empty(contact, 'salutation')} {none_to_empty(contact, 'firstName')} {none_to_empty(contact,'lastName')}"
+    mobile = key(contact, "mobile")
+    phone = key(contact, "phone")
 
-    address = obj["EstateAddress"]["Street"]
-    zip = obj["EstateAddress"]["ZipCode"]
+    estate_address = obj["EstateAddress"]
+    address = key(estate_address, "Street")
+    regio = key(estate_address, "District")
+    zip = key(estate_address, "ZipCode")
 
     total_rent, extra = find_total_and_extra(obj["Price"]["DataTable"])
     equipment = find_eq(obj["EquipmentAreas"])
@@ -72,6 +82,7 @@ def get_info(s):
         "phone": phone,
         "address": address,
         "zip": zip,
+        "regio": regio,
         "total_rent": total_rent,
         "extra": extra,
         "kitchen": kitchen,
@@ -80,11 +91,31 @@ def get_info(s):
         "space": space,
     }
 
-def main():
-    json_str = find_json("9.html")
+def parse_immowelt_full(file):
+    json_str = find_json(file)
     print(json.dumps(json_str))
-    print(get_info(json_str))
+    o = get_info(json_str)
+    if 'address' not in o or 'zip' not in o: return
+    addr = o['address']
+    if addr is None:
+        if o["regio"]:
+            addr = o["regio"]
+        else:
+            addr = 'N/A'
+    addr = addr.replace("..", ".").replace("_", " ") # REMOVE UNDERLINE
 
+    return Wohnung(
+        address=addr,
+        zip=o['zip'],
+        url=o['url'],
+        total_rent=o['total_rent'],
+        space=o['space'],
+        kitchen=o['kitchen'],
+        name=o['name'],
+        company=o['company'],
+        mobile=o['mobile'],
+        phone=o['phone'],
+        move=o['frei'],
+        extra=o["extra"]
+    )
 
-if __name__ == '__main__':
-    main()
