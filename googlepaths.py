@@ -12,6 +12,7 @@ from time import sleep
 
 class Chrome:
     def __init__(self, detach=False):
+        self.detach = detach
         option = Options()
         option.add_experimental_option("detach", detach)
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=option)
@@ -54,11 +55,11 @@ class Chrome:
                 logging.error("cannot submit? ", e)
                 return -1
             elif tries == 1:
-                return self.check_internet(full_address.replace("  Str", "Str").replace("  str", "str"), zip, tries + 1)
+                return Chrome(self.detach).check_internet(full_address.replace("  Str", "Str").replace("  str", "str"), zip, tries + 1)
             elif tries == 2:
-                return self.check_internet(full_address.replace(" ", ""), zip, tries + 1)
+                return Chrome(self.detach).check_internet(full_address.replace(" ", ""), zip, tries + 1)
             else:
-                return self.check_internet(full_address.replace("Str", " Str").replace("str", " str"), zip, tries+1)
+                return Chrome(self.detach).check_internet(full_address.replace("Str", " Str").replace("str", " str"), zip, tries+1)
         sleep(10)
         internet = int(self.driver.find_elements(By.CLASS_NAME, "tko-flatrate-value")[0].text.split(" ")[0].replace(".", ""))
         print("internet:", internet)
@@ -74,7 +75,7 @@ class Chrome:
                 i.click()
                 break
         self.driver.find_element(By.CSS_SELECTOR, "div[data-travel_mode='3']").click()
-        sleep(3)
+        sleep(4)
         dirs = self.driver.find_elements(By.CSS_SELECTOR, "div[aria-label$='min']")
         if not dirs: sleep(5)
         mins = []
@@ -112,5 +113,5 @@ class Chrome:
                 i.click()
                 break
         self.driver.find_element(By.CSS_SELECTOR, "div[aria-label^='Suche']").click()
-        self.driver.find_element(By.ID, "searchboxinput").send_keys(f"Supermärkte near {src}")
+        self.driver.find_element(By.ID, "searchboxinput").send_keys(f"Supermärkte near {src}, {plz}")
         self.driver.find_element(By.CSS_SELECTOR, "button[aria-label^='Suche']").click()
