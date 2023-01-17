@@ -9,9 +9,9 @@ from time import sleep
 
 
 class Chrome:
-    def __init__(self):
+    def __init__(self, detach=False):
         option = Options()
-        option.add_experimental_option("detach", True)
+        option.add_experimental_option("detach", detach)
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=option)
 
     def find_work(self, src):
@@ -19,10 +19,12 @@ class Chrome:
 
     def find_htwk(self, src):
         return self.find(src, "HTWK Leipzig")
+    def quit(self):
+        self.driver.quit()
 
     def check_internet(self, full_address, zip):
         address, number = tuple(full_address.split("."))
-        address = address + "."
+        address = (address + ".").replace("Straße", "Str").replace("straße", "str")
         number = number.strip()
         url = "https://www.check24.de/dsl/input2/"
 
@@ -42,14 +44,16 @@ class Chrome:
         self.driver.find_element(By.CSS_SELECTOR, "input[placeholder='Straße']").send_keys(address)
         self.driver.find_element(By.CSS_SELECTOR, "input[placeholder='Nr.']").send_keys(number)
         self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
-        sleep(5)
+        sleep(11)
         self.driver.find_element(By.CSS_SELECTOR, "div[data-value='downstream']").click()
-        sleep(5)
-        return int(self.driver.find_elements(By.CLASS_NAME, "tko-flatrate-value")[0].text.split(" ")[0].replace(".", ""))
+        sleep(10)
+        internet = int(self.driver.find_elements(By.CLASS_NAME, "tko-flatrate-value")[0].text.split(" ")[0].replace(".", ""))
+        print("internet:", internet)
+        return internet
 
     def find(self, src, dest):
         self.driver.switch_to.new_window('tab')
-        url = f"https://www.google.com/maps/dir/{src}/{dest}"
+        url = f"https://www.google.com/maps/dir/{src}, Leipzig/{dest}"
         self.driver.get(url)
         elem = self.driver.find_elements(By.TAG_NAME, "button")
         for i in elem:
@@ -57,12 +61,23 @@ class Chrome:
                 i.click()
                 break
         self.driver.find_element(By.CSS_SELECTOR, "div[data-travel_mode='3']").click()
-        sleep(1)
+        sleep(3)
         dirs = self.driver.find_elements(By.CSS_SELECTOR, "div[aria-label$='min']")
+        if not dirs: sleep(5)
         mins = []
         for dir in dirs:
-            mins.append(int(dir.text.split(" ")[0]))
+            print("Google Time Label:", dir.text)
+            if ("h" in dir.text):
+                print("more than 1 hour")
+                mins.append(65)
+                continue
+            time = dir.text.split(" min")[0]
+            print("Time:", time)
+            mins.append(int(time))
+        print("mins:", mins)
         self.close_tab()
+        if not mins: return -1
+        print(min(mins))
         return min(mins)
 
 
@@ -86,5 +101,3 @@ class Chrome:
         self.driver.find_element(By.CSS_SELECTOR, "div[aria-label^='Suche']").click()
         self.driver.find_element(By.ID, "searchboxinput").send_keys(f"Supermärkte near {src}")
         self.driver.find_element(By.CSS_SELECTOR, "button[aria-label^='Suche']").click()
-
-print(Chrome().check_internet("Georg-Schumann-Str. 14", "04105"))

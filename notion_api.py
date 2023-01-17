@@ -35,7 +35,8 @@ class NotionAPI:
                     kitchen,
                     pets,
                     move,
-                    extra
+                    extra,
+                    internet
                     ):
         url = 'https://api.notion.com/v1/pages'
 
@@ -68,6 +69,9 @@ class NotionAPI:
                 },
                 "Warm": {
                     "number": total
+                },
+                "Internet": {
+                    "number": internet
                 },
                 "OME": {
                     "number": ome

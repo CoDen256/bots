@@ -5,7 +5,7 @@ from collections import defaultdict
 from bs4 import BeautifulSoup
 from model import Wohnung
 
-base = "C:\\Users\\denbl\\Downloads\\whs"
+base = "C:\\Users\\denbl\\Downloads\\whs2"
 keyword = "var keyValues ="
 keyword_contact = "contactData:"
 base_url = "https://www.immobilienscout24.de/expose/"
@@ -29,7 +29,7 @@ def parse_contact(contents):
 
 
 def parse_url(contents):
-    return base_url + contents.split(base_url)[1].split("-->")[0]
+    return base_url + contents.split(base_url)[1].split("?")[0].split("-->")[0]
 
 
 def key(map, key):
@@ -53,6 +53,7 @@ def get_info(c):
                 res[field] = c[field]
         except:
             pass
+    print("Got info for ", res)
     return res
 
 
@@ -79,6 +80,8 @@ def get_contact_info(c):
     if ('realtorInformation' in c):
         if ("companyName" in c['realtorInformation']):
             res["company"] = c["realtorInformation"]["companyName"]
+    print("Got contacts for ", res)
+
     return res
 
 
@@ -101,11 +104,13 @@ def additional_info(file):
         totalrent = None
     else:
         totalrent = totalrent[0].text.strip().split(" ")[0]
-    return {
+    res = {
         "frei_ab": frei,
         "extra": "nicht" in heiz,
         "obj_totalRent": totalrent
     }
+    print("Got additional for ", res)
+    return res
 
 
 def parse_full(file):
@@ -117,6 +122,7 @@ def parse_full(file):
     o = res | contact | add
     if 'obj_streetPlain' not in o or 'obj_zipCode' not in o: return
     addr = o['obj_streetPlain']+"."+none_to_empty(res, 'obj_houseNumber')
+    addr = addr.replace("..", ".")
     if ("information" in addr):
         addr = o["obj_regio4"]
     return Wohnung(

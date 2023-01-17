@@ -1,9 +1,12 @@
 import logging
 import os
 from dateutil.parser import parse
+
+import contact_creator
 from googlepaths import *
 from immo24 import *
 from notion_api import *
+from contact_creator import *
 
 TOKEN = "secret_LZjYnWZZXpiQ0KUgT8vg6ph3afXj2j59yxRoZyw7k7I"
 DB = "3ca81a17-1dfe-4457-a5ea-3b3d6d687dd0"
@@ -41,6 +44,7 @@ def parse_kitchen(kitchen):
 
 
 def publish(o: Wohnung):
+    print("publishing")
     api.update_page(
         address=o.address,
         name=o.name,
@@ -55,23 +59,44 @@ def publish(o: Wohnung):
         kitchen=parse_kitchen(o.kitchen),
         pets=parse_pets(o.pets),
         move=parse_move(o.move),
-        extra=o.extra
+        extra=o.extra,
+        internet=parse_int(o.internet)
     )
 
 
 def main():
-    chrome = Chrome()
     for filename in os.listdir(base):
+        chrome = Chrome()
         if filename.endswith(".html"):
             try:
                 info = parse_full(filename)
-                ome = int(chrome.find_work(info.address))
-                htwk = int(chrome.find_htwk(info.address))
+                print("Parsed full", info)
                 new_info = info.copy()
-                new_info.ome = ome
-                new_info.htwk = htwk
+                try:
+                    print("Parsing OME Time")
+                    new_info.ome = int(chrome.find_work(info.address))
+                except Exception as e:
+                    logging.error("error ome", e)
+                try:
+                    print("Parsing HTWK Time")
+                    new_info.htwk = int(chrome.find_htwk(info.address))
+                except Exception as e:
+                    logging.error("error htwk", e)
+
+                try:
+                    print("Parsing Internet Speed")
+                    new_info.internet = int(chrome.check_internet(info.address, info.zip))
+                except Exception as e:
+                    logging.error("error internet", e)
+
                 print(new_info)
                 publish(new_info)
+
+                if new_info.mobile:
+                    contact_creator.send_contact(new_info.mobile, new_info.name, new_info.company, new_info.address)
+                elif new_info.phone:
+                    contact_creator.send_contact(new_info.phone, new_info.name, new_info.company, new_info.address)
+                chrome.quit()
             except Exception as e:
                 logging.error("error", e)
 

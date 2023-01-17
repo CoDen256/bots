@@ -37,6 +37,7 @@ class Wohnung(NoneRefersDefault):
 
     ome: str = DefaultVal("-1")
     htwk: str = DefaultVal("-1")
+    internet: str = DefaultVal("-1")
 
     kitchen: str = DefaultVal("No" )# No, Yes
     pets: str = DefaultVal("VB" )# No, Yes, VB
