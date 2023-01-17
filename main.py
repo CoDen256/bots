@@ -86,7 +86,6 @@ def main():
                 print("Parsed full", info)
                 new_info = info.copy()
                 publish(new_info)
-                break
                 chrome = Chrome()
                 try:
                     print("Parsing OME Time")
@@ -138,6 +137,6 @@ def check_manual_full(addr, plz):
         pass
     check_manual(addr, plz)
 
-main()
-#
-# check_manual("Karl-Liebknecht-Str. 102", "04275")
+# main()
+
+check_manual_full("Engertstraße.27", "04275")
