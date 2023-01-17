@@ -102,14 +102,17 @@ def parse_immowelt_full(file):
             addr = o["regio"]
         else:
             addr = 'N/A'
+    else:
+        addr_parts = addr.split(" ")
+        addr = " ".join(addr_parts[:-1]) + "." + addr_parts[-1]
     addr = addr.replace("..", ".").replace("_", " ") # REMOVE UNDERLINE
 
     return Wohnung(
         address=addr,
         zip=o['zip'],
         url=o['url'],
-        total_rent=o['total_rent'],
-        space=o['space'],
+        total_rent=str(o['total_rent']),
+        space=str(o['space']),
         kitchen=o['kitchen'],
         name=o['name'],
         company=o['company'],

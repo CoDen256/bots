@@ -81,7 +81,7 @@ class Chrome:
         mins = []
         for dir in dirs:
             print("Google Time Label:", dir.text)
-            if ("h" in dir.text):
+            if ("h" in dir.text[:10]):
                 print("more than 1 hour")
                 mins.append(65)
                 continue

@@ -92,7 +92,7 @@ def main():
                 info = parse_immowelt_full(filename)
                 print("Parsed full", info)
                 new_info = info.copy()
-                break
+                # break
                 chrome = Chrome()
                 try:
                     print("Parsing OME Time")
