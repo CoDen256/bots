@@ -98,9 +98,9 @@ class Chrome:
             .perform()
 
 
-    def open_markets(self, src):
+    def open_markets(self, src, plz):
         self.driver.switch_to.new_window('tab')
-        url = f"https://www.google.com/maps/search/{src}/"
+        url = f"https://www.google.com/maps/search/{src}, {plz}/"
         self.driver.get(url)
         elem = self.driver.find_elements(By.TAG_NAME, "button")
         for i in elem:

@@ -121,13 +121,13 @@ def main():
                     logging.error("error contact", e)
 
                 chrome.quit()
-                Chrome(True).open_markets(new_info.address)
+                Chrome(True).open_markets(new_info.address, new_info.zip)
             except Exception as e:
                 logging.error("error", e)
 
 
 def check_manual(addr, plz):
-    Chrome(True).open_markets(addr)
+    Chrome(True).open_markets(addr, plz)
 
 def check_manual_full(addr, plz):
     chrom = Chrome(True)
