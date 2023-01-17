@@ -20,6 +20,33 @@ class Chrome:
     def find_htwk(self, src):
         return self.find(src, "HTWK Leipzig")
 
+    def check_internet(self, full_address, zip):
+        address, number = tuple(full_address.split("."))
+        address = address + "."
+        number = number.strip()
+        url = "https://www.check24.de/dsl/input2/"
+
+        self.driver.get(url)
+        cookies = self.driver.find_elements(By.CLASS_NAME, "c24-cookie-consent-button")
+        for i in cookies:
+            if i.accessible_name == "Akzeptieren":
+                i.click()
+                break
+        sleep(1)
+        self.driver.find_element(By.CSS_SELECTOR, "input[placeholder='PLZ oder Ort']").send_keys(zip)
+        radios = self.driver.find_elements(By.CSS_SELECTOR, "label[for^='radio']")
+        for r in radios:
+            if r.text == "Nein":
+                r.click()
+                break
+        self.driver.find_element(By.CSS_SELECTOR, "input[placeholder='Straße']").send_keys(address)
+        self.driver.find_element(By.CSS_SELECTOR, "input[placeholder='Nr.']").send_keys(number)
+        self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+        sleep(5)
+        self.driver.find_element(By.CSS_SELECTOR, "div[data-value='downstream']").click()
+        sleep(5)
+        return int(self.driver.find_elements(By.CLASS_NAME, "tko-flatrate-value")[0].text.split(" ")[0].replace(".", ""))
+
     def find(self, src, dest):
         self.driver.switch_to.new_window('tab')
         url = f"https://www.google.com/maps/dir/{src}/{dest}"
@@ -60,3 +87,4 @@ class Chrome:
         self.driver.find_element(By.ID, "searchboxinput").send_keys(f"Supermärkte near {src}")
         self.driver.find_element(By.CSS_SELECTOR, "button[aria-label^='Suche']").click()
 
+print(Chrome().check_internet("Georg-Schumann-Str. 14", "04105"))
