@@ -50,9 +50,13 @@ class Chrome:
         try:
             self.driver.find_element(By.CSS_SELECTOR, "div[data-value='downstream']").click()
         except Exception as e:
-            if tries >= 1:
+            if tries >= 3:
                 logging.error("cannot submit? ", e)
                 return -1
+            elif tries == 1:
+                return self.check_internet(full_address.replace("  Str", "Str").replace("  str", "str"), zip, tries + 1)
+            elif tries == 2:
+                return self.check_internet(full_address.replace(" ", ""), zip, tries + 1)
             else:
                 return self.check_internet(full_address.replace("Str", " Str").replace("str", " str"), zip, tries+1)
         sleep(10)

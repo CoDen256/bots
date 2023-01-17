@@ -131,20 +131,20 @@ def check_manual(addr, plz):
 
 def check_manual_full(addr, plz):
     chrom = Chrome(True)
-    try:
-        print("ome", int(chrom.find_work(addr)))
-    except:
-        pass
-    try:
-        print("htwk", int(chrom.find_htwk(addr)))
-    except:
-        pass
+    # try:
+    #     print("ome", int(chrom.find_work(addr)))
+    # except:
+    #     pass
+    # try:
+    #     print("htwk", int(chrom.find_htwk(addr)))
+    # except:
+    #     pass
     try:
         print("internet", int(chrom.check_internet(addr, plz)))
     except:
         pass
     check_manual(addr, plz)
 
-main()
+# main()
 #
-# check_manual("Linkelstraße.36", "04159")
+check_manual_full("Seelenbinder Str.18", "04159")
