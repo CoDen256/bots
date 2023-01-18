@@ -56,6 +56,7 @@ def get_info(s):
     obj = s[name]
     url = f"https://www.immowelt.de/{name}"
     space = obj["General"]["LivingSpace"]
+    rooms = key(obj["General"], "Rooms")
 
     contact = defaultdict(lambda: None)
     contact |= obj["Offerer"]["contactData"]
@@ -89,6 +90,7 @@ def get_info(s):
         "frei": frei,
         "url": url,
         "space": space,
+        "rooms": rooms
     }
 
 def parse_immowelt_full(file):
@@ -119,6 +121,7 @@ def parse_immowelt_full(file):
         mobile=o['mobile'],
         phone=o['phone'],
         move=o['frei'],
-        extra=o["extra"]
+        extra=o["extra"],
+        rooms=o["rooms"]
     )
 

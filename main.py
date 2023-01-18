@@ -87,10 +87,10 @@ def publish(o: Wohnung):
 
 
 def main():
-    for filename in os.listdir(base):
+    for filename in os.listdir(immowelt_base):
         if filename.endswith(".html"):
             try:
-                info = parse_full(filename)
+                info = parse_immowelt_full(filename)
                 print("Parsed full", info)
                 new_info = info.copy()
                 # break
@@ -106,11 +106,11 @@ def main():
                 except Exception as e:
                     logging.error("error htwk", e)
 
-                try:
-                    print("Parsing Internet Speed")
-                    new_info.internet = int(chrome.check_internet(info.address, info.zip))
-                except Exception as e:
-                    logging.error("error internet", e)
+                # try:
+                #     print("Parsing Internet Speed")
+                #     new_info.internet = int(chrome.check_internet(info.address, info.zip))
+                # except Exception as e:
+                #     logging.error("error internet", e)
 
                 print(new_info)
                 publish(new_info)
