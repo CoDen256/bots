@@ -34,6 +34,7 @@ class Wohnung(NoneRefersDefault):
     mobile: str = DefaultVal("N/A")
     space: str = DefaultVal("0.0")
     total_rent: str = DefaultVal("0.0")
+    rooms: str = DefaultVal("0.0")
 
     ome: str = DefaultVal("-1")
     htwk: str = DefaultVal("-1")

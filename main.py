@@ -81,15 +81,16 @@ def publish(o: Wohnung):
         move=parse_move(o.move),
         extra=o.extra,
         internet=parse_int(o.internet),
-        zip=o.zip
+        zip=o.zip,
+        rooms=parse_float(o.rooms)
     )
 
 
 def main():
-    for filename in os.listdir(immowelt_base):
+    for filename in os.listdir(base):
         if filename.endswith(".html"):
             try:
-                info = parse_immowelt_full(filename)
+                info = parse_full(filename)
                 print("Parsed full", info)
                 new_info = info.copy()
                 # break
@@ -114,13 +115,13 @@ def main():
                 print(new_info)
                 publish(new_info)
 
-                try:
-                    if new_info.mobile != "N/A":
-                        contact_creator.send_contact(new_info.mobile, new_info.name, new_info.company, new_info.address)
-                    elif new_info.phone != "N/A":
-                        contact_creator.send_contact(new_info.phone, new_info.name, new_info.company, new_info.address)
-                except Exception as e:
-                    logging.error("error contact", e)
+                # try:
+                #     if new_info.mobile != "N/A":
+                #         contact_creator.send_contact(new_info.mobile, new_info.name, new_info.company, new_info.address)
+                #     elif new_info.phone != "N/A":
+                #         contact_creator.send_contact(new_info.phone, new_info.name, new_info.company, new_info.address)
+                # except Exception as e:
+                #     logging.error("error contact", e)
 
                 chrome.quit()
                 Chrome(True).open_markets(new_info.address, new_info.zip)

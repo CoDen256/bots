@@ -44,7 +44,7 @@ def floatmap(val):
 def get_info(c):
     fields = [
         "obj_hasKitchen", "obj_livingSpace", "obj_zipCode", "obj_petsAllowed", "obj_streetPlain",
-        "obj_houseNumber", "obj_totalRent", "obj_regio4",
+        "obj_houseNumber", "obj_totalRent", "obj_regio4", "obj_noRooms"
     ]
     res = defaultdict(lambda: None)
     for field in fields:
@@ -138,5 +138,6 @@ def parse_full(file):
         mobile=o['mobile'],
         phone=o['phone'],
         move=o['frei_ab'],
-        extra=o["extra"]
+        extra=o["extra"],
+        rooms = o["obj_noRooms"]
     )

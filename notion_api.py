@@ -37,7 +37,8 @@ class NotionAPI:
                     move,
                     extra,
                     internet,
-                    zip
+                    zip,
+                    rooms
                     ):
         url = 'https://api.notion.com/v1/pages'
 
@@ -92,6 +93,10 @@ class NotionAPI:
                 "Bezug": {
                     "date" : {"start": move}
                 },
+                "Zimmer" : {
+                    "number": rooms
+                },
+
                 "Extra": {
                     "checkbox": extra
                 }
