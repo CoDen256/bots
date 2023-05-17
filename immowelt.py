@@ -59,7 +59,8 @@ def get_info(s):
     rooms = key(obj["General"], "Rooms")
 
     contact = defaultdict(lambda: None)
-    contact |= obj["Offerer"]["contactData"]
+    if ("contactData" in obj["Offerer"]):
+        contact |= obj["Offerer"]["contactData"]
 
     company = key(contact,"companyName")
     name = f"{none_to_empty(contact, 'salutation')} {none_to_empty(contact, 'firstName')} {none_to_empty(contact,'lastName')}"
@@ -122,6 +123,6 @@ def parse_immowelt_full(file):
         phone=o['phone'],
         move=o['frei'],
         extra=o["extra"],
-        rooms=o["rooms"]
+        rooms=str(o["rooms"])
     )
 

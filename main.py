@@ -87,10 +87,10 @@ def publish(o: Wohnung):
 
 
 def main():
-    for filename in os.listdir(immowelt_base):
+    for filename in os.listdir(base):
         if filename.endswith(".html"):
             try:
-                info = parse_immowelt_full(filename)
+                info = parse_full(filename)
                 print("Parsed full", info)
                 new_info = info.copy()
                 # break
@@ -124,7 +124,7 @@ def main():
                 #     logging.error("error contact", e)
 
                 chrome.quit()
-                Chrome(True).open_markets(new_info.address, new_info.zip)
+                # Chrome(True).open_markets(new_info.address, new_info.zip)
             except Exception as e:
                 logging.error("error", e)
 
