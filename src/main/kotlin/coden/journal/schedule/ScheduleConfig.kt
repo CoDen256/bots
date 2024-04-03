@@ -1,7 +1,6 @@
 package coden.journal.schedule
 
 data class ScheduleConfig(
-    private val cron: String,
-    private val enabled: Boolean
-) {
-}
+    val cron: String,
+    val enabled: Boolean
+)
