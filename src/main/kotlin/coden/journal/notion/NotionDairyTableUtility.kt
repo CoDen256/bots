@@ -1,4 +1,4 @@
-package coden.journal.reminder.notion
+package coden.journal.notion
 
 import notion.api.v1.NotionClient
 import notion.api.v1.model.databases.*
@@ -9,7 +9,7 @@ import notion.api.v1.request.search.SearchRequest
 class NotionDairyTableUtility {
     companion object {
 
-        fun NotionClient.create(path: NotionPath): NotionDairyTable {
+        fun NotionClient.create(path: NotionPath): NotionJournalTable {
             verifyUniqueness(path)
             val parent = path.parent() ?: throw IllegalArgumentException("$path must have at least one page parent to be created")
             val parentPageId = getPageId(parent)
@@ -19,7 +19,7 @@ class NotionDairyTableUtility {
                 title = path.title().asDatabaseRichText(),
                 properties = SCHEMA
             )
-            return NotionDairyTable(this, db.id)
+            return NotionJournalTable(this, db.id)
         }
 
         fun NotionClient.exists(path: NotionPath): Boolean {
@@ -31,7 +31,7 @@ class NotionDairyTableUtility {
             this.updatePage(repo.id, properties = mapOf(), archived = true)
         }
 
-        fun NotionClient.get(path: NotionPath): NotionDairyTable {
+        fun NotionClient.get(path: NotionPath): NotionJournalTable {
             verifyUniqueness(path)
             val database = search(
                 query = path.title(),
@@ -42,7 +42,7 @@ class NotionDairyTableUtility {
             val id = database
                 ?.id
                 ?: throw IllegalStateException("$path table does not exist")
-            return NotionDairyTable(this, id)
+            return NotionJournalTable(this, id)
         }
 
         private fun NotionClient.getDatabase(path: NotionPath) = search(
@@ -52,8 +52,8 @@ class NotionDairyTableUtility {
             .results
             .firstOrNull { getDatabaseTitle(it) == path.title() }
 
-        fun NotionClient.get(id: String): NotionDairyTable {
-            return NotionDairyTable(this, id)
+        fun NotionClient.get(id: String): NotionJournalTable {
+            return NotionJournalTable(this, id)
         }
 
         private fun NotionClient.verifyUniqueness(path: NotionPath) {

@@ -1,4 +1,4 @@
-package coden.journal.reminder.notion
+package coden.journal.notion
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

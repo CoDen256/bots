@@ -1,38 +1,41 @@
-package coden.journal.reminder.core
+package coden.journal.memory
 
+import coden.journal.core.persistance.JournalEntry
+import coden.journal.core.persistance.JournalRepository
 import java.time.LocalDate
+import java.time.YearMonth
 
-class InMemoryRepository: DairyRepository {
+class InMemoryRepository: JournalRepository {
 
-    private val entities: MutableMap<LocalDate, DairyEntry> = HashMap()
+    private val entities: MutableMap<LocalDate, JournalEntry> = HashMap()
 
-    override fun entries(): Collection<DairyEntry> {
+    override fun entries(): Collection<JournalEntry> {
         return entities.values
     }
 
-    override fun get(month: LocalDate): Result<DairyEntry> {
+    override fun get(month: YearMonth): Result<JournalEntry> {
         return entities[month]?.let {
             Result.success(it)
         } ?: Result.failure(IllegalArgumentException("No entry for $month"))
     }
 
-    override fun first(): Result<DairyEntry> {
+    override fun first(): Result<JournalEntry> {
         return entities.maxByOrNull { it.key }?.value?.let {
             Result.success(it)
         } ?: Result.failure(IllegalArgumentException("No entries"))
     }
 
-    override fun last(): Result<DairyEntry> {
+    override fun last(): Result<JournalEntry> {
         return entities.minByOrNull { it.key }?.value?.let {
             Result.success(it)
         } ?: Result.failure(IllegalArgumentException("No entries"))
     }
 
-    override fun insert(entry: DairyEntry) {
+    override fun insert(entry: JournalEntry) {
         entities[entry.month] = entry
     }
 
-    override fun delete(month: LocalDate) {
+    override fun delete(month: YearMonth) {
         entities.remove(month)
     }
 

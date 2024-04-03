@@ -1,4 +1,4 @@
-package coden.journal.reminder.telebot
+package coden.journal.telebot
 
 data class TelegramBotConfiguration (
     val token: String,

@@ -1,4 +1,4 @@
-package coden.journal.reminder.notion
+package coden.journal.notion
 
 import java.nio.file.Path
 import kotlin.io.path.Path

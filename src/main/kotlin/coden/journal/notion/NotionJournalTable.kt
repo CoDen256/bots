@@ -1,8 +1,8 @@
-package coden.journal.reminder.notion
+package coden.journal.notion
 
-import coden.journal.reminder.core.DairyEntry
-import coden.journal.reminder.core.DairyRepository
-import coden.journal.reminder.notion.NotionDairyTableUtility.Companion.asRichText
+import coden.journal.core.persistance.JournalEntry
+import coden.journal.core.persistance.JournalRepository
+import coden.journal.notion.NotionDairyTableUtility.Companion.asRichText
 import notion.api.v1.NotionClient
 import notion.api.v1.model.databases.DatabaseProperty
 import notion.api.v1.model.databases.DatabasePropertySchema
@@ -12,7 +12,6 @@ import notion.api.v1.model.databases.query.filter.QueryTopLevelFilter
 import notion.api.v1.model.pages.Page
 import notion.api.v1.model.pages.PageParent
 import notion.api.v1.model.pages.PageProperty
-import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
@@ -21,10 +20,10 @@ val SCHEMA: Map<String, DatabasePropertySchema> = mapOf(
     "Description" to RichTextPropertySchema()
 )
 
-class NotionDairyTable(
+class NotionJournalTable(
     private val client: NotionClient,
     val id: String
-) : DairyRepository {
+) : JournalRepository {
 
     private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("MM'/'yyyy")
 
@@ -55,46 +54,45 @@ class NotionDairyTable(
         return true
     }
 
-    override fun entries(): Collection<DairyEntry> {
+    override fun entries(): Collection<JournalEntry> {
         return queryPages().mapNotNull { mapFromPage(it) }
     }
 
     private fun queryPages(filter: QueryTopLevelFilter? = null) =
         client.queryDatabase(id, filter).results
 
-    override fun get(month: LocalDate): Result<DairyEntry> {
+    override fun get(month: YearMonth): Result<JournalEntry> {
         return entries().firstOrNull { it.month == month }?.let {
             Result.success(it)
         } ?: Result.failure(IllegalArgumentException("No entry for $month"))
     }
 
 
-    override fun first(): Result<DairyEntry> {
+    override fun first(): Result<JournalEntry> {
         return entries().minByOrNull { it.month }?.let {
             Result.success(it)
         } ?: Result.failure(IllegalArgumentException("No entries"))
     }
 
-    override fun last(): Result<DairyEntry> {
+    override fun last(): Result<JournalEntry> {
         return entries().maxByOrNull { it.month }?.let {
             Result.success(it)
         } ?: Result.failure(IllegalArgumentException("No entries"))
     }
 
-    override fun insert(entry: DairyEntry) {
+    override fun insert(entry: JournalEntry) {
         client.createPage(
             parent = PageParent.database(id),
             properties = mapToProperties(entry)
         )
     }
 
-    private fun mapFromPage(page: Page): DairyEntry? {
+    private fun mapFromPage(page: Page): JournalEntry? {
         val descirption = getProperty(page, "Description").richText?.firstOrNull()?.plainText
         val month = getProperty(page, "Month").title?.firstOrNull()?.plainText
         if (descirption == null || month.isNullOrBlank()) return null
-        val ym = YearMonth.parse(month, formatter)
-        return DairyEntry(
-            ym.atDay(1),
+        return JournalEntry(
+            YearMonth.parse(month, formatter),
             descirption
         )
     }
@@ -104,14 +102,14 @@ class NotionDairyTable(
         prop: String
     ) = page.properties[prop] ?: throw IllegalArgumentException("Unknown page format: $page, missing 'Description'")
 
-    private fun mapToProperties(entry: DairyEntry): Map<String, PageProperty> {
+    private fun mapToProperties(entry: JournalEntry): Map<String, PageProperty> {
         return mapOf(
             "Month" to PageProperty(title = formatter.format(entry.month).asRichText()),
             "Description" to PageProperty(richText = entry.description.asRichText())
         )
     }
 
-    override fun delete(month: LocalDate) {
+    override fun delete(month: YearMonth) {
         queryPages()
             .mapNotNull { page -> mapFromPage(page)?.let { it to page }}
             .firstOrNull { it.first.month == month }

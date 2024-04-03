@@ -1,8 +1,8 @@
-package coden.journal.reminder.notion
+package coden.journal.notion
 
-import coden.journal.reminder.core.DairyEntry
-import coden.journal.reminder.core.DairyRepository
-import coden.journal.reminder.notion.NotionDairyTableUtility.Companion.get
+import coden.journal.core.persistance.JournalEntry
+import coden.journal.core.persistance.JournalRepository
+import coden.journal.notion.NotionDairyTableUtility.Companion.get
 import notion.api.v1.NotionClient
 import notion.api.v1.http.OkHttp4Client
 import org.junit.jupiter.api.AfterEach
@@ -14,13 +14,13 @@ import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestMethodOrder
-import java.time.LocalDate
+import java.time.YearMonth
 
 @TestMethodOrder(OrderAnnotation::class)
 @Disabled
 class NotionDairyTableTest {
 
-    lateinit var db: DairyRepository
+    lateinit var db: JournalRepository
 
     private val token = "<secret>"
     private val notion = NotionClient(
@@ -54,8 +54,8 @@ class NotionDairyTableTest {
     @Test
     @Order(1)
     fun insert() {
-        val month = LocalDate.now().withDayOfMonth(1)
-        val expected = DairyEntry(month, "Very good")
+        val month = YearMonth.now()
+        val expected = JournalEntry(month, "Very good")
         db.insert(expected)
         val entries = db.entries()
         assertEquals(1, entries.size)
@@ -64,10 +64,10 @@ class NotionDairyTableTest {
 
     @Test
     fun get_first_last() {
-        val month = LocalDate.now().withDayOfMonth(1)
-        val first = DairyEntry(month.minusMonths(2), "Very good")
-        val middle = DairyEntry(month.minusMonths(1), "Ok")
-        val last = DairyEntry(month, "Not good")
+        val month = YearMonth.now()
+        val first = JournalEntry(month.minusMonths(2), "Very good")
+        val middle = JournalEntry(month.minusMonths(1), "Ok")
+        val last = JournalEntry(month, "Not good")
 
         db.insert(last)
         db.insert(first)
@@ -85,8 +85,8 @@ class NotionDairyTableTest {
 
     @Test
     fun clear() {
-        db.insert(DairyEntry(LocalDate.now(), "Alright"))
-        db.insert(DairyEntry(LocalDate.now(), "Ok"))
+        db.insert(JournalEntry(YearMonth.now(), "Alright"))
+        db.insert(JournalEntry(YearMonth.now(), "Ok"))
         db.clear()
         assertTrue(db.entries().isEmpty())
     }
@@ -94,10 +94,10 @@ class NotionDairyTableTest {
 
     @Test
     fun delete() {
-        val month = LocalDate.now().withDayOfMonth(1)
-        val first = DairyEntry(month.minusMonths(2), "Very good")
-        val middle = DairyEntry(month.minusMonths(1), "Ok")
-        val last = DairyEntry(month, "Not good")
+        val month = YearMonth.now()
+        val first = JournalEntry(month.minusMonths(2), "Very good")
+        val middle = JournalEntry(month.minusMonths(1), "Ok")
+        val last = JournalEntry(month, "Not good")
 
         db.insert(last)
         db.insert(first)
