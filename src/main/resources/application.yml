@@ -1,0 +1,11 @@
+schedule:
+  cron: "/5 * * * *"
+  enabled: false
+
+notion:
+  token: "secret_"
+  db: ""
+
+telegram:
+  token: ""
+  target: 123456789

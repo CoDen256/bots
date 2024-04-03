@@ -1,6 +1,6 @@
 package coden.journal.telebot
 
-data class TelegramBotConfiguration (
+data class TelegramBotConfig (
     val token: String,
     val target: Long
 )

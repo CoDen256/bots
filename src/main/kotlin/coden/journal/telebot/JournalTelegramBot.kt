@@ -13,7 +13,7 @@ import org.apache.logging.log4j.kotlin.logger
 import java.time.YearMonth
 
 class JournalTelegramBot(
-    private val config: TelegramBotConfiguration,
+    private val config: TelegramBotConfig,
     private val interactor: JournalInteractor
 ): UI, Console {
 
