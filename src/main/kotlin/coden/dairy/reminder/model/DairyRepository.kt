@@ -1,10 +1,9 @@
 package coden.dairy.reminder.model
 
 import java.time.LocalDate
-import java.util.stream.Stream
 
 interface DairyRepository {
-    fun entries(): Stream<DairyEntry>
+    fun entries(): Collection<DairyEntry>
 
     fun get(index: Int): DairyEntry
     fun first(): DairyEntry

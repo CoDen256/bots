@@ -1,12 +1,16 @@
 package coden.dairy.reminder.notion
 
+import coden.dairy.reminder.model.DairyRepository
 import coden.dairy.reminder.notion.NotionDairyTableUtility.Companion.create
 import coden.dairy.reminder.notion.NotionDairyTableUtility.Companion.exists
+import coden.dairy.reminder.notion.NotionDairyTableUtility.Companion.get
 import coden.dairy.reminder.notion.NotionDairyTableUtility.Companion.purge
 import notion.api.v1.NotionClient
 import notion.api.v1.request.search.SearchRequest
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Order
 
 import org.junit.jupiter.api.Test
@@ -17,20 +21,17 @@ class NotionDairyTableTest {
     private val notion = NotionClient(token)
     private val path = NotionPath("/Junit Test/Junit Table")
 
-    @Test
-    @Order(0)
+    lateinit var db: DairyRepository
+
+
+    @BeforeEach
     fun create() {
-        notion.create(path)
-        assertTrue(notion.exists(path))
-        assertTrue(notion.search(
-            path.title(),
-            filter = SearchRequest.SearchFilter("database", property = "object"))
-            .results
-            .any { it.asDatabase().title?.any { it.plainText == path.title() } == true })
+        db = notion.get(path)
     }
 
     @Test
     fun entries() {
+        assertTrue(db.entries().isEmpty())
     }
 
     @Test
@@ -67,15 +68,4 @@ class NotionDairyTableTest {
     fun delete() {
     }
 
-    @Test
-    @Order(Int.MAX_VALUE)
-    fun purge() {
-        notion.purge(path)
-        assertFalse(notion.exists(path))
-        assertTrue(notion.search(
-            path.title(),
-            filter = SearchRequest.SearchFilter("database", property = "object"))
-            .results
-            .none { it.asDatabase().title?.any { it.plainText == path.title() } == true })
-    }
 }

@@ -3,6 +3,7 @@ package coden.dairy.reminder.notion
 import coden.dairy.reminder.model.DairyEntry
 import coden.dairy.reminder.model.DairyRepository
 import notion.api.v1.NotionClient
+import notion.api.v1.model.databases.DatabaseProperty
 import notion.api.v1.model.databases.DatabasePropertySchema
 import notion.api.v1.model.databases.RichTextPropertySchema
 import notion.api.v1.model.databases.TitlePropertySchema
@@ -19,8 +20,29 @@ class NotionDairyTable(
 ) : DairyRepository {
 
 
+    private val db = client.retrieveDatabase(id)
+    init {
+        verifySchema(db.properties, SCHEMA)
+    }
 
-    override fun entries(): Stream<DairyEntry> {
+
+    private fun verifySchema(properties: Map<String, DatabaseProperty>, target: Map<String, DatabasePropertySchema>): Boolean{
+        if (target.size != properties.size) throw IllegalStateException("${db.title} does not match schema of DairyRepository: expected <${target.size}> elements, but was <${properties.size}>")
+        for ((k,v) in target){
+            val property = properties.getOrElse(k){
+                throw IllegalStateException("${db.title} does not match schema of DairyRepository: '$k' property is missing in the table")
+            }
+            val type = v.javaClass.simpleName.removeSuffix("PropertySchema")
+            val actual = property.type.name
+            if (actual != type) {
+                throw IllegalStateException("${db.title} does not match schema of DairyRepository: '$k' must have <$type> type but was: <$actual>")
+
+            }
+        }
+        return true
+    }
+
+    override fun entries(): Collection<DairyEntry> {
         TODO("Not yet implemented")
     }
 
