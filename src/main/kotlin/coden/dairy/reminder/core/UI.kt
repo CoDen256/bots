@@ -1,5 +1,7 @@
 package coden.dairy.reminder.core
 
+import java.time.YearMonth
+
 interface UI {
-    fun requestEntry(): Result<String>
+    fun requestEntry(month: YearMonth): Result<String>
 }
