@@ -10,14 +10,14 @@ class NotionPathTest{
         assertEquals("Test Table", NotionPath("/Other/Test Table").filename())
         assertEquals("\\Other\\Test Table", NotionPath("/Other/Test Table").path())
         assertEquals(NotionPath("/Other/"), NotionPath("/Other/Test Table").parent())
-        assertEquals(NotionPath("/"), NotionPath("/Other").parent())
-        assertEquals(null, NotionPath("/").parent())
+        assertEquals(null, NotionPath("/Other").parent())
+        assertTrue(NotionPath("/Other").isTopLevel())
+        assertEquals(null, NotionPath("/Junit Test").parent())
         assertEquals(listOf(
             NotionPath("/Other/Another/"),
-            NotionPath("/Other"),
-            NotionPath("/")),
+            NotionPath("/Other")),
             NotionPath("/Other/Another/Test Table").parents())
-        assertTrue(NotionPath("/").isRoot())
-        assertTrue(NotionPath("/").isRoot())
+        assertTrue(NotionPath("/Hallo").isTopLevel())
+        assertTrue(NotionPath("/ThisIs Page").isTopLevel())
     }
 }

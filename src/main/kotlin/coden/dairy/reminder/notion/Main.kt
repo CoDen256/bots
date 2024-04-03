@@ -10,7 +10,6 @@ import java.nio.file.Path
 import java.time.LocalDate
 import java.util.stream.Stream
 import kotlin.io.path.Path
-import kotlin.io.path.absolutePathString
 
 interface DairyRepository {
     fun entries(): Stream<DairyEntry>
@@ -22,9 +21,6 @@ interface DairyRepository {
     fun insert(entry: DairyEntry)
     fun delete(index: Int)
 
-    fun create()
-    fun purge()
-
     fun clear()
 }
 
@@ -35,14 +31,21 @@ data class DairyEntry(
 
 data class NotionPath(private val absolute: String) {
 
+
     private val path: Path = Path(absolute)
+
+    init {
+        if (path.parent == null){
+            throw IllegalArgumentException("Notion Path cannot be root element '/'")
+        }
+    }
 
     fun path(): String {
         return path.toString()
     }
 
     fun filename(): String {
-        return path.fileName.toString()
+        return path.fileName?.toString() ?: "\\"
     }
 
     fun parents(): List<NotionPath> {
@@ -51,10 +54,13 @@ data class NotionPath(private val absolute: String) {
     }
 
     fun parent(): NotionPath? {
-        return path.parent?.let { NotionPath(it.toString()) }
+        if (path.parent.parent == null){
+            return null
+        }
+        return NotionPath(path.parent.toString())
     }
 
-    fun isRoot(): Boolean {
+    fun isTopLevel(): Boolean {
         return parents().isEmpty()
     }
 
@@ -72,23 +78,57 @@ data class NotionPath(private val absolute: String) {
     }
 }
 
+
+class NotionWorkspace(){
+    fun createRepository(path: NotionPath): DairyRepository{
+
+    }
+    fun exists(): Boolean
+    fun purge()
+    fun getRepository
+}
+
+
 class NotionDairyTable(
     private val client: NotionClient,
-    private val table: NotionPath
+    private val id: NotionPath
 ) : DairyRepository,
     Closeable by client {
 
-    private val parentPageId = findPage()
 
-    fun findPage() = (client.search(
-        query = table.filename(),
+    private val parentPage = table.parent() ?: throw IllegalArgumentException("$table must have at least one page parent")
+    private val parentPageId = getParentPageId()
+
+    init {
+        val num = countInstances()
+        if (num > 1){
+            throw IllegalStateException("$table is duplicated $num times. But only one instance must be present")
+        }
+    }
+
+    private val schema: Map<String, DatabasePropertySchema> = mapOf(
+        "Month" to  TitlePropertySchema(),
+        "Description" to RichTextPropertySchema()
+    )
+
+    private fun getParentPageId() = (client.search(
+        query = parentPage.filename(),
         filter = SearchRequest.SearchFilter("page", property = "object")
     )
         .results
         .filter { it.asPage().properties["title"]?.title?.get(0)?.plainText != null}
-        .firstOrNull { it.asPage().properties["title"]?.title?.get(0)?.plainText == table.filename() }
+        .firstOrNull { it.asPage().properties["title"]?.title?.get(0)?.plainText == parentPage.filename() }
         ?.id
-        ?: throw IllegalStateException("Create database $table and add connection"))
+        ?: throw IllegalStateException("Create page $parentPage and add connection"))
+
+    override fun exists(): Boolean {
+        return countInstances() >= 1
+    }
+
+    private fun countInstances() = client.search(
+        query = table.filename(),
+        filter = SearchRequest.SearchFilter("database", property = "object")
+    ).results.count { it.asDatabase().title?.any { it.plainText == table.filename() } == true }
 
     override fun entries(): Stream<DairyEntry> {
         TODO("Not yet implemented")
@@ -115,12 +155,11 @@ class NotionDairyTable(
     }
 
     override fun create() {
+        if (exists())return
         client.createDatabase(
-            parent = DatabaseParent.workspace(),
-            title = "Table".asDatabaseRichText(),
-            properties = mapOf(
-                "Title" to  TitlePropertySchema()
-            )
+            parent = DatabaseParent.page(parentPageId),
+            title = table.filename().asDatabaseRichText(),
+            properties = schema
         )
     }
 
