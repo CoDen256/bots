@@ -82,6 +82,11 @@
             <version>${notion-sdk.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.github.seratch</groupId>
+            <artifactId>notion-sdk-jvm-okhttp4</artifactId>
+            <version>${notion-sdk.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test-junit5</artifactId>
             <version>1.9.23</version>

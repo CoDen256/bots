@@ -2,32 +2,44 @@ package coden.dairy.reminder.notion
 
 import coden.dairy.reminder.model.DairyEntry
 import coden.dairy.reminder.model.DairyRepository
-import coden.dairy.reminder.notion.NotionDairyTableUtility.Companion.create
-import coden.dairy.reminder.notion.NotionDairyTableUtility.Companion.exists
 import coden.dairy.reminder.notion.NotionDairyTableUtility.Companion.get
-import coden.dairy.reminder.notion.NotionDairyTableUtility.Companion.purge
 import notion.api.v1.NotionClient
-import notion.api.v1.request.search.SearchRequest
-import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.*
+import notion.api.v1.http.OkHttp4Client
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
-
-import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
 import java.time.LocalDate
 
 @TestMethodOrder(OrderAnnotation::class)
 class NotionDairyTableTest {
 
-    private val token = "secret_onegyirr9ANiY7fs3lp5uUjNjXuehh8AxrIzbVdPNGJ"
-    private val notion = NotionClient(token)
-    private val path = NotionPath("/Junit Test/Junit Table")
-
     lateinit var db: DairyRepository
+
+    private val token = "secret_onegyirr9ANiY7fs3lp5uUjNjXuehh8AxrIzbVdPNGJ"
+    private val notion = NotionClient(
+        token,
+        httpClient = OkHttp4Client(
+            connectTimeoutMillis = 3 * 1000,
+            readTimeoutMillis = 10 * 1000,
+            writeTimeoutMillis = 10 * 1000
+        )
+    )
+    private val path = NotionPath("/Junit Test/Junit Table")
 
 
     @BeforeEach
     fun create() {
         db = notion.get(path)
+        db.clear()
+    }
+
+    @AfterEach
+    fun remove() {
         db.clear()
     }
 
@@ -49,15 +61,23 @@ class NotionDairyTableTest {
     }
 
     @Test
-    fun get() {
-    }
+    fun get_first_last() {
+        val month = LocalDate.now().withDayOfMonth(1)
+        val first = DairyEntry(month.minusMonths(2), "Very good")
+        val middle = DairyEntry(month.minusMonths(1), "Ok")
+        val last = DairyEntry(month, "Not good")
 
-    @Test
-    fun first() {
-    }
+        db.insert(last)
+        db.insert(first)
+        db.insert(middle)
 
-    @Test
-    fun last() {
+        val entries = db.entries()
+        assertEquals(3, entries.size)
+
+        assertEquals(first, db.first().getOrNull())
+        assertEquals(last, db.last().getOrNull())
+        assertEquals(last, db.get(month).getOrNull())
+        assertEquals(middle, db.get(month.minusMonths(1)).getOrNull())
     }
 
 
@@ -72,6 +92,19 @@ class NotionDairyTableTest {
 
     @Test
     fun delete() {
-    }
+        val month = LocalDate.now().withDayOfMonth(1)
+        val first = DairyEntry(month.minusMonths(2), "Very good")
+        val middle = DairyEntry(month.minusMonths(1), "Ok")
+        val last = DairyEntry(month, "Not good")
 
+        db.insert(last)
+        db.insert(first)
+        db.insert(middle)
+
+        db.delete(month) // last
+        val entries = db.entries()
+        assertEquals(2, entries.size)
+
+        assertEquals(middle, db.last().getOrNull())
+    }
 }

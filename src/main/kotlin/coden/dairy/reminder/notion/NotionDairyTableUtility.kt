@@ -33,16 +33,24 @@ class NotionDairyTableUtility {
 
         fun NotionClient.get(path: NotionPath): NotionDairyTable {
             verifyUniqueness(path)
-            val id = search(
+            val database = search(
                 query = path.title(),
                 filter = SearchRequest.SearchFilter("database", property = "object")
             )
                 .results
                 .firstOrNull { getDatabaseTitle(it) == path.title() }
+            val id = database
                 ?.id
                 ?: throw IllegalStateException("$path table does not exist")
             return NotionDairyTable(this, id)
         }
+
+        private fun NotionClient.getDatabase(path: NotionPath) = search(
+            query = path.title(),
+            filter = SearchRequest.SearchFilter("database", property = "object")
+        )
+            .results
+            .firstOrNull { getDatabaseTitle(it) == path.title() }
 
         fun NotionClient.get(id: String): NotionDairyTable {
             return NotionDairyTable(this, id)

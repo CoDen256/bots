@@ -5,12 +5,13 @@ import java.time.LocalDate
 interface DairyRepository {
     fun entries(): Collection<DairyEntry>
 
-    fun get(index: Int): DairyEntry
-    fun first(): DairyEntry
-    fun last(): DairyEntry
+    fun get(month: LocalDate): Result<DairyEntry>
+
+    fun first(): Result<DairyEntry>
+    fun last(): Result<DairyEntry>
 
     fun insert(entry: DairyEntry)
-    fun delete(index: Int)
+    fun delete(month: LocalDate)
 
     fun clear()
 }

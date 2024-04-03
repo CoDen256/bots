@@ -62,16 +62,23 @@ class NotionDairyTable(
     private fun queryPages(filter: QueryTopLevelFilter? = null) =
         client.queryDatabase(id, filter).results
 
-    override fun get(index: Int): DairyEntry {
-        TODO("Not yet implemented")
+    override fun get(month: LocalDate): Result<DairyEntry> {
+        return entries().firstOrNull { it.month == month }?.let {
+            Result.success(it)
+        } ?: Result.failure(IllegalArgumentException("No entry for $month"))
     }
 
-    override fun first(): DairyEntry {
-        TODO("Not yet implemented")
+
+    override fun first(): Result<DairyEntry> {
+        return entries().minByOrNull { it.month }?.let {
+            Result.success(it)
+        } ?: Result.failure(IllegalArgumentException("No entries"))
     }
 
-    override fun last(): DairyEntry {
-        TODO("Not yet implemented")
+    override fun last(): Result<DairyEntry> {
+        return entries().maxByOrNull { it.month }?.let {
+            Result.success(it)
+        } ?: Result.failure(IllegalArgumentException("No entries"))
     }
 
     override fun insert(entry: DairyEntry) {
@@ -104,17 +111,24 @@ class NotionDairyTable(
         )
     }
 
-    override fun delete(index: Int) {
-        TODO("Not yet implemented")
+    override fun delete(month: LocalDate) {
+        queryPages()
+            .mapNotNull { page -> mapFromPage(page)?.let { it to page }}
+            .firstOrNull { it.first.month == month }
+            ?.let {
+                deletePage(it.second)
+            }
     }
 
     override fun clear() {
-        queryPages().forEach {
-            client.updatePage(
-                pageId = it.id,
-                properties = it.properties,
-                archived = true
-            )
-        }
+        queryPages().forEach { deletePage(it) }
+    }
+
+    private fun deletePage(it: Page) {
+        client.updatePage(
+            pageId = it.id,
+            properties = it.properties,
+            archived = true
+        )
     }
 }
