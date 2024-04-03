@@ -7,7 +7,7 @@ import java.time.YearMonth
 
 class InMemoryRepository: JournalRepository {
 
-    private val entities: MutableMap<LocalDate, JournalEntry> = HashMap()
+    private val entities: MutableMap<YearMonth, JournalEntry> = HashMap()
 
     override fun entries(): Collection<JournalEntry> {
         return entities.values

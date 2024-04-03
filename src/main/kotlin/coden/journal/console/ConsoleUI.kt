@@ -8,7 +8,7 @@ class ConsoleUI: UI {
         print("Please add an entry for $month: ")
     }
 
-    override fun error(throwable: Throwable) {
-        println("ERROR"+throwable.message)
+    fun error(throwable: Throwable) {
+        println("ERROR "+throwable.message)
     }
 }

@@ -2,7 +2,7 @@ package coden.journal.console
 
 import coden.journal.core.persistance.JournalEntry
 import coden.journal.core.persistance.JournalRepository
-import coden.journal.core.persistance.JournalWriter
+import coden.journal.core.JournalInteractor
 import coden.journal.core.request.Trigger
 import coden.journal.core.request.UI
 import org.apache.logging.log4j.kotlin.Logging
@@ -12,7 +12,7 @@ import java.time.YearMonth
 class Console(
     private val ui: UI,
     private val repository: JournalRepository
-): Trigger, JournalWriter, Logging {
+): Trigger, Logging {
 
     override fun start() {
         logger.info { "Starting console" }
@@ -66,7 +66,7 @@ class Console(
             ui.request(month)
         } catch (e: Exception) {
             logger.error("Error while triggering occurred", e) // for debugging
-            ui.error(e)                                             // for user
+//            ui.error(e)                                             // for user
         }
     }
 

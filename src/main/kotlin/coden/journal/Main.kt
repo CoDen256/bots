@@ -1,26 +1,24 @@
 package coden.journal
 
-import coden.journal.console.Console
-import coden.journal.console.ConsoleUI
+import coden.journal.core.DefaultJournalInteractor
 import coden.journal.memory.InMemoryRepository
+import coden.journal.telebot.JournalTelegramBot
+import coden.journal.telebot.TelegramBotConfiguration
 
 
 fun main() {
-    val ui = ConsoleUI()
-    val trigger = Console(ui, InMemoryRepository())
-//    val requester = DefaultUI(ConsoleUI(), InMemoryRepository())
-//    val console = Console(requester, ui)
+    val repository = InMemoryRepository()
 
+    val interactor = DefaultJournalInteractor(repository)
 
+    val ui = JournalTelegramBot(
+        TelegramBotConfiguration(
+            token = "5275116671:AAFWFE56tOCH84NfWF6TqATIFbbPWJ9WZOU",
+            target = 5275116671L
+        ),
+        interactor
+    )
 
-//    val telegramBotTrigger = TelegramBot(
-//        TelegramBotConfiguration(
-//            "",
-//            5275116671
-//        ),
-//        requester
-//    )
-
-    trigger.start()
+    ui.start()
 }
 
