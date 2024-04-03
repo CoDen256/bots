@@ -79,10 +79,10 @@ class NotionDairyTableUtility {
         private fun getPageTitle(it: SearchResult) = it.asPage().properties["title"]?.title?.get(0)?.plainText
         private fun getDatabaseTitle(it: SearchResult) = it.asDatabase().title?.get(0)?.plainText
 
-        private fun String.asRichText(): List<PageProperty.RichText> =
+        fun String.asRichText(): List<PageProperty.RichText> =
             listOf(PageProperty.RichText(text = PageProperty.RichText.Text(content = this)))
 
-        private fun String.asDatabaseRichText(): List<DatabaseProperty.RichText> =
+        fun String.asDatabaseRichText(): List<DatabaseProperty.RichText> =
             listOf(DatabaseProperty.RichText(text = DatabaseProperty.RichText.Text(content = this)))
     }
 }
