@@ -1,13 +1,9 @@
 package coden.journal
 
-import coden.journal.console.STDOUTConsoleUI
-import coden.journal.core.Console
-import coden.journal.core.DefaultJournalInteractor
-import coden.journal.core.JournalInteractor
+import coden.journal.core.persistance.DefaultJournalInteractor
+import coden.journal.core.persistance.JournalInteractor
 import coden.journal.core.persistance.JournalRepository
-import coden.journal.core.request.NullTrigger
-import coden.journal.core.request.Trigger
-import coden.journal.core.request.UI
+import coden.journal.core.request.*
 import coden.journal.notion.NotionConfig
 import coden.journal.notion.NotionJournalTable
 import coden.journal.schedule.CronTrigger
@@ -19,8 +15,6 @@ import com.sksamuel.hoplite.addResourceSource
 import kotlinx.coroutines.asCoroutineDispatcher
 import notion.api.v1.NotionClient
 import notion.api.v1.logging.JavaUtilLogger
-import notion.api.v1.logging.StdoutLogger
-import org.apache.logging.log4j.LogManager
 import java.util.concurrent.Executors
 
 
@@ -50,19 +44,23 @@ fun notionJournalTable(client: NotionClient, config: NotionConfig): JournalRepos
     return NotionJournalTable(client, config.db)
 }
 
-fun defaultInteractor(repository: JournalRepository, ui: UI): JournalInteractor {
-    return DefaultJournalInteractor(repository, ui)
+fun interactor(repository: JournalRepository): JournalInteractor {
+    return DefaultJournalInteractor(repository)
 }
 
-fun cronTrigger(schedule: ScheduleConfig, interactor: JournalInteractor): Trigger {
+fun requester(ui: UI): Requester {
+    return DefaultRequester(ui)
+}
+
+fun cronTrigger(schedule: ScheduleConfig, requester: Requester): Trigger {
     return CronTrigger(
         schedule.cron,
         Executors.newSingleThreadExecutor().asCoroutineDispatcher(),
-        interactor
+        requester
     )
 }
 
-fun telegramBot(telegram: TelegramBotConfig, interactor: JournalInteractor): Console{
+fun telegramBot(telegram: TelegramBotConfig, interactor: JournalInteractor): JournalTelegramBot{
     return JournalTelegramBot(telegram, interactor)
 }
 
@@ -73,13 +71,11 @@ fun main() {
     val client = notionClient(config.notion)
     val repository = notionJournalTable(client, config.notion)
 
-    val ui = STDOUTConsoleUI()
-    val interactor = defaultInteractor(repository, ui)
-
-    val trigger = if (config.schedule.enabled) cronTrigger(config.schedule, interactor) else NullTrigger()
-
+    val interactor = interactor(repository)
     val console = telegramBot(config.telegram, interactor)
 
+    val requester = requester(console)
+    val trigger = if (config.schedule.enabled) cronTrigger(config.schedule, requester) else NullTrigger()
 
     console.start()
     trigger.start()

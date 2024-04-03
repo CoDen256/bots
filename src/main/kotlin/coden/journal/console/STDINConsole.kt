@@ -1,6 +1,6 @@
 package coden.journal.console
 
-import coden.journal.core.JournalInteractor
+import coden.journal.core.persistance.JournalInteractor
 import coden.journal.core.persistance.JournalEntry
 import coden.journal.core.request.Trigger
 import coden.journal.core.request.UI
@@ -65,7 +65,7 @@ class STDINConsole(
     private fun triggerRequest(month: YearMonth){
         logger.info { "Triggering for $month" }
         try {
-            interactor.request(month)
+//            interactor.request(month)
         } catch (e: Exception) {
             logger.error("Error while triggering occurred", e) // for debugging
 //            ui.error(e)                                             // for user

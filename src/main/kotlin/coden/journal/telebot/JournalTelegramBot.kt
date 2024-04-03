@@ -1,7 +1,7 @@
 package coden.journal.telebot
 
 import coden.journal.core.Console
-import coden.journal.core.JournalInteractor
+import coden.journal.core.persistance.JournalInteractor
 import coden.journal.core.persistance.JournalEntry
 import coden.journal.core.request.UI
 import com.github.kotlintelegrambot.bot

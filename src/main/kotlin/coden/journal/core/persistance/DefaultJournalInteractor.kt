@@ -1,14 +1,10 @@
-package coden.journal.core
+package coden.journal.core.persistance
 
-import coden.journal.core.persistance.JournalEntry
-import coden.journal.core.persistance.JournalRepository
-import coden.journal.core.request.UI
 import org.apache.logging.log4j.kotlin.Logging
 import java.time.YearMonth
 
 class DefaultJournalInteractor(
     private val repository: JournalRepository,
-    private val ui: UI,
 ):
     JournalInteractor, Logging {
 
@@ -17,14 +13,6 @@ class DefaultJournalInteractor(
         repository.insert(entry)
     }
 
-    override fun request(month: YearMonth) {
-        logger.info { "Requesting entry for $month" }
-        ui.request(month)
-    }
-
-    override fun request() {
-        request(YearMonth.now())
-    }
 
     override fun list(): Collection<JournalEntry> {
         logger.info { "Listing entries..." }
