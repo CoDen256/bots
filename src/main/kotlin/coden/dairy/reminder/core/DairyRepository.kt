@@ -1,4 +1,4 @@
-package coden.dairy.reminder.core.model
+package coden.dairy.reminder.core
 
 import java.time.LocalDate
 
