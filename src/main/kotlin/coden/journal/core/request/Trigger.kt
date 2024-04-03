@@ -1,5 +1,7 @@
 package coden.journal.core.request
 
-interface Trigger {
+import java.io.Closeable
+
+interface Trigger: Closeable {
     fun start()
 }

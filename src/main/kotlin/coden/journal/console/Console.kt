@@ -1,7 +1,5 @@
 package coden.journal.console
 
-import coden.journal.core.persistance.JournalEntry
-import coden.journal.core.persistance.JournalRepository
 import coden.journal.core.JournalInteractor
 import coden.journal.core.request.Trigger
 import coden.journal.core.request.UI
@@ -10,9 +8,8 @@ import java.time.YearMonth
 
 // ideally Spring shell
 class Console(
-    private val ui: UI,
-    private val repository: JournalRepository
-): Trigger, Logging {
+    private val interactor: JournalInteractor
+): Trigger, UI, Logging {
 
     override fun start() {
         logger.info { "Starting console" }
@@ -24,6 +21,10 @@ class Console(
                 println("Error: "+e.message)
             }
         }
+    }
+
+    override fun close() {
+
     }
 
     private fun readCommand(): Boolean {
@@ -53,7 +54,7 @@ class Console(
             }else{
                 val month = YearMonth.parse(args[1])
                 val descrption = args[2]
-                repository.insert(JournalEntry(month, descrption))
+                interactor.write(month, descrption)
             }
         }
 
@@ -63,11 +64,15 @@ class Console(
     private fun triggerRequest(month: YearMonth){
         logger.info { "Triggering for $month" }
         try {
-            ui.request(month)
+            interactor.request(month)
         } catch (e: Exception) {
             logger.error("Error while triggering occurred", e) // for debugging
 //            ui.error(e)                                             // for user
         }
+    }
+
+    override fun request(month: YearMonth) {
+        print("Add entry for $month")
     }
 
 }

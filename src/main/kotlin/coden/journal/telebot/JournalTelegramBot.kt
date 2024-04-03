@@ -18,35 +18,35 @@ class JournalTelegramBot(
     private val bot = bot {
         token = config.token
         dispatch {
+            command("w"){ write()}
             command("write"){ write()}
             command("help"){ help()}
         }
     }
 
     private fun CommandHandlerEnvironment.help() {
-        send("Hi, \n/write <YYYY-mm> <description>")
+        send("Hi, \n/w, /write <YYYY-mm> <description>")
     }
     private fun CommandHandlerEnvironment.write() {
         val args = message.text?.split(" ") ?: emptyList()
         if (args.size != 3) {
-            bot.sendMessage(ChatId.fromId(message.chat.id), "Wrong format")
+            send("Wrong format")
             return
         }
         val month: YearMonth?
         try {
             month = YearMonth.parse(args.get(1))
         } catch (e: Exception) {
-            bot.sendMessage(ChatId.fromId(message.chat.id), "Wrong month format" + e)
+            send("Wrong month format" + e)
             return
         }
         val descirption = args.get(2)
 
         interactor.write(month, descirption)
-        bot.sendMessage(ChatId.fromId(message.chat.id), "Entry added.")
+        send("Entry added.")
     }
 
     fun start() {
-        logger.info { "Admin: ${bot.getMe().getOrNull()?.id}" }
         logger.info { "Start polling for ${config.target} " }
         send("Hi! This is Dairy reminder bot. Im gonna remind you to journal regularly")
         bot.startPolling()
