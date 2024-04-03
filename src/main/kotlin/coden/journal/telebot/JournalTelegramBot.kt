@@ -22,14 +22,35 @@ class JournalTelegramBot(
         dispatch {
             command("w"){ write()}
             command("write"){ write()}
-            command("list"){ list()}
             command("l"){ list()}
+            command("list"){ list()}
+            command("r"){ remove()}
+            command("remove"){ remove()}
             command("help"){ help()}
         }
     }
 
     private fun CommandHandlerEnvironment.help() {
         send("Hi, \n/w, /write <YYYY-mm> <description>")
+    }
+
+    private fun CommandHandlerEnvironment.remove() {
+        val args = message.text?.split(" ", limit = 2) ?: emptyList()
+        if (args.size != 2) {
+            send("Wrong format")
+            return
+        }
+        val month: YearMonth?
+        try {
+            month = YearMonth.parse(args.get(1))
+        } catch (e: Exception) {
+            send("Wrong month format" + e)
+            return
+        }
+
+
+        interactor.remove(month)
+        send("Entry removed.")
     }
 
     private fun CommandHandlerEnvironment.list() {

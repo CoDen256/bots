@@ -7,5 +7,6 @@ interface JournalInteractor {
     fun write(entry: JournalEntry)
     fun request(month: YearMonth)
     fun list(): Collection<JournalEntry>
+    fun remove(month: YearMonth)
     fun request()
 }

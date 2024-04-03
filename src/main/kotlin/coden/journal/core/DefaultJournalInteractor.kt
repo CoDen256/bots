@@ -27,6 +27,12 @@ class DefaultJournalInteractor(
     }
 
     override fun list(): Collection<JournalEntry> {
+        logger.info { "Listing entries..." }
         return repository.entries()
+    }
+
+    override fun remove(month: YearMonth) {
+        logger.info { "Deleting $month..." }
+        repository.delete(month)
     }
 }
