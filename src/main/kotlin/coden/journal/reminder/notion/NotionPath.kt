@@ -1,4 +1,4 @@
-package coden.dairy.reminder.notion
+package coden.journal.reminder.notion
 
 import java.nio.file.Path
 import kotlin.io.path.Path

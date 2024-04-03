@@ -1,4 +1,4 @@
-package coden.dairy.reminder.notion
+package coden.journal.reminder.notion
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -15,7 +15,8 @@ class NotionPathTest{
         assertEquals(null, NotionPath("/Junit Test").parent())
         assertEquals(listOf(
             NotionPath("/Other/Another/"),
-            NotionPath("/Other")),
+            NotionPath("/Other")
+        ),
             NotionPath("/Other/Another/Test Table").parents())
         assertTrue(NotionPath("/Hallo").isTopLevel())
         assertTrue(NotionPath("/ThisIs Page").isTopLevel())

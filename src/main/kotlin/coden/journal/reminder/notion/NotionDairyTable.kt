@@ -1,8 +1,8 @@
-package coden.dairy.reminder.notion
+package coden.journal.reminder.notion
 
-import coden.dairy.reminder.core.DairyEntry
-import coden.dairy.reminder.core.DairyRepository
-import coden.dairy.reminder.notion.NotionDairyTableUtility.Companion.asRichText
+import coden.journal.reminder.core.DairyEntry
+import coden.journal.reminder.core.DairyRepository
+import coden.journal.reminder.notion.NotionDairyTableUtility.Companion.asRichText
 import notion.api.v1.NotionClient
 import notion.api.v1.model.databases.DatabaseProperty
 import notion.api.v1.model.databases.DatabasePropertySchema

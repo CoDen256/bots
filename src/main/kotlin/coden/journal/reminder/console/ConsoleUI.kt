@@ -1,9 +1,9 @@
-package coden.dairy.reminder.console
+package coden.journal.reminder.console
 
-import coden.dairy.reminder.core.UI
+import coden.journal.reminder.core.UI
 import java.time.YearMonth
 
-class ConsoleUI: UI{
+class ConsoleUI: UI {
     override fun requestEntry(month: YearMonth): Result<String> {
         var entry: String?
         do {
@@ -17,6 +17,6 @@ class ConsoleUI: UI{
     }
 
     override fun error(throwable: Throwable) {
-        println(throwable.message)
+        println("ERROR"+throwable.message)
     }
 }

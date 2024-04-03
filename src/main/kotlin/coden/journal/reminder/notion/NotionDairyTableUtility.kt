@@ -1,4 +1,4 @@
-package coden.dairy.reminder.notion
+package coden.journal.reminder.notion
 
 import notion.api.v1.NotionClient
 import notion.api.v1.model.databases.*

@@ -1,4 +1,4 @@
-package coden.dairy.reminder.core
+package coden.journal.reminder.core
 
 import org.apache.logging.log4j.kotlin.Logging
 import java.time.YearMonth

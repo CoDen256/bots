@@ -1,8 +1,8 @@
-package coden.dairy.reminder.console
+package coden.journal.reminder.console
 
-import coden.dairy.reminder.core.DairyEntryRequester
-import coden.dairy.reminder.core.Trigger
-import coden.dairy.reminder.core.UI
+import coden.journal.reminder.core.DairyEntryRequester
+import coden.journal.reminder.core.Trigger
+import coden.journal.reminder.core.UI
 import org.apache.logging.log4j.kotlin.Logging
 import java.time.YearMonth
 
@@ -11,9 +11,6 @@ class ConsoleTrigger(
     private val requester: DairyEntryRequester,
     private val ui: UI
 ): Trigger, Logging {
-
-
-
 
     override fun start() {
         logger.info { "Starting console" }

@@ -1,4 +1,4 @@
-package coden.dairy.reminder.core
+package coden.journal.reminder.core
 
 interface Trigger {
     fun start()
