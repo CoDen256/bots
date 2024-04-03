@@ -1,7 +1,7 @@
 package coden.dairy.reminder.notion
 
-import coden.dairy.reminder.model.DairyEntry
-import coden.dairy.reminder.model.DairyRepository
+import coden.dairy.reminder.core.model.DairyEntry
+import coden.dairy.reminder.core.model.DairyRepository
 import coden.dairy.reminder.notion.NotionDairyTableUtility.Companion.asRichText
 import notion.api.v1.NotionClient
 import notion.api.v1.model.databases.DatabaseProperty

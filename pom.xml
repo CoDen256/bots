@@ -20,6 +20,10 @@
             <id>mavenCentral</id>
             <url>https://repo1.maven.org/maven2/</url>
         </repository>
+        <repository>
+            <id>jitpack</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
     <dependencyManagement>
         <dependencies>
@@ -76,6 +80,11 @@
         </plugins>
     </build>
     <dependencies>
+        <dependency>
+            <groupId>io.github.kotlin-telegram-bot.kotlin-telegram-bot</groupId>
+            <artifactId>telegram</artifactId>
+            <version>6.1.0</version>
+        </dependency>
         <dependency>
             <groupId>com.github.seratch</groupId>
             <artifactId>notion-sdk-jvm-core</artifactId>

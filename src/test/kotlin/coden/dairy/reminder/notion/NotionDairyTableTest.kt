@@ -1,7 +1,7 @@
 package coden.dairy.reminder.notion
 
-import coden.dairy.reminder.model.DairyEntry
-import coden.dairy.reminder.model.DairyRepository
+import coden.dairy.reminder.core.model.DairyEntry
+import coden.dairy.reminder.core.model.DairyRepository
 import coden.dairy.reminder.notion.NotionDairyTableUtility.Companion.get
 import notion.api.v1.NotionClient
 import notion.api.v1.http.OkHttp4Client
@@ -9,6 +9,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
@@ -16,11 +17,12 @@ import org.junit.jupiter.api.TestMethodOrder
 import java.time.LocalDate
 
 @TestMethodOrder(OrderAnnotation::class)
+@Disabled
 class NotionDairyTableTest {
 
     lateinit var db: DairyRepository
 
-    private val token = "secret_onegyirr9ANiY7fs3lp5uUjNjXuehh8AxrIzbVdPNGJ"
+    private val token = "<secret>"
     private val notion = NotionClient(
         token,
         httpClient = OkHttp4Client(
