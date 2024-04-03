@@ -1,13 +1,14 @@
 package coden.journal.console
 
 import coden.journal.core.JournalInteractor
+import coden.journal.core.persistance.JournalEntry
 import coden.journal.core.request.Trigger
 import coden.journal.core.request.UI
 import org.apache.logging.log4j.kotlin.Logging
 import java.time.YearMonth
 
 // ideally Spring shell
-class Console(
+class STDINConsole(
     private val interactor: JournalInteractor
 ): Trigger, UI, Logging {
 
@@ -54,7 +55,7 @@ class Console(
             }else{
                 val month = YearMonth.parse(args[1])
                 val descrption = args[2]
-                interactor.write(month, descrption)
+                interactor.write(JournalEntry( month, descrption))
             }
         }
 

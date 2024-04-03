@@ -1,6 +1,8 @@
 package coden.journal.telebot
 
+import coden.journal.core.Console
 import coden.journal.core.JournalInteractor
+import coden.journal.core.persistance.JournalEntry
 import coden.journal.core.request.UI
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
@@ -13,13 +15,15 @@ import java.time.YearMonth
 class JournalTelegramBot(
     private val config: TelegramBotConfiguration,
     private val interactor: JournalInteractor
-): UI {
+): UI, Console {
 
     private val bot = bot {
         token = config.token
         dispatch {
             command("w"){ write()}
             command("write"){ write()}
+            command("list"){ list()}
+            command("l"){ list()}
             command("help"){ help()}
         }
     }
@@ -27,8 +31,20 @@ class JournalTelegramBot(
     private fun CommandHandlerEnvironment.help() {
         send("Hi, \n/w, /write <YYYY-mm> <description>")
     }
+
+    private fun CommandHandlerEnvironment.list() {
+        val list = interactor.list().sortedBy { it.month }.map {
+            "${it.month} - ${it.description}"
+        }
+        if (list.isEmpty()){
+            send("No entries yet")
+        }else {
+            send(list.joinToString("\n\n"))
+        }
+    }
+
     private fun CommandHandlerEnvironment.write() {
-        val args = message.text?.split(" ") ?: emptyList()
+        val args = message.text?.split(" ", limit = 3) ?: emptyList()
         if (args.size != 3) {
             send("Wrong format")
             return
@@ -42,11 +58,11 @@ class JournalTelegramBot(
         }
         val descirption = args.get(2)
 
-        interactor.write(month, descirption)
+        interactor.write(JournalEntry( month, descirption))
         send("Entry added.")
     }
 
-    fun start() {
+    override fun start() {
         logger.info { "Start polling for ${config.target} " }
         send("Hi! This is Dairy reminder bot. Im gonna remind you to journal regularly")
         bot.startPolling()
@@ -58,5 +74,9 @@ class JournalTelegramBot(
 
     private fun send(text: String) {
         bot.sendMessage(ChatId.fromId(config.target), text)
+    }
+
+    override fun stop() {
+        bot.stopPolling()
     }
 }

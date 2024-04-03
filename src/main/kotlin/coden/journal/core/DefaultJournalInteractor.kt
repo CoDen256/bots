@@ -12,9 +12,9 @@ class DefaultJournalInteractor(
 ):
     JournalInteractor, Logging {
 
-    override fun write(month: YearMonth, description: String) {
-        logger.info { "Adding entry for $month: ${description.take(10)}[...]" }
-        repository.insert(JournalEntry(month, description))
+    override fun write(entry: JournalEntry) {
+        logger.info { "Adding entry for ${entry.month}: ${entry.description.take(10)}[...]" }
+        repository.insert(entry)
     }
 
     override fun request(month: YearMonth) {
@@ -26,4 +26,7 @@ class DefaultJournalInteractor(
         request(YearMonth.now())
     }
 
+    override fun list(): Collection<JournalEntry> {
+        return repository.entries()
+    }
 }
