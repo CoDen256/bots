@@ -1,7 +1,7 @@
 package coden.journal.schedule
 
-import coden.journal.core.request.Requester
-import coden.journal.core.request.Trigger
+import coden.journal.core.notify.Notifier
+import coden.journal.core.Trigger
 import dev.inmo.krontab.doInfinity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -12,7 +12,7 @@ import org.apache.logging.log4j.kotlin.Logging
 class CronTrigger(
     private val cron: String,
     dispatcher: CoroutineDispatcher,
-    private val requester: Requester,
+    private val notifier: Notifier,
 ): Trigger, Logging {
 
     private val scope: CoroutineScope = CoroutineScope(dispatcher)
@@ -22,7 +22,7 @@ class CronTrigger(
         logger.info { "Launching trigger for $cron" }
         job = scope.launch {
             doInfinity(cron) {
-                requester.request()
+                notifier.notify()
             }
         }
     }

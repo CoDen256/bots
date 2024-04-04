@@ -1,9 +1,8 @@
 package coden.journal.telebot
 
-import coden.journal.core.Console
-import coden.journal.core.persistance.JournalInteractor
-import coden.journal.core.persistance.JournalEntry
-import coden.journal.core.request.UI
+import coden.journal.core.ExecutorConsole
+import coden.journal.core.Display
+import coden.journal.core.executor.*
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
 import com.github.kotlintelegrambot.dispatcher.command
@@ -14,8 +13,8 @@ import java.time.YearMonth
 
 class JournalTelegramBot(
     private val config: TelegramBotConfig,
-    private val interactor: JournalInteractor
-): UI, Console {
+    private val executor: JournalExecutor
+): Display, ExecutorConsole {
 
     private val bot = bot {
         token = config.token
@@ -30,56 +29,86 @@ class JournalTelegramBot(
         }
     }
 
+
     private fun CommandHandlerEnvironment.help() {
-        send("Hi, \n/w, /write <YYYY-mm> <description>")
+        send("Hi, " +
+                "\n/h, /help" +
+                "\n/r, /remove <YYYY-mm>" +
+                "\n/r, /remove" +
+                "\n/w, /write <YYYY-mm> <description>" +
+                "\n/w, /write <description>" +
+                ""
+        )
     }
 
     private fun CommandHandlerEnvironment.remove() {
-        val args = message.text?.split(" ", limit = 2) ?: emptyList()
-        if (args.size != 2) {
-            send("Wrong format")
-            return
+        val args = args(1)
+            .onFailure{ send(it.message) }
+            .getOrNull() ?: return
+
+        val month = parseMonth(args[0])
+            .onFailure { send(it.message) }
+            .getOrNull() ?: return
+
+        executor.execute(RemoveDatedEntryRequest(month))
+        send("Entry for <$month> is removed.")
+    }
+
+    private fun CommandHandlerEnvironment.args(arity: Int): Result<List<String>> {
+        val args = message.text?.split(" ", limit = arity + 1) ?: emptyList()
+        if (args.size != arity) {
+            return Result.failure(wrongArity(arity, args))
         }
-        val month: YearMonth?
-        try {
-            month = YearMonth.parse(args.get(1))
+        return Result.success(args.drop(1))
+    }
+
+    private fun wrongArity(arity: Int, args: List<String>): IllegalArgumentException {
+       return IllegalArgumentException("Wrong format of the command, expected $arity arguments, but was ${args.size}.")
+    }
+
+    private fun parseMonth(arg: String): Result<YearMonth> {
+        return try {
+            Result.success(YearMonth.parse(arg))
         } catch (e: Exception) {
-            send("Wrong month format" + e)
-            return
+            Result.failure(IllegalArgumentException("Wrong YYYY-mm format for '$arg': $e"))
         }
-
-
-        interactor.remove(month)
-        send("Entry removed.")
     }
 
     private fun CommandHandlerEnvironment.list() {
-        val list = interactor.list().sortedBy { it.month }.map {
-            "${it.month} - ${it.description}"
-        }
+
+        val list = executor
+            .execute(ListEntriesRequest)
+            .entries
+            .sortedBy { it.month }
+            .map { format(it) }
+
         if (list.isEmpty()){
-            send("No entries yet")
+            send("No entries yet.")
         }else {
             send(list.joinToString("\n\n"))
         }
     }
 
-    private fun CommandHandlerEnvironment.write() {
-        val args = message.text?.split(" ", limit = 3) ?: emptyList()
-        if (args.size != 3) {
-            send("Wrong format")
-            return
-        }
-        val month: YearMonth?
-        try {
-            month = YearMonth.parse(args.get(1))
-        } catch (e: Exception) {
-            send("Wrong month format" + e)
-            return
-        }
-        val descirption = args.get(2)
+    private fun format(it: DatedEntryResponse) = "${it.month} - ${it.description}"
 
-        interactor.write(JournalEntry( month, descirption))
+    private fun CommandHandlerEnvironment.write() {
+        val args = args(2)
+            .recoverCatching { args(1).getOrThrow() }
+            .onFailure { send(it.message) }
+            .getOrNull() ?: return
+
+
+        if (args.size == 2){
+            val month = parseMonth(args[0])
+                .onFailure { send(it.message) }
+                .getOrNull() ?: return
+
+            val description = args[1]
+            executor.execute(NewDatedEntryRequest(month, description))
+        }else {
+            val description = args[0]
+            executor.execute(NewUndatedEntryRequest(description))
+        }
         send("Entry added.")
     }
 
@@ -89,12 +118,12 @@ class JournalTelegramBot(
         bot.startPolling()
     }
 
-    override fun request(month: YearMonth){
+    override fun displayReminder(month: YearMonth){
         send("Sup, please add a journal entry for the $month")
     }
 
-    private fun send(text: String) {
-        bot.sendMessage(ChatId.fromId(config.target), text)
+    private fun send(text: String?) {
+        bot.sendMessage(ChatId.fromId(config.target), text ?: "<unknown error: message is empty>")
     }
 
     override fun stop() {

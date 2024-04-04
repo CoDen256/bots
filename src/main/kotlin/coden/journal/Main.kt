@@ -1,9 +1,14 @@
 package coden.journal
 
-import coden.journal.core.persistance.DefaultJournalInteractor
-import coden.journal.core.persistance.JournalInteractor
+import coden.journal.core.Display
+import coden.journal.core.executor.DefaultJournalExecutor
+import coden.journal.core.executor.JournalExecutor
 import coden.journal.core.persistance.JournalRepository
-import coden.journal.core.request.*
+import coden.journal.core.notify.*
+import coden.journal.core.Never
+import coden.journal.core.Trigger
+import coden.journal.core.oracle.DefaultOracle
+import coden.journal.core.oracle.Oracle
 import coden.journal.notion.NotionConfig
 import coden.journal.notion.NotionJournalTable
 import coden.journal.schedule.CronTrigger
@@ -44,23 +49,16 @@ fun notionJournalTable(client: NotionClient, config: NotionConfig): JournalRepos
     return NotionJournalTable(client, config.db)
 }
 
-fun interactor(repository: JournalRepository): JournalInteractor {
-    return DefaultJournalInteractor(repository)
-}
-
-fun requester(ui: UI): Requester {
-    return DefaultRequester(ui)
-}
-
-fun cronTrigger(schedule: ScheduleConfig, requester: Requester): Trigger {
+fun cronTrigger(schedule: ScheduleConfig, notifier: Notifier): Trigger {
+    if (!schedule.enabled) return Never
     return CronTrigger(
         schedule.cron,
         Executors.newSingleThreadExecutor().asCoroutineDispatcher(),
-        requester
+        notifier
     )
 }
 
-fun telegramBot(telegram: TelegramBotConfig, interactor: JournalInteractor): JournalTelegramBot{
+fun telegramBot(telegram: TelegramBotConfig, interactor: JournalExecutor): JournalTelegramBot{
     return JournalTelegramBot(telegram, interactor)
 }
 
@@ -68,14 +66,16 @@ fun main() {
 
     val config = config()
 
-    val client = notionClient(config.notion)
-    val repository = notionJournalTable(client, config.notion)
+    val client: NotionClient = notionClient(config.notion)
+    val repository: JournalRepository = notionJournalTable(client, config.notion)
 
-    val interactor = interactor(repository)
-    val console = telegramBot(config.telegram, interactor)
+    val oracle = DefaultOracle(repository)
+    val interactor: JournalExecutor = DefaultJournalExecutor(repository, oracle)
 
-    val requester = requester(console)
-    val trigger = if (config.schedule.enabled) cronTrigger(config.schedule, requester) else NullTrigger()
+    val console: JournalTelegramBot = telegramBot(config.telegram, interactor)
+    val notifier: Notifier = DefaultNotifier(console, oracle)
+
+    val trigger: Trigger = cronTrigger(config.schedule, notifier)
 
     console.start()
     trigger.start()

@@ -1,16 +1,16 @@
 package coden.journal.console
 
-import coden.journal.core.persistance.JournalInteractor
-import coden.journal.core.persistance.JournalEntry
-import coden.journal.core.request.Trigger
-import coden.journal.core.request.UI
+import coden.journal.core.Display
+import coden.journal.core.ExecutorConsole
+import coden.journal.core.executor.JournalExecutor
+import coden.journal.core.executor.NewDatedEntryRequest
 import org.apache.logging.log4j.kotlin.Logging
 import java.time.YearMonth
 
 // ideally Spring shell
-class STDINConsole(
-    private val interactor: JournalInteractor
-): Trigger, UI, Logging {
+class IOConsole(
+    private val interactor: JournalExecutor
+): ExecutorConsole, Display, Logging {
 
     override fun start() {
         logger.info { "Starting console" }
@@ -23,6 +23,8 @@ class STDINConsole(
             }
         }
     }
+
+    override fun stop() {}
 
     override fun close() {
 
@@ -55,7 +57,7 @@ class STDINConsole(
             }else{
                 val month = YearMonth.parse(args[1])
                 val descrption = args[2]
-                interactor.write(JournalEntry( month, descrption))
+                interactor.execute(NewDatedEntryRequest(month, descrption))
             }
         }
 
@@ -72,8 +74,8 @@ class STDINConsole(
         }
     }
 
-    override fun request(month: YearMonth) {
-        print("Add entry for $month")
+    override fun displayReminder(month: YearMonth) {
+        print("Please, add entry for $month")
     }
 
 }
