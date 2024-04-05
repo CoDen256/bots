@@ -48,7 +48,7 @@ class NotionDairyTableTest {
     @Test
     @Order(0)
     fun entries() {
-        assertTrue(db.entries().isEmpty())
+        assertTrue(db.entries().getOrThrow().isEmpty())
     }
 
     @Test
@@ -58,8 +58,8 @@ class NotionDairyTableTest {
         val expected = JournalEntry(month, "Very good")
         db.insert(expected)
         val entries = db.entries()
-        assertEquals(1, entries.size)
-        assertEquals(expected, entries.first())
+        assertEquals(1, entries.getOrThrow().size)
+        assertEquals(expected, entries.getOrThrow().first())
     }
 
     @Test
@@ -74,7 +74,7 @@ class NotionDairyTableTest {
         db.insert(middle)
 
         val entries = db.entries()
-        assertEquals(3, entries.size)
+        assertEquals(3, entries.getOrThrow().size)
 
         assertEquals(first, db.first().getOrNull())
         assertEquals(last, db.last().getOrNull())
@@ -88,7 +88,7 @@ class NotionDairyTableTest {
         db.insert(JournalEntry(YearMonth.now(), "Alright"))
         db.insert(JournalEntry(YearMonth.now(), "Ok"))
         db.clear()
-        assertTrue(db.entries().isEmpty())
+        assertTrue(db.entries().getOrThrow().isEmpty())
     }
 
 
@@ -105,7 +105,7 @@ class NotionDairyTableTest {
 
         db.delete(month) // last
         val entries = db.entries()
-        assertEquals(2, entries.size)
+        assertEquals(2, entries.getOrThrow().size)
 
         assertEquals(middle, db.last().getOrNull())
     }

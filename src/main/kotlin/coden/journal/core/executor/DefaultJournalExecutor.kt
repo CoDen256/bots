@@ -18,6 +18,7 @@ class DefaultJournalExecutor(
         val entry = JournalEntry(request.month, request.description)
         repository.insert(entry)
         return Result.success(NewEntryResponse(entry.month))
+            .also { logger.info { "Adding entry: Success!" } }
     }
 
     override fun execute(request: NewUndatedEntryRequest): Result<NewEntryResponse> {
@@ -36,6 +37,7 @@ class DefaultJournalExecutor(
                 DatedEntryListResponse(
                     entries.map { DatedEntryResponse(it.month, it.description) }
                 )
+                    .also { logger.info { "Listing entries: Success!" } }
             }
     }
 
@@ -43,6 +45,8 @@ class DefaultJournalExecutor(
         logger.info { "Deleting ${request.month}..." }
         repository.delete(request.month)
         return Result.success(RemoveEntryResponse(request.month))
+            .also { logger.info { "Removing entry: Success!" } }
+
     }
 
     override fun execute(request: RemoveUndatedEntryRequest): Result<RemoveEntryResponse> {
@@ -59,6 +63,8 @@ class DefaultJournalExecutor(
         return repository
             .clear()
             .map { ClearEntryResponse(it) }
+            .also { logger.info { "Clearing entries: Success!" } }
+
     }
 
     override fun execute(request: ListPendingEntryRequest): Result<PendingEntriesListResponse> {
@@ -68,5 +74,6 @@ class DefaultJournalExecutor(
                 oracle.pending().asSequence().toList()
             )
         )
+            .also { logger.info { "Listing pending requests: Success!" } }
     }
 }
