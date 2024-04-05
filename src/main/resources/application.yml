@@ -12,3 +12,4 @@ telegram:
 
 oracle:
   start: 2024-01
+  offset: 30

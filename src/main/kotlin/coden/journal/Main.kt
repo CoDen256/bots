@@ -75,7 +75,7 @@ fun main() {
     val client: NotionClient = notionClient(config.notion)
     val repository: JournalRepository = notionJournalTable(client, config.notion)
 
-    val oracle = DefaultOracle(config.oracle.start, repository)
+    val oracle = DefaultOracle(config.oracle.start, config.oracle.offset, repository)
 
     val interactor: JournalExecutor = DefaultJournalExecutor(repository, oracle)
 

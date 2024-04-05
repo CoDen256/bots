@@ -1,12 +1,14 @@
 package coden.journal.core.oracle
 
 import coden.journal.core.persistance.JournalRepository
+import java.time.LocalDate
 import java.time.Month
 import java.time.Year
 import java.time.YearMonth
 
 class DefaultOracle(
     private val start: YearMonth,
+    private val offset: Long,
     private val repository: JournalRepository
 ) : Oracle {
 
@@ -27,7 +29,9 @@ class DefaultOracle(
         return months(next(), YearMonth.of(Year.MAX_VALUE, Month.DECEMBER)).iterator()
     }
 
-    private fun current(): YearMonth = YearMonth.now()
+    private fun current(): YearMonth {
+        return YearMonth.from(LocalDate.now().plusDays(offset))
+    }
     private fun next(): YearMonth = current().plusMonths(1)
 }
 
