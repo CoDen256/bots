@@ -54,37 +54,49 @@ class NotionJournalTable(
         return true
     }
 
-    override fun entries(): Collection<JournalEntry> {
-        return queryPages().mapNotNull { mapFromPage(it) }
+    override fun entries(): Result<Collection<JournalEntry>> {
+        return Result.success(Unit)
+            .mapCatching {
+                queryPages().mapNotNull { mapFromPage(it) }
+            }
     }
 
     private fun queryPages(filter: QueryTopLevelFilter? = null) =
         client.queryDatabase(id, filter).results
 
     override fun get(month: YearMonth): Result<JournalEntry> {
-        return entries().firstOrNull { it.month == month }?.let {
-            Result.success(it)
-        } ?: Result.failure(IllegalArgumentException("No entry for $month"))
+        return entries()
+            .getOrNull()
+            ?.firstOrNull { it.month == month }
+            ?.let { Result.success(it) }
+            ?: Result.failure(IllegalArgumentException("No entry for $month"))
     }
 
 
     override fun first(): Result<JournalEntry> {
-        return entries().minByOrNull { it.month }?.let {
-            Result.success(it)
-        } ?: Result.failure(IllegalArgumentException("No entries"))
+        return entries()
+            .getOrNull()
+            ?.minByOrNull { it.month }?.let { Result.success(it) }
+            ?: Result.failure(IllegalArgumentException("No entries"))
     }
 
     override fun last(): Result<JournalEntry> {
-        return entries().maxByOrNull { it.month }?.let {
-            Result.success(it)
-        } ?: Result.failure(IllegalArgumentException("No entries"))
+        return entries()
+            .getOrNull()
+            ?.maxByOrNull { it.month }?.let {
+                Result.success(it)
+            } ?: Result.failure(IllegalArgumentException("No entries"))
     }
 
-    override fun insert(entry: JournalEntry) {
-        client.createPage(
-            parent = PageParent.database(id),
-            properties = mapToProperties(entry)
-        )
+    override fun insert(entry: JournalEntry): Result<Unit> {
+        return Result
+            .success(Unit)
+            .mapCatching {
+                client.createPage(
+                    parent = PageParent.database(id),
+                    properties = mapToProperties(entry)
+                )
+            }
     }
 
     private fun mapFromPage(page: Page): JournalEntry? {
@@ -109,12 +121,15 @@ class NotionJournalTable(
         )
     }
 
-    override fun delete(month: YearMonth) {
-        queryPages()
-            .mapNotNull { page -> mapFromPage(page)?.let { it to page }}
-            .firstOrNull { it.first.month == month }
-            ?.let {
-                deletePage(it.second)
+    override fun delete(month: YearMonth): Result<Unit> {
+        return Result.success(Unit)
+            .mapCatching {
+                queryPages()
+                    .mapNotNull { page -> mapFromPage(page)?.let { it to page } }
+                    .firstOrNull { it.first.month == month }
+                    ?.let {
+                        deletePage(it.second)
+                    }
             }
     }
 
@@ -123,7 +138,7 @@ class NotionJournalTable(
         queryPages()
             .forEach {
                 deletePage(it)
-                counter ++
+                counter++
             }
         return Result.success(counter)
     }

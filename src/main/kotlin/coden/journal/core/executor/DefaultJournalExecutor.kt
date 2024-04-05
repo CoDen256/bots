@@ -21,16 +21,18 @@ class DefaultJournalExecutor(
     // add current month, if not journaled
     // add current month even if journaled
     override fun execute(request: NewUndatedEntryRequest): Result<NewEntryResponse> {
-        TODO("Not yet implemented")
+        return Result.failure(IllegalArgumentException("Not implemented"))
     }
 
     override fun execute(request: ListEntriesRequest): Result<DatedEntryListResponse> {
         logger.info { "Listing entries..." }
-        return Result.success(DatedEntryListResponse(
-            repository
-                .entries()
-                .map { DatedEntryResponse(it.month, it.description) }
-        ))
+        return repository
+            .entries()
+            .map { entries ->
+                DatedEntryListResponse(
+                    entries.map { DatedEntryResponse(it.month, it.description) }
+                )
+            }
     }
 
     override fun execute(request: RemoveDatedEntryRequest): Result<RemoveEntryResponse> {

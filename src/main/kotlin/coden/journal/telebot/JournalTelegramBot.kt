@@ -117,11 +117,14 @@ class JournalTelegramBot(
 
             val description = args[1]
             executor.execute(NewDatedEntryRequest(month, description))
+                .onSuccess { send("Entry for ${it.month} is written") }
+                .onFailure { send("Failed to write entry: ${it.message}") }
         }else {
             val description = args[0]
             executor.execute(NewUndatedEntryRequest(description))
+                .onSuccess { send("Entry for ${it.month} is written") }
+                .onFailure { send("Failed to write entry: ${it.message}") }
         }
-        send("Entry added.")
     }
 
     override fun start() {

@@ -2,15 +2,14 @@ package coden.journal.memory
 
 import coden.journal.core.persistance.JournalEntry
 import coden.journal.core.persistance.JournalRepository
-import java.time.LocalDate
 import java.time.YearMonth
 
 class InMemoryRepository: JournalRepository {
 
     private val entities: MutableMap<YearMonth, JournalEntry> = HashMap()
 
-    override fun entries(): Collection<JournalEntry> {
-        return entities.values
+    override fun entries(): Result<Collection<JournalEntry>> {
+        return Result.success(entities.values)
     }
 
     override fun get(month: YearMonth): Result<JournalEntry> {
@@ -31,12 +30,14 @@ class InMemoryRepository: JournalRepository {
         } ?: Result.failure(IllegalArgumentException("No entries"))
     }
 
-    override fun insert(entry: JournalEntry) {
+    override fun insert(entry: JournalEntry): Result<Unit> {
         entities[entry.month] = entry
+        return Result.success(Unit)
     }
 
-    override fun delete(month: YearMonth) {
+    override fun delete(month: YearMonth): Result<Unit> {
         entities.remove(month)
+        return Result.success(Unit)
     }
 
     override fun clear(): Result<Long> {

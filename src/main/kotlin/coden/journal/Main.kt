@@ -19,6 +19,7 @@ import com.sksamuel.hoplite.ConfigLoaderBuilder
 import com.sksamuel.hoplite.addResourceSource
 import kotlinx.coroutines.asCoroutineDispatcher
 import notion.api.v1.NotionClient
+import notion.api.v1.http.OkHttp4Client
 import notion.api.v1.logging.JavaUtilLogger
 import java.util.concurrent.Executors
 
@@ -41,6 +42,11 @@ fun config(): Config{
 fun notionClient(config: NotionConfig): NotionClient{
     return NotionClient(
         token = config.token,
+        httpClient =  OkHttp4Client(
+            connectTimeoutMillis = 3 * 1000,
+            readTimeoutMillis = 10 * 1000,
+            writeTimeoutMillis = 10 * 1000
+        ),
         logger = JavaUtilLogger()
     )
 }
@@ -63,7 +69,6 @@ fun telegramBot(telegram: TelegramBotConfig, interactor: JournalExecutor): Journ
 }
 
 fun main() {
-    "s s s".split(" ", limit = 3)
     val config = config()
 
     val client: NotionClient = notionClient(config.notion)
