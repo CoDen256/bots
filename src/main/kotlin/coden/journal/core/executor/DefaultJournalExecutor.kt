@@ -17,11 +17,9 @@ class DefaultJournalExecutor(
         return Result.success(NewEntryResponse(entry.month))
     }
 
-    // add next unjournaled month
-    // add current month, if not journaled
-    // add current month even if journaled
     override fun execute(request: NewUndatedEntryRequest): Result<NewEntryResponse> {
-        return Result.failure(IllegalArgumentException("Not implemented"))
+        val next = oracle.pending().next()
+        return execute(NewDatedEntryRequest(next, request.description))
     }
 
     override fun execute(request: ListEntriesRequest): Result<DatedEntryListResponse> {

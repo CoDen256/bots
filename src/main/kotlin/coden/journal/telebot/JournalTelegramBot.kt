@@ -54,11 +54,11 @@ class JournalTelegramBot(
 
             executor.execute(RemoveDatedEntryRequest(month))
                 .onSuccess { send("Entry for <${it.month}> is removed.") }
-                .onFailure { send("Failed to remove entry: ${it.message}>") }
+                .onFailure { send("Failed to remove entry: ${it.message}") }
         }else {
             executor.execute(RemoveUndatedEntryRequest)
                 .onSuccess { send("Entry for <${it.month}> is removed.") }
-                .onFailure { send("Failed to remove entry: ${it.message}>") }
+                .onFailure { send("Failed to remove entry: ${it.message}") }
         }
 
     }

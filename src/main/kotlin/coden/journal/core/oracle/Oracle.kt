@@ -3,6 +3,8 @@ package coden.journal.core.oracle
 import java.time.YearMonth
 
 interface Oracle {
-    fun shouldNotify(): Boolean
-    fun shouldNotify(month: YearMonth): Boolean
+    fun isPending(month: YearMonth): Boolean
+
+    fun pending(): Iterator<YearMonth>
+    fun upcoming(): Iterator<YearMonth>
 }

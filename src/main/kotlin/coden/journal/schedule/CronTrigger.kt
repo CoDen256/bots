@@ -1,14 +1,13 @@
 package coden.journal.schedule
 
-import coden.journal.core.notify.Notifier
 import coden.journal.core.Trigger
+import coden.journal.core.notify.Notifier
 import dev.inmo.krontab.doInfinity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.apache.logging.log4j.kotlin.Logging
-import java.time.YearMonth
 
 class CronTrigger(
     private val cron: String,
@@ -23,7 +22,7 @@ class CronTrigger(
         logger.info { "Launching trigger for $cron" }
         job = scope.launch {
             doInfinity(cron) {
-                notifier.notify(YearMonth.now())
+                notifier.check()
             }
         }
     }

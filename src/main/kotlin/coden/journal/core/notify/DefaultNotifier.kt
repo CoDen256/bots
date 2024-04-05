@@ -1,26 +1,24 @@
 package coden.journal.core.notify
 
-import coden.journal.core.oracle.Oracle
 import coden.journal.core.Display
+import coden.journal.core.oracle.Oracle
 import org.apache.logging.log4j.kotlin.Logging
-import java.time.YearMonth
 
 class DefaultNotifier(
     private val display: Display,
     private val oracle: Oracle
-): Notifier, Logging {
+) : Notifier, Logging {
 
-    override fun notify(month: YearMonth) {
-        logger.info("Checking reminder for $month...")
-        if (!oracle.shouldNotify(month)){
-            logger.info("Not needed, skip.")
+    override fun check() {
+        logger.info("Checking pending reminders.")
+        val pending = oracle.pending()
+        if (!pending.hasNext()) {
+            logger.info("No pending reminders. Skip.")
             return
         }
-        logger.info { "Notifying user for $month" }
-        display.displayReminder(month)
+        for (month in pending) {
+            logger.info { "Notifying user for $month" }
+            display.displayReminder(month)
+        }
     }
-
-//    override fun notify() {
-//        notify(YearMonth.now())
-//    }
 }
