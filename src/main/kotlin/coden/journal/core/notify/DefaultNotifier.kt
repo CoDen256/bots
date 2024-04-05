@@ -20,7 +20,7 @@ class DefaultNotifier(
         display.displayReminder(month)
     }
 
-    override fun notify() {
-        notify(YearMonth.now())
-    }
+//    override fun notify() {
+//        notify(YearMonth.now())
+//    }
 }

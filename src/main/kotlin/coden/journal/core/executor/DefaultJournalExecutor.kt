@@ -10,34 +10,47 @@ class DefaultJournalExecutor(
     private val oracle: Oracle,
 ) : JournalExecutor, Logging {
 
-    override fun execute(request: NewDatedEntryRequest) {
+    override fun execute(request: NewDatedEntryRequest): Result<NewEntryResponse> {
         logger.info { "Adding entry for ${request.month}: ${request.description.take(10)}[...]" }
-        repository.insert(JournalEntry(request.month, request.description))
+        val entry = JournalEntry(request.month, request.description)
+        repository.insert(entry)
+        return Result.success(NewEntryResponse(entry.month))
     }
 
-    override fun execute(request: NewUndatedEntryRequest) {
+    // add next unjournaled month
+    // add current month, if not journaled
+    // add current month even if journaled
+    override fun execute(request: NewUndatedEntryRequest): Result<NewEntryResponse> {
         TODO("Not yet implemented")
     }
 
-    override fun execute(request: ListEntriesRequest): DatedEntryListResponse {
+    override fun execute(request: ListEntriesRequest): Result<DatedEntryListResponse> {
         logger.info { "Listing entries..." }
-        return DatedEntryListResponse(
+        return Result.success(DatedEntryListResponse(
             repository
                 .entries()
                 .map { DatedEntryResponse(it.month, it.description) }
-        )
+        ))
     }
 
-    override fun execute(request: RemoveDatedEntryRequest) {
+    override fun execute(request: RemoveDatedEntryRequest): Result<RemoveEntryResponse> {
         logger.info { "Deleting ${request.month}..." }
         repository.delete(request.month)
+        return Result.success(RemoveEntryResponse(request.month))
     }
 
-    override fun execute(request: RemoveUndatedEntryRequest) {
-        TODO("Not yet implemented")
+    override fun execute(request: RemoveUndatedEntryRequest): Result<RemoveEntryResponse> {
+        return repository
+            .last()
+            .map { RemoveDatedEntryRequest(it.month) }
+            .map { execute(it) }
+            .mapCatching { it.getOrThrow() }
     }
 
-    override fun execute(request: ClearEntriesRequest) {
-        TODO("Not yet implemented")
+    override fun execute(request: ClearEntriesRequest): Result<ClearEntryResponse> {
+        logger.info { "Clearing all entries..." }
+        return repository
+            .clear()
+            .map { ClearEntryResponse(it) }
     }
 }

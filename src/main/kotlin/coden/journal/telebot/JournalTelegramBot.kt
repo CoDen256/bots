@@ -43,20 +43,29 @@ class JournalTelegramBot(
 
     private fun CommandHandlerEnvironment.remove() {
         val args = args(1)
-            .onFailure{ send(it.message) }
-            .getOrNull() ?: return
-
-        val month = parseMonth(args[0])
+            .recoverCatching { args(0).getOrThrow() }
             .onFailure { send(it.message) }
             .getOrNull() ?: return
 
-        executor.execute(RemoveDatedEntryRequest(month))
-        send("Entry for <$month> is removed.")
+        if (args.size == 1){
+            val month = parseMonth(args[0])
+                .onFailure { send(it.message) }
+                .getOrNull() ?: return
+
+            executor.execute(RemoveDatedEntryRequest(month))
+                .onSuccess { send("Entry for <${it.month}> is removed.") }
+                .onFailure { send("Failed to remove entry: ${it.message}>") }
+        }else {
+            executor.execute(RemoveUndatedEntryRequest)
+                .onSuccess { send("Entry for <${it.month}> is removed.") }
+                .onFailure { send("Failed to remove entry: ${it.message}>") }
+        }
+
     }
 
     private fun CommandHandlerEnvironment.args(arity: Int): Result<List<String>> {
         val args = message.text?.split(" ", limit = arity + 1) ?: emptyList()
-        if (args.size != arity) {
+        if (args.size != arity + 1) {
             return Result.failure(wrongArity(arity, args))
         }
         return Result.success(args.drop(1))
@@ -78,9 +87,12 @@ class JournalTelegramBot(
 
         val list = executor
             .execute(ListEntriesRequest)
-            .entries
-            .sortedBy { it.month }
-            .map { format(it) }
+            .onFailure { send("Unable to retrieve entries: ${it.message}") }
+            .getOrNull()
+            ?.entries
+            ?.sortedBy { it.month }
+            ?.map { format(it) }
+            ?: return
 
         if (list.isEmpty()){
             send("No entries yet.")

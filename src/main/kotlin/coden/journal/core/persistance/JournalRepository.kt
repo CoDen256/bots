@@ -13,5 +13,5 @@ interface JournalRepository {
     fun insert(entry: JournalEntry)
     fun delete(month: YearMonth)
 
-    fun clear()
+    fun clear(): Result<Long>
 }

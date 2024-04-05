@@ -4,5 +4,5 @@ import java.time.YearMonth
 
 interface Notifier {
     fun notify(month: YearMonth)
-    fun notify()
+//    fun notify()
 }

@@ -118,8 +118,14 @@ class NotionJournalTable(
             }
     }
 
-    override fun clear() {
-        queryPages().forEach { deletePage(it) }
+    override fun clear(): Result<Long> {
+        var counter = 0L
+        queryPages()
+            .forEach {
+                deletePage(it)
+                counter ++
+            }
+        return Result.success(counter)
     }
 
     private fun deletePage(it: Page) {

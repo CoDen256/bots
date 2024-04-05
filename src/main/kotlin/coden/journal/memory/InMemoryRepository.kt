@@ -39,7 +39,9 @@ class InMemoryRepository: JournalRepository {
         entities.remove(month)
     }
 
-    override fun clear() {
+    override fun clear(): Result<Long> {
+        val value = entities.size.toLong()
         entities.clear()
+        return Result.success(value)
     }
 }

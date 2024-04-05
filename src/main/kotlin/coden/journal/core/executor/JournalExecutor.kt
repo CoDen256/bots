@@ -3,15 +3,15 @@ package coden.journal.core.executor
 import java.time.YearMonth
 
 interface JournalExecutor {
-    fun execute(request: NewDatedEntryRequest)
-    fun execute(request: NewUndatedEntryRequest)
+    fun execute(request: NewDatedEntryRequest): Result<NewEntryResponse>
+    fun execute(request: NewUndatedEntryRequest): Result<NewEntryResponse>
 
-    fun execute(request: ListEntriesRequest): DatedEntryListResponse
+    fun execute(request: ListEntriesRequest): Result<DatedEntryListResponse>
 
-    fun execute(request: RemoveDatedEntryRequest)
-    fun execute(request: RemoveUndatedEntryRequest)
+    fun execute(request: RemoveDatedEntryRequest): Result<RemoveEntryResponse>
+    fun execute(request: RemoveUndatedEntryRequest): Result<RemoveEntryResponse>
 
-    fun execute(request: ClearEntriesRequest)
+    fun execute(request: ClearEntriesRequest): Result<ClearEntryResponse>
 }
 
 interface JournalRequest
@@ -45,4 +45,17 @@ data class DatedEntryResponse(
 
 data class DatedEntryListResponse(
     val entries: List<DatedEntryResponse>
+): JournalResponse
+
+
+data class RemoveEntryResponse(
+    val month: YearMonth
+): JournalResponse
+
+data class NewEntryResponse(
+    val month: YearMonth
+): JournalResponse
+
+data class ClearEntryResponse(
+    val count: Long
 ): JournalResponse

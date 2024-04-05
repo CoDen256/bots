@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.apache.logging.log4j.kotlin.Logging
+import java.time.YearMonth
 
 class CronTrigger(
     private val cron: String,
@@ -22,7 +23,7 @@ class CronTrigger(
         logger.info { "Launching trigger for $cron" }
         job = scope.launch {
             doInfinity(cron) {
-                notifier.notify()
+                notifier.notify(YearMonth.now())
             }
         }
     }

@@ -63,7 +63,7 @@ fun telegramBot(telegram: TelegramBotConfig, interactor: JournalExecutor): Journ
 }
 
 fun main() {
-
+    "s s s".split(" ", limit = 3)
     val config = config()
 
     val client: NotionClient = notionClient(config.notion)
