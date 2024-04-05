@@ -8,7 +8,6 @@ import coden.journal.core.notify.DefaultNotifier
 import coden.journal.core.notify.Notifier
 import coden.journal.core.oracle.DefaultOracle
 import coden.journal.core.oracle.OracleConfig
-import coden.journal.core.persistance.JournalEntry
 import coden.journal.core.persistance.JournalRepository
 import coden.journal.notion.NotionConfig
 import coden.journal.notion.NotionJournalTable
@@ -22,7 +21,6 @@ import kotlinx.coroutines.asCoroutineDispatcher
 import notion.api.v1.NotionClient
 import notion.api.v1.http.OkHttp4Client
 import notion.api.v1.logging.JavaUtilLogger
-import java.time.YearMonth
 import java.util.concurrent.Executors
 
 
@@ -77,11 +75,8 @@ fun main() {
     val client: NotionClient = notionClient(config.notion)
     val repository: JournalRepository = notionJournalTable(client, config.notion)
 
-    repository.insert(JournalEntry(YearMonth.now().minusMonths(2), ""))
     val oracle = DefaultOracle(config.oracle.start, repository)
-    for (yearMonth in oracle.pending()) {
-        println(yearMonth)
-    }
+
     val interactor: JournalExecutor = DefaultJournalExecutor(repository, oracle)
 
     val console: JournalTelegramBot = telegramBot(config.telegram, interactor)

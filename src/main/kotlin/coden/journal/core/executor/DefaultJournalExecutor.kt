@@ -11,14 +11,20 @@ class DefaultJournalExecutor(
 ) : JournalExecutor, Logging {
 
     override fun execute(request: NewDatedEntryRequest): Result<NewEntryResponse> {
-        logger.info { "Adding entry for ${request.month}: ${request.description.take(10)}[...]" }
+        logger.info { "Adding entry ${if (request.overwrite) "**forcefully**" else ""} for ${request.month}: ${request.description.take(10)}[...]" }
+        if (!oracle.isPending(request.month) and !request.overwrite){
+            return Result.failure(IllegalStateException("${request.month} is not pending, request denied. Try force overwriting it."))
+        }
         val entry = JournalEntry(request.month, request.description)
         repository.insert(entry)
         return Result.success(NewEntryResponse(entry.month))
     }
 
     override fun execute(request: NewUndatedEntryRequest): Result<NewEntryResponse> {
-        val next = oracle.pending().next()
+        logger.info { "Adding new undated entry..." }
+        val pending = oracle.pending()
+        if (pending.hasNext().not()){ return Result.failure(IllegalStateException("No pending journal entries to write for. Come again next month."))}
+        val next = pending.next()
         return execute(NewDatedEntryRequest(next, request.description))
     }
 
@@ -40,6 +46,7 @@ class DefaultJournalExecutor(
     }
 
     override fun execute(request: RemoveUndatedEntryRequest): Result<RemoveEntryResponse> {
+        logger.info { "Deleting undated entry..." }
         return repository
             .last()
             .map { RemoveDatedEntryRequest(it.month) }
@@ -52,5 +59,14 @@ class DefaultJournalExecutor(
         return repository
             .clear()
             .map { ClearEntryResponse(it) }
+    }
+
+    override fun execute(request: ListPendingEntryRequest): Result<PendingEntriesListResponse> {
+        logger.info { "Listing all pending requests..." }
+        return Result.success(
+            PendingEntriesListResponse(
+                oracle.pending().asSequence().toList()
+            )
+        )
     }
 }

@@ -22,7 +22,8 @@ class CronTrigger(
         logger.info { "Launching trigger for $cron" }
         job = scope.launch {
             doInfinity(cron) {
-                notifier.check()
+                logger.info("Triggering notifier.")
+                notifier.trigger()
             }
         }
     }

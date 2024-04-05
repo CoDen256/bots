@@ -12,15 +12,18 @@ interface JournalExecutor {
     fun execute(request: RemoveUndatedEntryRequest): Result<RemoveEntryResponse>
 
     fun execute(request: ClearEntriesRequest): Result<ClearEntryResponse>
+    fun execute(request: ListPendingEntryRequest): Result<PendingEntriesListResponse>
 }
 
-interface JournalRequest
 
-object ListEntriesRequest: JournalRequest
+sealed interface JournalRequest
+
+data object ListEntriesRequest: JournalRequest
 
 data class NewDatedEntryRequest(
     val month: YearMonth,
-    val description: String
+    val description: String,
+    val overwrite: Boolean = false
 ): JournalRequest
 
 data class NewUndatedEntryRequest(
@@ -31,10 +34,11 @@ data class RemoveDatedEntryRequest(
     val month: YearMonth
 ): JournalRequest
 
-object RemoveUndatedEntryRequest : JournalRequest
+data object RemoveUndatedEntryRequest : JournalRequest
 
-object ClearEntriesRequest :JournalRequest
+data object ClearEntriesRequest :JournalRequest
 
+data object ListPendingEntryRequest: JournalRequest
 
 interface JournalResponse
 
@@ -58,4 +62,8 @@ data class NewEntryResponse(
 
 data class ClearEntryResponse(
     val count: Long
+): JournalResponse
+
+data class PendingEntriesListResponse (
+    val months: List<YearMonth>
 ): JournalResponse

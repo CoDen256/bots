@@ -9,7 +9,7 @@ class DefaultNotifier(
     private val oracle: Oracle
 ) : Notifier, Logging {
 
-    override fun check() {
+    override fun trigger() {
         logger.info("Checking pending reminders.")
         val pending = oracle.pending()
         if (!pending.hasNext()) {
