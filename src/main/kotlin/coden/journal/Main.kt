@@ -16,6 +16,7 @@ import coden.journal.schedule.ScheduleConfig
 import coden.journal.telebot.JournalTelegramBot
 import coden.journal.telebot.TelegramBotConfig
 import com.sksamuel.hoplite.ConfigLoaderBuilder
+import com.sksamuel.hoplite.addFileSource
 import com.sksamuel.hoplite.addResourceSource
 import kotlinx.coroutines.asCoroutineDispatcher
 import notion.api.v1.NotionClient
@@ -34,7 +35,7 @@ data class Config(
 
 fun config(): Config{
     return ConfigLoaderBuilder.default()
-        .addResourceSource("/application.yml")
+        .addFileSource("application.yml")
         .build()
         .loadConfigOrThrow<Config>()
 }
