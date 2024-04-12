@@ -31,7 +31,7 @@ fun main() {
     val config = config()
     val repo: FocusableRepository = null!!
 
-    val analuser = DefaultFocusableAnalyser(repo)
+    val analyser = DefaultFocusableAnalyser(repo)
     val actionDefiner = DefaultActionDefiner(repo)
     val giver = DefaultFocusableAnalyser(repo)
     val focusableDefiner = DefaultFocusableDefiner(repo)
