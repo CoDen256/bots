@@ -1,9 +1,10 @@
-package io.github.coden
+package io.github.coden.focus.observer
 
 import com.sksamuel.hoplite.ConfigLoaderBuilder
 import com.sksamuel.hoplite.addFileSource
 import io.github.coden.database.DatasourceConfig
 import io.github.coden.telegram.abilities.TelegramBotConfig
+
 
 data class RepositoryConfig(
     val inmemory: Boolean = true,
@@ -15,7 +16,7 @@ data class Config(
     val repo: RepositoryConfig
 )
 
-fun config(): Config{
+fun config(): Config {
     return ConfigLoaderBuilder.default()
         .addFileSource("application.yml")
         .build()

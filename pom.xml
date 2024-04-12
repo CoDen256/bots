@@ -49,7 +49,7 @@
                             <archiveBaseDirectory>${project.basedir}</archiveBaseDirectory>
                             <archive>
                                 <manifest>
-                                    <mainClass>io.github.coden.anxiety.debunker.MainKt</mainClass>
+                                    <mainClass>io.github.coden.focus.observer</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>
