@@ -4,7 +4,7 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 
 
-object Focusables : Table("focusable") {
+object Focusables : Table("focusables") {
     val id = varchar("id", 5)
     val description = text("description")
     val created = timestamp("created")

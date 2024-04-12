@@ -7,11 +7,13 @@ interface FocusableAnalyser {
     fun action(request: GetActionRequest): Result<ActionEntityResponse>
     fun actions(request: ListActionsRequest): Result<ListActionResponse>
 
+
     fun focusable(request: GetFocusableRequest): Result<FocusableEntityResponse>
     fun focusables(request: ListFocusablesRequest): Result<ListFocusablesResponse>
 
     fun timeline(request: GetTimelineRequest): Result<FocusableTimelineEntityResponse>
     fun timelines(request: ListTimelinesRequest): Result<ListTimelinesResponse>
+    fun lastAttentionInstant(request: GetLastAttentionInstantRequest): Result<AttentionEntityResponse>
 }
 
 sealed interface FocusableActivityAnalyserRequest
@@ -22,6 +24,7 @@ data object ListActionsRequest : FocusableActivityAnalyserRequest
 data class GetFocusableRequest(val focusableId: String): FocusableActivityAnalyserRequest
 data object ListFocusablesRequest: FocusableActivityAnalyserRequest
 
+data class GetLastAttentionInstantRequest(val focusableId: String): FocusableActivityAnalyserRequest
 data class GetTimelineRequest(val focusableId: String): FocusableActivityAnalyserRequest
 data object ListTimelinesRequest: FocusableActivityAnalyserRequest
 
@@ -41,4 +44,4 @@ data class FocusableTimelineEntityResponse(
     val focusable: FocusableEntityResponse,
     val timeline: List<AttentionEntityResponse>
 ): FocusableActivityAnalyserResponse
-data class ListTimelinesResponse(val s: List<FocusableTimelineEntityResponse>): FocusableActivityAnalyserResponse
+data class ListTimelinesResponse(val timelines: List<FocusableTimelineEntityResponse>): FocusableActivityAnalyserResponse

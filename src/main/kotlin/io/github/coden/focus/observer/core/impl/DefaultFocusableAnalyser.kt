@@ -20,6 +20,12 @@ class DefaultFocusableAnalyser(val repo: FocusableRepository) : FocusableAnalyse
             .map { ListActionResponse(it) }
     }
 
+
+    override fun lastAttentionInstant(request: GetLastAttentionInstantRequest): Result<AttentionEntityResponse> {
+        return repo.getLastAttentionInstant(FocusableId(request.focusableId))
+            .map { mapAttention(it) }
+    }
+
     override fun focusable(request: GetFocusableRequest): Result<FocusableEntityResponse> {
         return repo.getFocusableById(FocusableId(request.focusableId))
             .map { mapFocusable(it) }

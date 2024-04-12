@@ -1,6 +1,5 @@
 package io.github.coden.focus.observer.core.model
 
-import java.sql.Instant
 import java.time.Instant
 
 interface FocusableRepository{
@@ -28,8 +27,8 @@ interface FocusableRepository{
 
     fun getFocusableById(id: FocusableId): Result<Focusable>
     fun getActionById(id: ActionId): Result<Action>
-    fun getAttentionInstantById(focusableId: FocusableId, timestamp: Instant): Result<AttentionInstant>
-    fun getLastAttentionInstant(focusableId: FocusableId): Result<AttentionInstant>
+    fun getAttentionInstantById(focusableId: FocusableId, timestamp: Instant): Result<DetailedAttentionInstant>
+    fun getLastAttentionInstant(focusableId: FocusableId): Result<DetailedAttentionInstant>
 
     fun getFocusableAttentionTimeline(focusableId: FocusableId): Result<FocusableAttentionTimeline>
     fun getFocusableAttentionTimelines(): Result<List<FocusableAttentionTimeline>>

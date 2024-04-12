@@ -7,7 +7,6 @@ import io.github.coden.focus.observer.core.model.*
 import io.github.coden.utils.randomPronouncable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import java.sql.Timestamp
 import java.time.Instant
 
 class PostgresFocusableRepository(private val db: Database): FocusableRepository {
@@ -70,14 +69,15 @@ class PostgresFocusableRepository(private val db: Database): FocusableRepository
 
     private fun fetchAction(actionId: ActionId) =
         Actions.selectAll().where { Actions.id eq actionId.value }
-            .map { mapAction(it) }
+            .mapNotNull { mapAction(it) }
             .single()
 
-    private fun mapAction(row: ResultRow): Action {
-        return Action(
-            ActionId(row[Actions.id]),
-            row[Actions.name]
-        )
+    private fun mapAction(row: ResultRow): Action? {
+        val id = row.getOrNull(Actions.id) ?: return null
+            return Action(
+                ActionId(id),
+                row[Actions.name]
+            )
     }
 
     override fun deleteAttentionInstant(focusableId: FocusableId, timestamp: Instant): Result<AttentionInstant> = db.transaction {
@@ -95,13 +95,14 @@ class PostgresFocusableRepository(private val db: Database): FocusableRepository
     ) = AttentionInstants.selectAll().where {
         (AttentionInstants.focusableId eq focusableId.value) and
                 (AttentionInstants.timestamp eq timestamp.asDBInstant())
-    }.map {
+    }.mapNotNull {
         mapAttentionInstant(it)
     }.single()
 
-    private fun mapAttentionInstant(row: ResultRow): AttentionInstant {
+    private fun mapAttentionInstant(row: ResultRow): AttentionInstant? {
+        val timestamp = row.getOrNull(AttentionInstants.timestamp) ?: return null
         return AttentionInstant(
-            row[AttentionInstants.timestamp].asInstant(),
+            timestamp.asInstant(),
             FocusableId(row[AttentionInstants.focusableId]),
             ActionId(row[AttentionInstants.actionId])
         )
@@ -120,7 +121,7 @@ class PostgresFocusableRepository(private val db: Database): FocusableRepository
         .where { AttentionInstants.focusableId eq focusableId.value}
         .orderBy(AttentionInstants.timestamp, SortOrder.DESC)
         .limit(1)
-        .map { mapAttentionInstant(it) }
+        .mapNotNull { mapAttentionInstant(it) }
         .single()
 
     override fun updateFocusable(focusable: Focusable): Result<Focusable> = db.transaction {
@@ -160,7 +161,7 @@ class PostgresFocusableRepository(private val db: Database): FocusableRepository
     }
 
     override fun getNextActionId(): Result<ActionId> = db.transaction {
-        ActionId(randomPronouncable(3,7))
+        ActionId(Actions.selectAll().count().toString())
     }
 
     override fun getFocusables(): Result<List<Focusable>> = db.transaction {
@@ -169,7 +170,7 @@ class PostgresFocusableRepository(private val db: Database): FocusableRepository
     }
 
     override fun getActions(): Result<List<Action>> = db.transaction {
-        Actions.selectAll().map { mapAction(it) }
+        Actions.selectAll().mapNotNull { mapAction(it) }
     }
 
     override fun getFocusableById(id: FocusableId): Result<Focusable> = db.transaction {
@@ -180,43 +181,78 @@ class PostgresFocusableRepository(private val db: Database): FocusableRepository
         fetchAction(id)
     }
 
-    override fun getAttentionInstantById(focusableId: FocusableId, timestamp: Instant): Result<AttentionInstant> = db.transaction {
-        fetchAttentionInstant(focusableId, timestamp)
+    override fun getAttentionInstantById(focusableId: FocusableId, timestamp: Instant): Result<DetailedAttentionInstant> = db.transaction {
+        AttentionInstants
+            .leftJoin(Actions, {AttentionInstants.actionId}, {Actions.id})
+            .selectAll()
+            .where {
+                (AttentionInstants.focusableId eq focusableId.value ).
+                and (AttentionInstants.timestamp eq timestamp.asDBInstant())
+
+            }
+            .orderBy(AttentionInstants.timestamp, SortOrder.DESC)
+            .limit(1)
+            .mapNotNull { mapDetailedAttentionInstant(it) }
+            .single()
     }
 
-    override fun getLastAttentionInstant(focusableId: FocusableId): Result<AttentionInstant> = db.transaction {
-        fetchLastAttentionInstant(focusableId)
+    override fun getLastAttentionInstant(focusableId: FocusableId): Result<DetailedAttentionInstant> = db.transaction {
+        AttentionInstants
+            .leftJoin(Actions, {AttentionInstants.actionId}, {Actions.id})
+            .selectAll()
+            .where { AttentionInstants.focusableId eq focusableId.value}
+            .orderBy(AttentionInstants.timestamp, SortOrder.DESC)
+            .limit(1)
+            .mapNotNull { mapDetailedAttentionInstant(it) }
+            .single()
+    }
+
+    private fun mapDetailedAttentionInstant(row: ResultRow): DetailedAttentionInstant? {
+        val action = mapAction(row) ?: return null
+        return DetailedAttentionInstant(
+            row[AttentionInstants.timestamp].asInstant(),
+            action
+        )
     }
 
     override fun getFocusableAttentionTimeline(focusableId: FocusableId): Result<FocusableAttentionTimeline> = db.transaction {
-        AttentionInstants
-            .leftJoin(Focusables, { AttentionInstants.focusableId }, { Focusables.id })
+        Focusables
+            .leftJoin(AttentionInstants, { Focusables.id }, { AttentionInstants.focusableId })
             .leftJoin(Actions, { AttentionInstants.actionId }, { Actions.id })
             .selectAll()
-            .where { AttentionInstants.focusableId eq focusableId.value }
+            .where { Focusables.id eq focusableId.value }
             .map {
                 Triple(mapFocusable(it) ,mapAction(it), mapAttentionInstant(it))
             }
             .groupBy { it.first }
-            .map { (focusable: Focusable, aggregated: List<Triple<Focusable, Action, AttentionInstant>>) ->
+            .map { (focusable: Focusable, aggregated: List<Triple<Focusable, Action?, AttentionInstant?>>) ->
                 FocusableAttentionTimeline(focusable,
-                    aggregated.map {DetailedAttentionInstant(it.third.timestamp, it.second)  }
+                    aggregated.mapNotNull { mapDetailedAttentionInstant(it) }
                     ) }
             .single()
     }
 
+    private fun mapDetailedAttentionInstant(it: Triple<Focusable, Action?, AttentionInstant?>): DetailedAttentionInstant? {
+        val action = it.second
+        val instant = it.third
+        if (action == null || instant == null) {
+            return null
+        }
+        return DetailedAttentionInstant(instant.timestamp, action)
+    }
+
     override fun getFocusableAttentionTimelines(): Result<List<FocusableAttentionTimeline>> = db.transaction {
-        AttentionInstants
-            .leftJoin(Focusables, { AttentionInstants.focusableId }, { Focusables.id })
+        Focusables
+            .leftJoin(AttentionInstants, { Focusables.id }, { AttentionInstants.focusableId })
             .leftJoin(Actions, { AttentionInstants.actionId }, { Actions.id })
             .selectAll()
             .map {
-                Triple(mapFocusable(it) ,mapAction(it), mapAttentionInstant(it))
+                Triple(mapFocusable(it),mapAction(it), mapAttentionInstant(it))
             }
             .groupBy { it.first }
-            .map { (focusable: Focusable, aggregated: List<Triple<Focusable, Action, AttentionInstant>>) ->
+            .map { (focusable: Focusable, aggregated: List<Triple<Focusable, Action?, AttentionInstant?>>) ->
                 FocusableAttentionTimeline(focusable,
-                    aggregated.map {DetailedAttentionInstant(it.third.timestamp, it.second)  }
+                    aggregated.mapNotNull {mapDetailedAttentionInstant(it)  }
                 ) }
     }
 }

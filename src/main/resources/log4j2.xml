@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="15">
+    <Properties>
+        <Property name="LOG_PATTERN">%d{dd.MM.yy HH:mm:ss} %level{length=5} [%t] %c{1.} - %msg%throwable{full}%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN}" alwaysWriteExceptions="false" />
+            <LevelRangeFilter minLevel="INFO" maxLevel="ALL" onMatch="ACCEPT" onMismatch="DENY" />
+        </Console>
+        <Console name="STDERR" target="SYSTEM_ERR">
+            <PatternLayout pattern="${LOG_PATTERN}" alwaysWriteExceptions="false" />
+            <LevelRangeFilter minLevel="FATAL" maxLevel="WARN" onMatch="ACCEPT" onMismatch="DENY" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="all" additivity="false">
+            <AppenderRef ref="STDOUT" level="DEBUG" />
+            <AppenderRef ref="STDERR" level="WARN" />
+        </Root>
+    </Loggers>
+</Configuration>
