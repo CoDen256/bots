@@ -28,7 +28,7 @@ data object ListTimelinesRequest: FocusableActivityAnalyserRequest
 sealed interface FocusableActivityAnalyserResponse
 
 data class ActionEntityResponse(val actionId: String, val action: String): FocusableActivityAnalyserResponse
-data class ListActionResponse(val actions: List<ListActionResponse>): FocusableActivityAnalyserResponse
+data class ListActionResponse(val actions: List<ActionEntityResponse>): FocusableActivityAnalyserResponse
 
 data class FocusableEntityResponse(val focusableId: String, val description: String, val created: Instant): FocusableActivityAnalyserResponse
 data class ListFocusablesResponse(val focusables: List<FocusableEntityResponse>): FocusableActivityAnalyserResponse

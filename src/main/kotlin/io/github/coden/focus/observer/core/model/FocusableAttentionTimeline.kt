@@ -1,6 +1,6 @@
 package io.github.coden.focus.observer.core.model
 
-import java.sql.Timestamp
+import java.time.Instant
 
 
 data class FocusableAttentionTimeline(
@@ -8,4 +8,4 @@ data class FocusableAttentionTimeline(
     val attentionInstants: List<DetailedAttentionInstant>,
 )
 
-data class DetailedAttentionInstant(val timestamp: Timestamp, val action: Action)
+data class DetailedAttentionInstant(val timestamp: Instant, val action: Action)

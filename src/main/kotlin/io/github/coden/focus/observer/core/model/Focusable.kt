@@ -6,7 +6,7 @@ import java.time.Instant
 value class FocusableId(val value: String)
 
 data class Focusable(
+    val id: FocusableId,
     val description: String,
-    val created: Instant,
-    val id: FocusableId
+    val created: Instant = Instant.now()
 )
