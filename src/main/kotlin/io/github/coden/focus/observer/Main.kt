@@ -4,29 +4,17 @@ import com.sksamuel.hoplite.ConfigLoaderBuilder
 import com.sksamuel.hoplite.addFileSource
 import io.github.coden.database.DatasourceConfig
 import io.github.coden.database.database
-import io.github.coden.focus.observer.core.api.GetTimelineRequest
 import io.github.coden.focus.observer.core.api.NewActionRequest
-import io.github.coden.focus.observer.core.api.NewAttentionRequest
-import io.github.coden.focus.observer.core.api.NewFocusableRequest
 import io.github.coden.focus.observer.core.impl.DefaultActionDefiner
 import io.github.coden.focus.observer.core.impl.DefaultAttentionGiver
 import io.github.coden.focus.observer.core.impl.DefaultFocusableAnalyser
 import io.github.coden.focus.observer.core.impl.DefaultFocusableDefiner
-import io.github.coden.focus.observer.core.model.Action
-import io.github.coden.focus.observer.core.model.ActionId
 import io.github.coden.focus.observer.core.model.FocusableRepository
-import io.github.coden.focus.observer.postgres.Actions
-import io.github.coden.focus.observer.postgres.AttentionInstants
-import io.github.coden.focus.observer.postgres.Focusables
 import io.github.coden.focus.observer.postgres.PostgresFocusableRepository
 import io.github.coden.focus.observer.telegram.FocusObserverBot
 import io.github.coden.focus.observer.telegram.FocusObserverDB
-import io.github.coden.focus.observer.telegram.commands.DefaultCommandSerializer
-import io.github.coden.focus.observer.telegram.commands.FocusObserverCommand
 import io.github.coden.telegram.abilities.TelegramBotConfig
 import io.github.coden.telegram.run.TelegramBotConsole
-import org.jetbrains.exposed.sql.SchemaUtils
-import java.time.Instant
 
 
 data class RepositoryConfig(
@@ -60,6 +48,15 @@ fun main() {
     val actionDefiner = DefaultActionDefiner(repo)
     val giver = DefaultAttentionGiver(repo)
     val focusableDefiner = DefaultFocusableDefiner(repo)
+
+    actionDefiner.add(NewActionRequest("won't do"))
+    actionDefiner.add(NewActionRequest("will do"))
+    actionDefiner.add(NewActionRequest("don't wanna do"))
+    actionDefiner.add(NewActionRequest("do wanna do"))
+    actionDefiner.add(NewActionRequest("anxious about"))
+    actionDefiner.add(NewActionRequest("engage"))
+    actionDefiner.add(NewActionRequest("disengage"))
+    actionDefiner.add(NewActionRequest("refuse"))
 
     val db = FocusObserverDB("observer")
     val bot = FocusObserverBot(

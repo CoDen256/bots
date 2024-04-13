@@ -56,18 +56,18 @@ class FocusObserverBot(
 
     fun onCallback() = serializer.replyOnCallbackCommand { upd, cmd ->
         when (cmd) {
-            is ActivateActionCommand -> activateAction(upd, cmd.actionId, cmd.focusableId.toString())
+            is ActivateActionCommand -> activateAction(upd, cmd.actionId, cmd.focusableId)
             is DeleteActionCommand -> deleteAction(upd, cmd.actionId)
         }
     }
 
-    private fun activateAction(upd: Update, actionId: String, focusableId: String) {
+    private fun activateAction(upd: Update, actionId: Int, focusableId: String) {
 
         val (id, action) = analyser.action(GetActionRequest(actionId)).getOrThrow()
         sender.send("Action $action($id) for $focusableId was activated", upd.chat())
     }
 
-    private fun deleteAction(upd: Update, actionId: String) {
+    private fun deleteAction(upd: Update, actionId: Int) {
         val response = actionDefiner
             .delete(DeleteActionRequest(actionId))
             .getOrThrow()

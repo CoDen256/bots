@@ -5,11 +5,11 @@ sealed interface FocusObserverCommand : CallbackCommand
 
 
 class DeleteActionCommand(
-    val actionId: String,
+    val actionId: Int,
 ) : FocusObserverCommand
 
 
 data class ActivateActionCommand(
-    val actionId: String,
+    val actionId: Int,
     val focusableId: String
 ) : FocusObserverCommand

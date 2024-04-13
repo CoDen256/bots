@@ -11,13 +11,13 @@ object Focusables : Table("focusables") {
     override val primaryKey = PrimaryKey(id)
 }
 
-object Actions : Table("actions") {
-    val id = varchar("id", 5)
+object Actions : Table("focusable_actions") {
+    val id = integer("id")
     val name = varchar("name", 50)
     override val primaryKey = PrimaryKey(id)
 }
 
-object AttentionInstants : Table("attention_instants") {
+object AttentionInstants : Table("focus_attention_instants") {
     val timestamp = timestamp("timestamp")
     val focusableId = reference("focusable_id", Focusables.id)
     val actionId = reference("action_id", Actions.id)

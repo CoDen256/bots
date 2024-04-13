@@ -18,7 +18,7 @@ interface FocusableAnalyser {
 
 sealed interface FocusableActivityAnalyserRequest
 
-data class GetActionRequest(val actionId: String): FocusableActivityAnalyserRequest
+data class GetActionRequest(val actionId: Int): FocusableActivityAnalyserRequest
 data object ListActionsRequest : FocusableActivityAnalyserRequest
 
 data class GetFocusableRequest(val focusableId: String): FocusableActivityAnalyserRequest
@@ -30,7 +30,7 @@ data object ListTimelinesRequest: FocusableActivityAnalyserRequest
 
 sealed interface FocusableActivityAnalyserResponse
 
-data class ActionEntityResponse(val actionId: String, val action: String): FocusableActivityAnalyserResponse
+data class ActionEntityResponse(val actionId: Int, val action: String): FocusableActivityAnalyserResponse
 data class ListActionResponse(val actions: List<ActionEntityResponse>): FocusableActivityAnalyserResponse
 
 data class FocusableEntityResponse(val focusableId: String, val description: String, val created: Instant): FocusableActivityAnalyserResponse

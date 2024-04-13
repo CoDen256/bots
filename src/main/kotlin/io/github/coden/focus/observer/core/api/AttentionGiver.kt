@@ -12,7 +12,7 @@ interface AttentionGiver {
 
 sealed interface AttentionGiverRequest
 
-data class NewAttentionRequest(val timestamp: Instant, val focusId: String, val actionId: String): AttentionGiverRequest
+data class NewAttentionRequest(val timestamp: Instant, val focusId: String, val actionId: Int): AttentionGiverRequest
 data class DeleteAttentionRequest(val timestamp: Instant, val focusId: String): AttentionGiverRequest
 data class DeleteLastAttentionRequest(val focusId: String): AttentionGiverRequest
 data object ClearAttentionsRequest: AttentionGiverRequest
@@ -20,7 +20,7 @@ data object ClearAttentionsRequest: AttentionGiverRequest
 
 sealed interface AttentionGiverResponse
 
-data class NewAttentionResponse(val timestamp: Instant, val focusId: String, val actionId: String): AttentionGiverResponse
+data class NewAttentionResponse(val timestamp: Instant, val focusId: String, val actionId: Int): AttentionGiverResponse
 data class DeleteAttentionResponse(val timestamp: Instant, val focusId: String): AttentionGiverResponse
 data class DeleteLastAttentionResponse(val focusId: String): AttentionGiverResponse
 data class ClearAttentionsResponse(val count: Long): AttentionGiverResponse

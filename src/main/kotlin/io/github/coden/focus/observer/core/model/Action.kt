@@ -1,7 +1,7 @@
 package io.github.coden.focus.observer.core.model
 
 @JvmInline
-value class ActionId(val value: String)
+value class ActionId(val value: Int)
 
 /**
  * The type of attention given, an action performed in regard of a focusable.

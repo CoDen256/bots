@@ -11,6 +11,10 @@ import java.time.Instant
 
 class PostgresFocusableRepository(private val db: Database): FocusableRepository {
 
+    init {
+        SchemaUtils.createMissingTablesAndColumns(Focusables, Actions, AttentionInstants)
+    }
+
     override fun saveFocusable(focusable: Focusable): Result<Focusable> = db.transaction {
         Focusables.insert {
             it[id] = focusable.id.value
@@ -161,7 +165,13 @@ class PostgresFocusableRepository(private val db: Database): FocusableRepository
     }
 
     override fun getNextActionId(): Result<ActionId> = db.transaction {
-        ActionId(Actions.selectAll().count().toString())
+        val lastActionId = Actions
+            .select(Actions.id)
+            .orderBy(Actions.id, SortOrder.DESC)
+            .limit(1)
+            .single()[Actions.id]
+                .toInt()
+        ActionId(lastActionId + 1)
     }
 
     override fun getFocusables(): Result<List<Focusable>> = db.transaction {
