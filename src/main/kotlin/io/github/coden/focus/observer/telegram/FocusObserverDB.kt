@@ -16,24 +16,22 @@ class FocusObserverDB(filename: String)
         get() = getMap<OwnerMessage, String>(OWNER_FOCUSABLE_MESSAGES)
 
     private val botMessages
-        get() = getMap<String, MutableSet<BotMessage>>(BOT_FOCUSABLE_MESSAGES)
+        get() = getList<Pair<String, BotMessage>>(BOT_FOCUSABLE_MESSAGES)
 
 
     fun addFocusableToMessagesLink(focusableId: String, inMessage: OwnerMessage, outMessage: BotMessage) {
         ownerMessages[inMessage] = focusableId
-        botMessages.putIfAbsent(focusableId, HashSet())
-        botMessages[focusableId]?.add(outMessage)
+        botMessages.add(focusableId to outMessage)
         commit()
     }
 
-    private fun addOwnerMessageLink(focusableId: String, ownerMessage: OwnerMessage) {
+    fun addOwnerMessageLink(focusableId: String, ownerMessage: OwnerMessage) {
         ownerMessages[ownerMessage] = focusableId
         commit()
     }
 
     fun addBotMessageLink(focusableId: String, botMessage: BotMessage) {
-        botMessages.putIfAbsent(focusableId, HashSet())
-        botMessages[focusableId]?.add(botMessage)
+       botMessages.add(focusableId to botMessage)
         commit()
     }
 
@@ -46,7 +44,14 @@ class FocusObserverDB(filename: String)
     }
 
     fun getBotMessagesByFocusable(focusableId: String): Set<BotMessage> {
-        return botMessages[focusableId] ?: emptySet()
+        return botMessages
+            .filter { it.first == focusableId }
+            .map { it.second }
+            .toSet()
+    }
+
+    fun getAllBotMessages(): List<Pair<String, BotMessage>> {
+        return botMessages
     }
 
     fun getFocusableByOwnerMessage(ownerMessage: OwnerMessage): Result<String> {
@@ -56,14 +61,13 @@ class FocusObserverDB(filename: String)
 
     fun getFocusableByBotMessage(botMessage: BotMessage): Result<String> {
         return botMessages
-            .entries
-            .firstOrNull { it.value.contains(botMessage) }
-            ?.key
+            .firstOrNull { it.second == botMessage }
+            ?.first
             .notNullOrFailure(IllegalArgumentException("Unable to find focusable for $botMessage"))
     }
 
     fun deleteLinks(focusableId: String): Result<Unit> {
-        botMessages.remove(focusableId)
+            botMessages.removeIf { it.first == focusableId }
         ownerMessages
             .filterValues { it == focusableId }
             .toList()

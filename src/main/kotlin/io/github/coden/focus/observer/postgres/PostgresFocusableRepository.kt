@@ -45,6 +45,9 @@ class PostgresFocusableRepository(private val db: Database): FocusableRepository
 
     override fun deleteFocusable(focusableId: FocusableId): Result<Focusable> = db.transaction {
         val focusable = fetchFocusable(focusableId)
+        AttentionInstants.deleteWhere {
+            AttentionInstants.focusableId eq focusableId.value
+        }
         Focusables.deleteWhere {
             Focusables.id eq focusableId.value
         }
@@ -67,6 +70,9 @@ class PostgresFocusableRepository(private val db: Database): FocusableRepository
 
     override fun deleteAction(actionId: ActionId): Result<Action> = db.transaction {
         val action = fetchAction(actionId)
+        AttentionInstants.deleteWhere {
+            AttentionInstants.actionId eq actionId.value
+        }
         Actions.deleteWhere {
             Actions.id eq actionId.value
         }
@@ -151,10 +157,12 @@ class PostgresFocusableRepository(private val db: Database): FocusableRepository
     }
 
     override fun clearFocusables(): Result<Long> = db.transaction {
+        clearAttentionInstants()
         Focusables.deleteAll().toLong()
     }
 
     override fun clearActions(): Result<Long> = db.transaction {
+        clearAttentionInstants()
         Actions.deleteAll().toLong()
     }
 

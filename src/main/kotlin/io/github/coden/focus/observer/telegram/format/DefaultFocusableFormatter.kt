@@ -6,6 +6,7 @@ import io.github.coden.focus.observer.core.api.NewActionResponse
 import io.github.coden.focus.observer.core.api.NewFocusableResponse
 import io.github.coden.telegram.senders.ParseMode
 import io.github.coden.telegram.senders.StyledString
+import io.github.coden.telegram.senders.snippet
 import io.github.coden.telegram.senders.styled
 import java.time.Instant
 
@@ -15,16 +16,16 @@ class DefaultFocusableFormatter: FocusableFormatter {
     }
 
     override fun actionActivated(actionId: Int, focusableId: String): StyledString {
-        return "Action $actionId) for $focusableId was activated".styled()
+        return "Action ($actionId) for $focusableId was activated".styled()
     }
 
     override fun actionDeleted(actionId: Int): StyledString {
         return "Action $actionId deleted".styled()
     }
 
-    override fun focusable(id: String, description: String, created: Instant): StyledString {
+    override fun focusable(id: String, description: String, created: Instant, lastAction: String?): StyledString {
        return "*Focusable* `#${id}`".styled(ParseMode.MARKDOWN) +
-               "\n${created}" +
+               "\n${created} - $lastAction" +
                "\n\n${description}"
     }
 
@@ -38,5 +39,25 @@ class DefaultFocusableFormatter: FocusableFormatter {
 
     override fun newAction(response: NewActionResponse): StyledString {
         return "New action ${response.id} added".styled()
+    }
+
+    override fun format(focusables: List<FocusableEntityResponse>): StyledString {
+        return focusables.asList("\n") { f ->
+            append(
+                ("${f.focusableId}\n${f.description}"
+                    .take(73)
+                    .strip() + "..")
+                    .snippet(ParseMode.MARKDOWN))
+        }
+    }
+
+    private fun List<FocusableEntityResponse>.asList(separator: String, formatter: StringBuilder.(FocusableEntityResponse) -> Unit): StyledString {
+        val result = StringBuilder()
+        for (focusable in sortedBy { it.created }) {
+            formatter.invoke(result, focusable)
+            result.append(separator)
+        }
+        result.dropLast(separator.length)
+        return result.toString().styled(ParseMode.MARKDOWN)
     }
 }
