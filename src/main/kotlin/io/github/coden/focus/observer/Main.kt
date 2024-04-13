@@ -19,7 +19,10 @@ import io.github.coden.focus.observer.postgres.Actions
 import io.github.coden.focus.observer.postgres.AttentionInstants
 import io.github.coden.focus.observer.postgres.Focusables
 import io.github.coden.focus.observer.postgres.PostgresFocusableRepository
+import io.github.coden.focus.observer.telegram.FocusObserverBot
+import io.github.coden.focus.observer.telegram.FocusObserverDB
 import io.github.coden.telegram.abilities.TelegramBotConfig
+import io.github.coden.telegram.run.TelegramBotConsole
 import org.jetbrains.exposed.sql.SchemaUtils
 import java.time.Instant
 
@@ -56,11 +59,18 @@ fun main() {
     val giver = DefaultAttentionGiver(repo)
     val focusableDefiner = DefaultFocusableDefiner(repo)
 
-    analyser.timeline(GetTimelineRequest("ezyav")).getOrThrow()
+    val db = FocusObserverDB("observer")
+    val bot = FocusObserverBot(
+        config.telegram,
+        db,
+        actionDefiner,
+        focusableDefiner,
+        analyser,
+        giver
+    )
+
+    val console = TelegramBotConsole(bot)
 
 
-    println(config)
-
-
-
+    console.start()
 }
