@@ -21,6 +21,8 @@ import io.github.coden.focus.observer.postgres.Focusables
 import io.github.coden.focus.observer.postgres.PostgresFocusableRepository
 import io.github.coden.focus.observer.telegram.FocusObserverBot
 import io.github.coden.focus.observer.telegram.FocusObserverDB
+import io.github.coden.focus.observer.telegram.commands.DefaultCommandSerializer
+import io.github.coden.focus.observer.telegram.commands.FocusObserverCommand
 import io.github.coden.telegram.abilities.TelegramBotConfig
 import io.github.coden.telegram.run.TelegramBotConsole
 import org.jetbrains.exposed.sql.SchemaUtils
