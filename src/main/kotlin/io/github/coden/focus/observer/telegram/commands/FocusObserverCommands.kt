@@ -13,3 +13,5 @@ data class ActivateActionCommand(
     val actionId: Int,
     val focusableId: String
 ) : FocusObserverCommand
+
+data object DeleteMessageCommand: FocusObserverCommand
