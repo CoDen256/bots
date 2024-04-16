@@ -16,4 +16,5 @@ interface FocusableFormatter {
     fun listActions(actions: List<ActionEntityResponse>): StyledString
     fun newAction(response: NewActionResponse): StyledString
     fun format(focusables: List<FocusableEntityResponse>): StyledString
+    fun keyboardActionColumns(): Int
 }
