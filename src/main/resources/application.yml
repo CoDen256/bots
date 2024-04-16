@@ -10,3 +10,6 @@ repo:
     url: jdbc:postgresql://<host>/<schema>
     password: <password>
     user: <user>
+
+format:
+  columns: 3

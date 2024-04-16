@@ -10,7 +10,9 @@ import io.github.coden.telegram.senders.snippet
 import io.github.coden.telegram.senders.styled
 import java.time.Instant
 
-class DefaultFocusableFormatter: FocusableFormatter {
+class DefaultFocusableFormatter
+    (private val actionColumns: Int)
+    : FocusableFormatter {
     override fun addedNewFocusable(response: NewFocusableResponse): StyledString {
         return "Gotcha! Added new focusable #${response.id}".styled()
     }
@@ -23,9 +25,10 @@ class DefaultFocusableFormatter: FocusableFormatter {
         return "Action $actionId deleted".styled()
     }
 
-    override fun focusable(id: String, description: String, created: Instant, lastAction: String?): StyledString {
-       return "*Focusable* `#${id}`".styled(ParseMode.MARKDOWN) +
-               "\n${created} - $lastAction" +
+    override fun focusable(id: String, description: String, created: Instant, actions: List<String>): StyledString {
+        val size = actions.size
+        return "*Focusable* `#${id}`".styled(ParseMode.MARKDOWN) +
+               "\n${created} - ${size} actions${actions.getOrNull(0)?.let { " : $it" } ?: ""}" +
                "\n\n${description}"
     }
 
@@ -49,6 +52,10 @@ class DefaultFocusableFormatter: FocusableFormatter {
                     .strip() + "..")
                     .snippet(ParseMode.MARKDOWN))
         }
+    }
+
+    override fun keyboardActionColumns(): Int {
+        return actionColumns
     }
 
     private fun List<FocusableEntityResponse>.asList(separator: String, formatter: StringBuilder.(FocusableEntityResponse) -> Unit): StyledString {

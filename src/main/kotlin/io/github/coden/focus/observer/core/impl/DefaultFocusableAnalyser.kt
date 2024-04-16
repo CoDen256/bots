@@ -49,6 +49,7 @@ class DefaultFocusableAnalyser(val repo: FocusableRepository) : FocusableAnalyse
     private fun mapTimeline(timeline: FocusableAttentionTimeline): FocusableTimelineEntityResponse {
         return FocusableTimelineEntityResponse(mapFocusable(timeline.focusable)
             , timeline.attentionInstants.map { mapAttention(it) }
+                .sortedByDescending { it.timestamp }
 
         )
     }

@@ -5,7 +5,7 @@ import io.github.coden.focus.observer.core.model.Action
 import io.github.coden.focus.observer.core.model.ActionId
 import io.github.coden.focus.observer.core.model.FocusableRepository
 import io.github.coden.utils.flatMap
-import io.github.coden.utils.logInteraction
+import io.github.coden.utils.logResult
 import org.apache.logging.log4j.kotlin.Logging
 
 class DefaultActionDefiner(
@@ -17,7 +17,7 @@ class DefaultActionDefiner(
         return repo.getNextActionId()
             .flatMap { repo.saveAction(Action(it, request.name)) }
             .map { NewActionResponse(it.id.value, it.type) }
-            .logInteraction(logger) { "Added new action: ${it.id}" }
+            .logResult(logger) { "Added new action: ${it.id}" }
     }
 
     override fun delete(request: DeleteActionRequest): Result<DeleteActionResponse> {
@@ -25,7 +25,7 @@ class DefaultActionDefiner(
 
         return repo.deleteAction(ActionId(request.id))
             .map { DeleteActionResponse(it.id.value) }
-            .logInteraction(logger) { "Deleted action: ${request.id}" }
+            .logResult(logger) { "Deleted action: ${request.id}" }
     }
 
     override fun update(request: UpdateActionRequest): Result<UpdateActionResponse> {
@@ -34,7 +34,7 @@ class DefaultActionDefiner(
         return repo
             .updateAction(Action(ActionId(request.id), request.name))
             .map { UpdateActionResponse(it.id.value, it.type) }
-            .logInteraction(logger) { "Updated action: ${request.id}" }
+            .logResult(logger) { "Updated action: ${request.id}" }
     }
 
     override fun clear(request: ClearActionsRequest): Result<ClearActionsResponse> {
@@ -42,6 +42,6 @@ class DefaultActionDefiner(
         return repo
             .clearActions()
             .map { ClearActionsResponse(it) }
-            .logInteraction(logger) { "Cleared ${it.count} actions" }
+            .logResult(logger) { "Cleared ${it.count} actions" }
     }
 }

@@ -19,6 +19,7 @@ import io.github.coden.telegram.senders.deleteMessage
 import io.github.coden.telegram.senders.edit
 import io.github.coden.telegram.senders.editBuilder
 import io.github.coden.telegram.senders.send
+import io.github.coden.utils.combine
 import org.telegram.abilitybots.api.objects.Flag
 import org.telegram.abilitybots.api.objects.Reply
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup
@@ -47,6 +48,21 @@ class FocusObserverBot(
     // focusable changed -> bla -> bla
 
 
+    fun onActivatedAction() = replyOn(Flag.REPLY) { upd ->
+
+        val action = cleanText(upd)
+
+        val (focusableId, newAction, newAttention) = db()
+            .getFocusableByBotMessage(upd.message.replyToMessage.asBot())
+            .combine { actionDefiner.add(NewActionRequest(action)) }
+            .combine { focusableId, newAction ->
+                attentionGiver.add(NewAttentionRequest(Instant.now(), focusableId, newAction.id))
+            }
+            .getOrThrow()
+
+        syncFocusableMessages(focusableId, upd.chat())
+    }
+
     fun onNewAction() = ability("action") { update ->
         val name = cleanText(update)
 
@@ -70,7 +86,10 @@ class FocusObserverBot(
             )
         }.getOrThrow()
 
-        sender.send(formatter.listActions(actions), upd.chat(), keyboard)
+        sender.send(
+            formatter.listActions(actions), upd.chat(),
+//            keyboard
+        )
     }
 
     fun onAllFocusables() = ability("all") { update ->
@@ -120,24 +139,24 @@ class FocusObserverBot(
         }.getOrThrow()
 
         val owner = db().getOwnerMessageByFocusable(focusable.focusableId).getOrNull()
-        val lastAction = analyser.lastAttentionInstant(GetLastAttentionInstantRequest(focusable.focusableId))
+        val timeline = analyser.timeline(GetTimelineRequest(focusable.focusableId))
             .getOrNull()
+        val text = formatter.focusable(
+            focusable.focusableId,
+            focusable.description,
+            focusable.created,
+            timeline?.timeline?.map { it.action.action } ?: emptyList()
+        )
         val bot = sender.send(
-            formatter.focusable(
-                focusable.focusableId,
-                focusable.description,
-                focusable.created,
-                lastAction?.action?.action
-            ),
+            text,
             upd.chat(),
-            keyboard,
-            owner
+            replyTo = owner
         )
 
         db().addBotMessageLink(focusable.focusableId, bot)
     }
 
-    fun onNewFocusable() = replyOn({ isJustText(it) }) { upd ->
+    fun onNewFocusable() = replyOn({ isJustText(it) && it.message?.isReply != true}) { upd ->
         val description = cleanText(upd)
 
         val newFocusable = focusableDefiner
@@ -151,19 +170,24 @@ class FocusObserverBot(
             .actions
             .sortedBy { it.actionId }
 
-        val lastAction = analyser.lastAttentionInstant(GetLastAttentionInstantRequest(newFocusable.id))
-            .getOrNull()
+
         val keyboard = keyboard(actions, formatter.keyboardActionColumns()) { action ->
             KeyboardButton(
                 action.action,
                 data = cmdSerializer.serialize(ActivateActionCommand(action.actionId, newFocusable.id))
             )
         }.getOrThrow()
-        val botMessage = sender.send(
-            formatter.focusable(newFocusable.id, newFocusable.description, newFocusable.created, lastAction?.action?.action),
-            upd.chat(),
-            keyboard
+
+        val timeline = analyser.timeline(GetTimelineRequest(newFocusable.id)).getOrNull()
+
+        val text = formatter.focusable(
+            newFocusable.id,
+            newFocusable.description,
+            newFocusable.created,
+            timeline?.timeline?.map { it.action.action } ?: emptyList()
         )
+
+        val botMessage = sender.send(text, upd.chat())
         val owner = upd.message.asOwner()
         db().addFocusableToMessagesLink(newFocusable.id, owner, botMessage)
 
@@ -246,24 +270,26 @@ class FocusObserverBot(
         }
         db().getAllBotMessages().sortedByDescending { it.second.id }
             .forEach { (focusableId, botMessage) ->
-            val keyboard = keyboard(actions, formatter.keyboardActionColumns()) { action ->
-                KeyboardButton(
-                    action.action,
-                    data = cmdSerializer.serialize(ActivateActionCommand(action.actionId, focusableId))
-                )
-            }.getOrNull()
-                ?.asInlineKeyboardMarkup() ?: return@forEach
+                val keyboard = keyboard(actions, formatter.keyboardActionColumns()) { action ->
+                    KeyboardButton(
+                        action.action,
+                        data = cmdSerializer.serialize(ActivateActionCommand(action.actionId, focusableId))
+                    )
+                }.getOrNull()
+                    ?.asInlineKeyboardMarkup() ?: return@forEach
 
-            try {
-                sender.execute(editReply
-                    .replyMarkup(keyboard)
-                    .messageId(botMessage.id)
-                    .build())
-            }catch (e:Exception){
-                logger.error(e)
-                return@forEach
+                try {
+                    sender.execute(
+                        editReply
+//                    .replyMarkup(keyboard)
+                            .messageId(botMessage.id)
+                            .build()
+                    )
+                } catch (e: Exception) {
+                    logger.error(e)
+                    return@forEach
+                }
             }
-        }
     }
 
     fun syncFocusableMessages(focusableId: String, upd: Chat, deleted: Boolean = false) {
@@ -285,16 +311,24 @@ class FocusObserverBot(
         val keyboard = keyboard(actions, formatter.keyboardActionColumns()) { action ->
             KeyboardButton(
                 action.action,
-                data = cmdSerializer.serialize(ActivateActionCommand(action.actionId, focusableId))
+//                data = cmdSerializer.serialize(ActivateActionCommand(action.actionId, focusableId))
             )
         }.getOrThrow()
 
 
-        val lastAction = analyser.lastAttentionInstant(GetLastAttentionInstantRequest(focusable.focusableId))
+        val timeline = analyser.timeline(GetTimelineRequest(focusable.focusableId))
             .getOrNull()
-        val text = formatter.focusable(focusable.focusableId, focusable.description, focusable.created, lastAction?.action?.action)
+        val text = formatter.focusable(
+            focusable.focusableId,
+            focusable.description,
+            focusable.created,
+            timeline?.timeline?.map { it.action.action } ?: emptyList()
+        )
 
-        val edit = sender.editBuilder(text, upd, keyboard)
+        val edit = sender.editBuilder(
+            text, upd,
+//            keyboard
+        )
 
         for (target in targets.sortedByDescending { it.id }) {
             sender.execute(edit.messageId(target.id).build())

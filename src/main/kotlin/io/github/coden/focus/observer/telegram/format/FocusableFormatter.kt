@@ -11,7 +11,7 @@ interface FocusableFormatter {
     fun addedNewFocusable(response: NewFocusableResponse): StyledString
     fun actionActivated(actionId: Int, focusableId: String): StyledString
     fun actionDeleted(actionId: Int): StyledString
-    fun focusable(id: String, description: String, created: Instant, lastAction: String?): StyledString
+    fun focusable(id: String, description: String, created: Instant, actions: List<String>): StyledString
     fun deletedFocusable(focusableId: String): StyledString
     fun listActions(actions: List<ActionEntityResponse>): StyledString
     fun newAction(response: NewActionResponse): StyledString
