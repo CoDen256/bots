@@ -1,0 +1,6 @@
+GET
+
+https://onlinetermine.arzt-direkt.com/api/opening?
+localityIds=
+&instance=63888c84a368f154129b0af0
+&terminSucheIdent=132158609569087490&forerunTime=0
