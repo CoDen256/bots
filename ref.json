@@ -1,0 +1,451 @@
+{
+  "_id": "64282e89ce6275ae8d079cfb",
+  "instance": "5e8d5ff3a6abce001906ae07",
+  "name": {
+    "de": "Neurologie: Mandy Broszeit",
+    "en": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+    "fr": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+    "it": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+    "es": "MULTILINGUAL-FIELD.NO-TRANSLATION"
+  },
+  "description": {
+    "de": "<p>Sprechstunde Neurologie - Leipzig</p><p>(Deutsch, Englisch)</p>",
+    "en": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+    "fr": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+    "it": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+    "es": "MULTILINGUAL-FIELD.NO-TRANSLATION"
+  },
+  "info": {
+    "de": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+    "en": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+    "fr": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+    "it": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+    "es": "MULTILINGUAL-FIELD.NO-TRANSLATION"
+  },
+  "insurance": [
+    "gkv",
+    "pkv"
+  ],
+  "terminSucheIdent": "78299350465773569",
+  "attachment": [],
+  "active": true,
+  "displayLimit": 0,
+  "urgentAppointment": false,
+  "useSpecificFieldSettings": false,
+  "waitinglist": false,
+  "textNoOpeningsDefault": {
+    "de": "Derzeit sind keine Termine freigegeben.",
+    "en": "There are no available appointments at the moment.",
+    "fr": "There are no available appointments at the moment.",
+    "it": "There are no available appointments at the moment.",
+    "es": "There are no available appointments at the moment."
+  },
+  "emailSettings": {
+    "cancelled": {
+      "content": {
+        "de": "",
+        "en": "",
+        "fr": "",
+        "it": "",
+        "es": ""
+      },
+      "format": "template",
+      "embedContent": false,
+      "subject": {
+        "de": "",
+        "en": "",
+        "fr": "",
+        "it": "",
+        "es": ""
+      },
+      "useSubject": false,
+      "active": true,
+      "sendHostMessage": true
+    },
+    "confirmed": {
+      "content": {
+        "de": "",
+        "en": "",
+        "fr": "",
+        "it": "",
+        "es": ""
+      },
+      "format": "template",
+      "embedContent": false,
+      "subject": {
+        "de": "",
+        "en": "",
+        "fr": "",
+        "it": "",
+        "es": ""
+      },
+      "useSubject": false,
+      "active": true,
+      "sendHostMessage": true
+    },
+    "moved": {
+      "content": {
+        "de": "",
+        "en": "",
+        "fr": "",
+        "it": "",
+        "es": ""
+      },
+      "format": "template",
+      "embedContent": false,
+      "subject": {
+        "de": "",
+        "en": "",
+        "fr": "",
+        "it": "",
+        "es": ""
+      },
+      "useSubject": false,
+      "active": true,
+      "sendHostMessage": true
+    },
+    "requested": {
+      "content": {
+        "de": "",
+        "en": "",
+        "fr": "",
+        "it": "",
+        "es": ""
+      },
+      "format": "template",
+      "embedContent": false,
+      "subject": {
+        "de": "",
+        "en": "",
+        "fr": "",
+        "it": "",
+        "es": ""
+      },
+      "useSubject": false,
+      "active": true,
+      "sendHostMessage": true
+    },
+    "reminder": {
+      "content": {
+        "de": "",
+        "en": "",
+        "fr": "",
+        "it": "",
+        "es": ""
+      },
+      "format": "template",
+      "embedContent": false,
+      "subject": {
+        "de": "",
+        "en": "",
+        "fr": "",
+        "it": "",
+        "es": ""
+      },
+      "useSubject": false,
+      "active": true,
+      "sendHostMessage": false
+    }
+  },
+  "bookingLimitSettings": {
+    "general": {
+      "limitCount": 0,
+      "limitLength": 0,
+      "limitInterval": 0,
+      "limitIntervalType": "quarter"
+    },
+    "gkv": {
+      "limitCount": 0,
+      "limitLength": 0,
+      "limitInterval": 0,
+      "limitIntervalType": "quarter"
+    },
+    "pkv": {
+      "limitCount": 0,
+      "limitLength": 0,
+      "limitInterval": 0,
+      "limitIntervalType": "quarter"
+    },
+    "hzv": {
+      "limitCount": 0,
+      "limitLength": 0,
+      "limitInterval": 0,
+      "limitIntervalType": "day"
+    },
+    "sz": {
+      "limitCount": 0,
+      "limitLength": 0,
+      "limitInterval": 0,
+      "limitIntervalType": "quarter"
+    },
+    "bg": {
+      "limitCount": 0,
+      "limitLength": 0,
+      "limitInterval": 0,
+      "limitIntervalType": "quarter"
+    }
+  },
+  "displayOptions": {
+    "ageAtBookingTime": {
+      "show": false,
+      "condition": []
+    },
+    "ageAtAppointmentTime": {
+      "show": false,
+      "condition": []
+    }
+  },
+  "__v": 2,
+  "lastSync": "2024-12-02T13:03:24.402Z",
+  "allowClientCancellationDefault": true,
+  "allowClientMoveDefault": true,
+  "allowOnlyKnownEmailDefault": false,
+  "cancellationWindowDefault": 24,
+  "dialectDefault": "arzt",
+  "fileUpload": true,
+  "formIdentifier": null,
+  "onlineConsultation": false,
+  "onlineConsultationFormIdentifier": null,
+  "patientTargetDefault": "both",
+  "selectableIfNoOpeningsDefault": false,
+  "showDoctorsDefault": true,
+  "showDurationDefault": false,
+  "showIfNoOpeningsDefault": true,
+  "strategyDefault": "autoconfirm",
+  "specificFieldSettings": {
+    "pediatricianMode": false,
+    "basic": [
+      {
+        "identifier": "address",
+        "display": false,
+        "required": false,
+        "editable": false,
+        "description": {
+          "de": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "en": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "fr": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "it": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "es": "MULTILINGUAL-FIELD.NO-TRANSLATION"
+        }
+      },
+      {
+        "identifier": "confirmTreated",
+        "display": false,
+        "required": false,
+        "editable": false,
+        "description": {
+          "de": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "en": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "fr": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "it": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "es": "MULTILINGUAL-FIELD.NO-TRANSLATION"
+        }
+      },
+      {
+        "identifier": "confirmCorrect",
+        "display": false,
+        "required": false,
+        "editable": false,
+        "description": {
+          "de": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "en": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "fr": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "it": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "es": "MULTILINGUAL-FIELD.NO-TRANSLATION"
+        }
+      },
+      {
+        "identifier": "checkbox3",
+        "display": false,
+        "required": false,
+        "editable": false,
+        "description": {
+          "de": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "en": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "fr": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "it": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "es": "MULTILINGUAL-FIELD.NO-TRANSLATION"
+        }
+      },
+      {
+        "identifier": "checkbox4",
+        "display": false,
+        "required": false,
+        "editable": false,
+        "description": {
+          "de": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "en": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "fr": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "it": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "es": "MULTILINGUAL-FIELD.NO-TRANSLATION"
+        }
+      },
+      {
+        "identifier": "checkbox5",
+        "display": false,
+        "required": false,
+        "editable": false,
+        "description": {
+          "de": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "en": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "fr": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "it": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "es": "MULTILINGUAL-FIELD.NO-TRANSLATION"
+        }
+      },
+      {
+        "identifier": "emailCC",
+        "display": false,
+        "required": false,
+        "editable": false,
+        "description": {
+          "de": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "en": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "fr": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "it": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "es": "MULTILINGUAL-FIELD.NO-TRANSLATION"
+        }
+      },
+      {
+        "identifier": "gender",
+        "display": true,
+        "required": false,
+        "editable": false,
+        "description": {
+          "de": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "en": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "fr": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "it": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "es": "MULTILINGUAL-FIELD.NO-TRANSLATION"
+        }
+      },
+      {
+        "identifier": "customerId",
+        "display": false,
+        "required": false,
+        "editable": false,
+        "description": {
+          "de": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "en": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "fr": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "it": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "es": "MULTILINGUAL-FIELD.NO-TRANSLATION"
+        }
+      },
+      {
+        "identifier": "insuranceName",
+        "display": false,
+        "required": false,
+        "editable": false,
+        "description": {
+          "de": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "en": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "fr": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "it": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "es": "MULTILINGUAL-FIELD.NO-TRANSLATION"
+        },
+        "limit": 40
+      },
+      {
+        "identifier": "info",
+        "display": false,
+        "required": false,
+        "editable": false,
+        "description": {
+          "de": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "en": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "fr": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "it": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "es": "MULTILINGUAL-FIELD.NO-TRANSLATION"
+        },
+        "limit": 200
+      },
+      {
+        "identifier": "phone",
+        "display": true,
+        "required": false,
+        "editable": false,
+        "description": {
+          "de": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "en": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "fr": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "it": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "es": "MULTILINGUAL-FIELD.NO-TRANSLATION"
+        }
+      },
+      {
+        "identifier": "insuranceNumber",
+        "display": false,
+        "required": false,
+        "editable": false,
+        "description": {
+          "de": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "en": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "fr": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "it": "MULTILINGUAL-FIELD.NO-TRANSLATION",
+          "es": "MULTILINGUAL-FIELD.NO-TRANSLATION"
+        },
+        "limit": 40
+      }
+    ],
+    "custom": []
+  },
+  "kalender": [
+    "74393038086471681"
+  ],
+  "showDescription": true,
+  "showInfo": false,
+  "isEnabled": true,
+  "isZuweiser": false,
+  "redirectionAfterBookingActive": false,
+  "redirectionAfterBookingUrls": {
+    "de": "",
+    "en": "",
+    "fr": "",
+    "it": "",
+    "es": ""
+  },
+  "adPayActive": false,
+  "amount": {
+    "currency": "EUR",
+    "value": 0
+  },
+  "dateCondition": [],
+  "netAmount": {
+    "currency": "EUR",
+    "value": "0"
+  },
+  "storeId": null,
+  "vatPercentage": 0,
+  "order": 0,
+  "tomTerminSuche": {
+    "_id": "64282e89ce6275ae8d079cf6",
+    "duration": 15,
+    "durationSearch": 15
+  },
+  "hasOpenings": false,
+  "duration": 15,
+  "durationSearch": 15,
+  "allowDoctorChoice": true,
+  "allowOnlyKnownEmail": false,
+  "allowClientCancellation": true,
+  "allowClientMove": true,
+  "showDuration": false,
+  "cancellationWindow": 24,
+  "showDoctors": true,
+  "strategy": "autoconfirm",
+  "patientTarget": "both",
+  "reservationTime": 15,
+  "showIfNoOpenings": true,
+  "selectableIfNoOpenings": false,
+  "textNoOpenings": {
+    "de": "Derzeit sind keine Termine freigegeben.",
+    "en": "There are no available appointments at the moment.",
+    "fr": "There are no available appointments at the moment.",
+    "it": "There are no available appointments at the moment.",
+    "es": "There are no available appointments at the moment."
+  },
+  "dialect": "arzt",
+  "forerunTime": 0,
+  "isDisabled": true
+}
