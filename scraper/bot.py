@@ -50,12 +50,14 @@ class Opening:
 
 
 class HyApi:
+    LOCALITIES = ["136244789462435842", "106154130175164417", "106154141269098497"]
+    INSTANCE = "5e8d5ff3a6abce001906ae07"
     # The URL to check
     API_HOST = "https://onlinetermine.arzt-direkt.com"
     CATEGORY_ENDPOINT = "/api/appointment-category"
     OPENINGS_ENDPOINT = ("/api/opening?"
-                         "localityIds=136244789462435842,106154130175164417,106154141269098497"
-                         "&instance=5e8d5ff3a6abce001906ae07"
+                         f"localityIds={','.join(LOCALITIES)}"
+                         f"&instance={INSTANCE}"
                          "&terminSucheIdent={ident}"
                          "&forerunTime=0")
     HEADERS = {
@@ -69,19 +71,17 @@ class HyApi:
     }
 
     CATEGORY_PAYLOAD = {"birthDate": None,
-                        "localityIds":
-                            ["136244789462435842", "106154130175164417", "106154141269098497"],
-                        # [],
-                        "instance":
-                        # "63888c84a368f154129b0af0",
-                            "5e8d5ff3a6abce001906ae07",
+                        "localityIds": LOCALITIES,
+                        "instance": INSTANCE,
                         "catId": "", "insuranceType": "gkv"}
 
     def __init__(self):
         pass
 
     def get_raw_categories(self):
-        response = requests.post(HyApi.API_HOST + HyApi.CATEGORY_ENDPOINT, headers=HyApi.HEADERS,
+        e = HyApi.API_HOST + HyApi.CATEGORY_ENDPOINT
+        print(f"Running {e}")
+        response = requests.post(e, headers=HyApi.HEADERS,
                                  json=HyApi.CATEGORY_PAYLOAD)
         response.raise_for_status()  # Raise an exception for HTTP errors
         json = response.json()
@@ -100,7 +100,9 @@ class HyApi:
             raise e
 
     def get_raw_openings(self, id):
-        response = requests.get(HyApi.API_HOST + HyApi.OPENINGS_ENDPOINT.replace("{ident}", id), headers=HyApi.HEADERS)
+        e = HyApi.API_HOST + HyApi.OPENINGS_ENDPOINT.replace("{ident}", id)
+        print(f"Running {e}")
+        response = requests.get(e, headers=HyApi.HEADERS)
         response.raise_for_status()  # Raise an exception for HTTP errors
         json = response.json()
         print(f"Got response: {json}")
