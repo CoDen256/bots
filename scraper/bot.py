@@ -139,8 +139,10 @@ def check_message(message):
             bot.reply_to(message, f"These are all the openings:\n{joined}", parse_mode='Markdown')
             for d in data:
                 try:
-                    ops = api.get_openings(d.searchId)
+                    ops = api.get_openings(d.searchId)[:10]
+                    if (not ops): continue
                     bot.reply_to(message, f"These are all the openings for {d.name}:\n" + "\n".join(map(lambda x: str(x), ops)))
+                    time.sleep(5)
                 except Exception as e:
                     bot.reply_to(message, f"Error while getting openings: {e}")
         else:
@@ -230,7 +232,7 @@ def poll_and_check():
             bot.send_message(CHAT_ID,
                              f"📅 There is an available opening !\n\n {s}\n\nhttps://www.hygieia.net/leipzig/terminvereinbarung/",
                              parse_mode='Markdown')
-            ops = api.get_raw_openings(a.searchId)
+            ops = api.get_raw_openings(a.searchId)[:10]
             bot.send_message(CHAT_ID, "Openings:\n" + "\n".join(map(lambda x: str(x), ops)))
 
 
