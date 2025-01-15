@@ -115,3 +115,10 @@ class Chrome:
         self.driver.find_element(By.CSS_SELECTOR, "div[aria-label^='Suche']").click()
         self.driver.find_element(By.ID, "searchboxinput").send_keys(f"Supermärkte near {src}, {plz}")
         self.driver.find_element(By.CSS_SELECTOR, "button[aria-label^='Suche']").click()
+
+chrome = Chrome()
+try:
+    print("Parsing OME Time")
+    print(chrome.find_work("Georg-Schumann-Str. 100"))
+except Exception as e:
+    logging.error("error ome", e)
