@@ -13,7 +13,7 @@ BOT_TOKEN = "7763823252:AAHRToFwss4-dqbB-f-rzo9fEACefFNnPd8"
 CHECK_INTERVAL = 600  # god forgive me for editing this global var, im so sorry
 CHECK_PATTERN = "Psychiatrie: E. Müller"  # god forgive me for editing this global var, im so sorry
 # User ID to notify (replace with the actual user ID or chat ID)
-CHAT_ID = 283382228  #
+CHAT_ID = -1002193480523# 283382228  #
 LATEST = []
 
 
@@ -232,8 +232,13 @@ def poll_and_check():
             bot.send_message(CHAT_ID,
                              f"📅 There is an available opening !\n\n {s}\n\nhttps://www.hygieia.net/leipzig/terminvereinbarung/",
                              parse_mode='Markdown')
-            ops = api.get_raw_openings(a.searchId)[:10]
-            bot.send_message(CHAT_ID, "Openings:\n" + "\n".join(map(lambda x: str(x), ops)))
+            try:
+                ops = api.get_openings(a.searchId)
+                if (not ops): continue
+                bot.send_message(CHAT_ID,
+                             f"These are all the openings for {a.name}:\n" + "\n".join(map(lambda x: str(x), ops)))
+            except Exception as e:
+                bot.send_message(CHAT_ID, f"Error while getting openings: {e}")
 
 
 # Function to check the URL
