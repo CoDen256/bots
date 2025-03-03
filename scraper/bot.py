@@ -1,65 +1,240 @@
 import io
 import json
-from datetime import datetime
+import threading
+from datetime import datetime, timedelta
 
 import pytz
 import telebot
 import requests
 import time
-from threading import Thread
 
-BOT_TOKEN = "7763823252:AAHRToFwss4-dqbB-f-rzo9fEACefFNnPd8"
-# Time interval for periodic checks (in seconds)
-CHECK_INTERVAL = 600  # god forgive me for editing this global var, im so sorry
-CHECK_PATTERN = "Psychiatrie: E. Müller"  # god forgive me for editing this global var, im so sorry
-# User ID to notify (replace with the actual user ID or chat ID)
-CHAT_ID = -1002193480523# 283382228  #
-LATEST = []
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+
+BOT_TOKEN = "7885389800:AAGW8OnhjAQiy8xYk0RszcFWn2gIqyeXxGk"
+CHECK_INTERVAL = 10
+CHECK_PATTERN = ""  # check any
+CHAT_ID = 283382228  # -1002193480523 # 283382228
+TZ = pytz.timezone("Europe/Berlin")
+
+
+def inutc(datetime):
+    return datetime.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+
+
+def readable_precise_time(datetime):
+    return str(datetime.astimezone(TZ).strftime("%d.%m.%y at %H:%M:%S"))
+
+
+def readable_time(datetime):
+    return str(datetime.astimezone(TZ).strftime("🗓️ %b %d, %Y 🕒 %H:%M"))
+
+
+def format_appointment(appointment, queried=False):
+    mark = "🟢" if appointment.has_openings else "🔴"
+    body = ""
+    body += f"Last synced:  {readable_precise_time(appointment.sync)}"
+    if queried:
+        body += f"\nLast queried: {readable_precise_time(appointment.updated)}"
+    if not appointment.patient: appointment.patient = "u"
+    return f'<pre><code class="language-{mark} ({appointment.patient[0].upper()}) {appointment.name}">{body}</code></pre>'
+
+
+def format_appointments(appointments, queried=False):
+    return "\n".join(map(lambda x: format_appointment(x, queried), appointments))
+
+
+def format_openings(openings, appointment, sync=False):
+    mark = "🟢" if appointment.has_openings else "🔴"
+
+    body = format_openings_if_present(openings, appointment, sync)
+    return f'<pre><code class="language-{mark} ({appointment.patient[0].upper()}) {appointment.name}">{body}</code></pre>'
+
+
+def format_openings_if_present(openings, appointment, sync):
+    body = ""
+
+    if not openings and appointment.has_openings:
+        body += "--😮 no openings found --"
+    if openings:
+        body += "\n".join(list(map(format_opening, openings)))
+    if sync:
+        if openings:
+            body += "\n\n"
+        body += f"Last sync: {readable_precise_time(appointment.sync)}"
+    if not openings and not sync:
+        body += "..."
+
+    return body
+
+
+def format_opening(opening):
+    return f"{readable_time(opening.date)}"
 
 
 class Appointment:
-    def __init__(self, name, hasOpenings, id, patient, sync: datetime, searchId):
+    def __init__(self, name, has_openings, id, patient, sync: datetime, search_id, updated: datetime):
         self.name = name
-        self.hasOpenings = hasOpenings
+        self.has_openings = has_openings
         self.id = id
         self.patient = patient
-        self.sync: datetime = sync
-        self.searchId = searchId
+        self.sync: datetime = pytz.utc.localize(sync)
+        self.updated = pytz.utc.localize(updated)
+        self.search_id = search_id
 
     def __str__(self):
-        pre = "✅" if self.hasOpenings else "❌"
-        avail = "available" if self.hasOpenings else "not available"
-        tz = pytz.timezone("Europe/Berlin")
-        return f"{pre} {self.name} ({self.patient} patients) -> *{avail}* | as of {self.sync.astimezone(tz)}"
+        return self.name
 
     def __repr__(self):
         return self.__str__()
 
 
 class Opening:
-    def __init__(self, name, date: datetime):
+    def __init__(self, name, date: datetime, duration, doctor_ids, search_id):
         self.name = name
-        self.date = date
+        self.date = pytz.utc.localize(date)
+        self.duration = duration
+        self.doctor_ids = doctor_ids
+        self.search_id = search_id
 
     def __str__(self):
-        tz = pytz.timezone("Europe/Berlin")
-        return f"{self.date.astimezone(tz)} - {self.name}"
+        return self.name
 
     def __repr__(self):
         return self.__str__()
 
 
-class HyApi:
-    LOCALITIES = ["136244789462435842", "106154130175164417", "106154141269098497"]
+class TelegramUI:
+    def __init__(self, chat_id, token):
+        self.bot = telebot.TeleBot(token)
+        self.chat_id = chat_id
+
+    def start_blocking(self):
+        # Polling for Telegram bot commands
+        print("Bot is running...")
+        self.bot.infinity_polling()
+
+    def send(self, text, **kwargs):
+        try:
+            self.bot.send_message(self.chat_id, text, **kwargs)
+        except Exception as e:
+            self.error("Could not send a message", e)
+
+    def reply(self, message, text, **kwargs):
+        try:
+            self.bot.send_message(self.chat_id, text, **kwargs)
+        except Exception as e:
+            self.error(f"Could not reply to a message {message.text}", e)
+
+    def error(self, message, error):
+        print(f"Error! {message}: {error}")
+        self.bot.send_message(self.chat_id, f"Error! {message}:\n{error}")
+
+
+class ArztService:
+    def __init__(self, ui, pattern, interval):
+        self.ui = ui
+        self.pattern = pattern
+        self.interval = interval
+        self.latest = []
+
+    def set_filter(self, pattern):
+        prev = self.pattern
+        self.pattern = pattern
+        return prev
+
+    def start(self):
+        threading.Thread(target=self.run_blocking, daemon=True).start()
+
+    def run_blocking(self):
+        while True:
+            print(f"Check at {datetime.now()}")
+            self.poll_and_check()
+            print(f"Next check in {self.interval} min")
+            time.sleep(self.interval * 60)
+
+    def poll_and_check(self, log=False):
+        result = api.get_categories()
+        print(f"Got for {self.pattern if self.pattern else "*"} appointments: {result}")
+        open = []
+        for a in self.filter(result, self.pattern):
+            self.latest.append(a)
+            if a.has_openings:
+                print(f"{a} has new openings")
+                open.append(a)
+            else:
+                print(f"{a} has no openings")
+
+        if not open:
+            print("No available openings at all!")
+            if log: self.ui.send("No available openings!")
+            return
+        self.notify_appointments(open, "📅 New available openings!",
+                                 "\nhttps://www.hygieia.net/leipzig/terminvereinbarung/")
+
+    def filter(self, appointments, pattern):
+        for a in appointments:
+            if pattern in a.name:
+                yield a
+
+    def get_openings_or_empty(self, appointment):
+        try:
+            print(f"Querying {appointment.name} openings")
+            return api.get_openings(appointment.search_id)
+        except Exception as e:
+            print(f"Failed to get {appointment.name} openings")
+            ui.error(f"Failed to get openings for {appointment.name}", e)
+            return []
+
+    def notify_appointments(self, appointments, header, footer, sync=False):
+        body = ""
+        markup = InlineKeyboardMarkup()
+        markup.row_width = 1
+
+        for appoint in appointments:
+            body += "\n"
+            body += format_openings(self.get_openings_or_empty(appoint), appoint, sync)
+            if appoint.has_openings:
+                if not appoint.patient: appoint.patient = "u"
+                markup.add(InlineKeyboardButton(f"({appoint.patient[0].upper()}) {appoint.name}",
+                                                callback_data=f"appoint;{appoint.search_id};{appoint.name};{appoint.patient};{int(appoint.has_openings)}"))
+
+        self.ui.send(
+            f"{header}\n{body}\n{footer}",
+            parse_mode='HTML',
+            reply_markup=markup)
+
+    def select_for_reserve(self, appointment, header, footer):
+        markup = InlineKeyboardMarkup()
+        markup.row_width = 1
+        openings = self.get_openings_or_empty(appointment)
+        for opening in openings:
+            data = f"o;{opening.search_id};{','.join(opening.doctor_ids)};{int(opening.duration)/5};{inutc(opening.date)}"
+            markup.add(InlineKeyboardButton(f"{readable_time(opening.date)}",
+                                                callback_data=data[:-8])) # ':00.000Z'
+
+        self.ui.send(
+            f"{header}\n\n{footer}",
+            parse_mode='HTML',
+            reply_markup=markup)
+
+
+
+class ArztApi:
+    LOCALITIES = ["94418895887138817", "94418856297627649", "94418877937614849", "136244910254196738",
+                  "94418986358276097", "94418836904738817", "94418872331403265", "94418864488054785",
+                  "94418868363591681", "94418891544985601", "136244761438717954", "94418842869563393",
+                  "94418992644489217", "157028186179241986"]
     INSTANCE = "5e8d5ff3a6abce001906ae07"
-    # The URL to check
+
     API_HOST = "https://onlinetermine.arzt-direkt.com"
     CATEGORY_ENDPOINT = "/api/appointment-category"
+    RESERVE_ENDPOINT = "/api/reservation/reserve"
     OPENINGS_ENDPOINT = ("/api/opening?"
                          f"localityIds={','.join(LOCALITIES)}"
                          f"&instance={INSTANCE}"
                          "&terminSucheIdent={ident}"
                          "&forerunTime=0")
+
     HEADERS = {
         "accept": 'application/json, text/plain, */*',
         "content-type": 'application/json',
@@ -73,82 +248,111 @@ class HyApi:
     CATEGORY_PAYLOAD = {"birthDate": None,
                         "localityIds": LOCALITIES,
                         "instance": INSTANCE,
-                        "catId": "", "insuranceType": "gkv"}
-
-    def __init__(self):
-        pass
+                        "catId": "",
+                        "insuranceType": "gkv"}
 
     def get_raw_categories(self):
-        e = HyApi.API_HOST + HyApi.CATEGORY_ENDPOINT
-        print(f"Running {e}")
-        response = requests.post(e, headers=HyApi.HEADERS,
-                                 json=HyApi.CATEGORY_PAYLOAD)
-        response.raise_for_status()  # Raise an exception for HTTP errors
-        json = response.json()
-        print(f"Got response: {json}")
-        return json
+        url = ArztApi.API_HOST + ArztApi.CATEGORY_ENDPOINT
+        print(f"Running {url}")
+        response = requests.post(url, headers=ArztApi.HEADERS, json=ArztApi.CATEGORY_PAYLOAD)
+        response.raise_for_status()
+        return response.json()
 
-    def get_appointments(self):
+    def get_categories(self):
         try:
             data = self.get_raw_categories()["categories"][0]["appointmentTypes"]
-            return list(
-                map(lambda x: Appointment(x["name"]["de"], x["hasOpenings"], x["_id"], x["patientTargetDefault"],
-                                          datetime.strptime(x["lastSync"], "%Y-%m-%dT%H:%M:%S.%fZ"),
-                                          x["terminSucheIdent"]), data))
+            return list(map(lambda x: Appointment(
+                x["name"]["de"],
+                x["hasOpenings"],
+                x["_id"],
+                x["patientTargetDefault"],
+                datetime.strptime(x["lastSync"], "%Y-%m-%dT%H:%M:%S.%fZ"),
+                x["terminSucheIdent"],
+                datetime.now()
+            ), data)
+                        )
         except Exception as e:
-            print(f"Error checking URL: {e}")
+            print(f"Error checking categories: {e}")
             raise e
 
     def get_raw_openings(self, id):
-        e = HyApi.API_HOST + HyApi.OPENINGS_ENDPOINT.replace("{ident}", id)
-        print(f"Running {e}")
-        response = requests.get(e, headers=HyApi.HEADERS)
+        url = ArztApi.API_HOST + ArztApi.OPENINGS_ENDPOINT.replace("{ident}", id)
+        print(f"Running {url}")
+        response = requests.get(url, headers=ArztApi.HEADERS)
         response.raise_for_status()  # Raise an exception for HTTP errors
-        json = response.json()
-        print(f"Got response: {json}")
-        return json
+        return response.json()
 
     def get_openings(self, id):
         try:
             data = self.get_raw_openings(id)["openings"]
-            return list(map(lambda x: Opening(x["displayStringNames"],
-                                              datetime.strptime(x["date"], "%Y-%m-%dT%H:%M:%S.%fZ"),
-                                              ), data))
+            return list(map(lambda x:
+                            Opening(
+                                x["displayStringNames"],
+                                datetime.strptime(x["date"], "%Y-%m-%dT%H:%M:%S.%fZ"),
+                                x["duration"],
+                                list(map(lambda s: s["kid"], x["kdSet"])),
+                                id
+                            ),
+                            data)
+                        )
         except Exception as e:
-            print(f"Error checking URL: {e}")
+            print(f"Error checking openings: {e}")
             raise e
+
+    def reserve(self, doctors, id, date, duration):
+        url = ArztApi.API_HOST + ArztApi.RESERVE_ENDPOINT
+        print(f"Running {url}")
+        expires = datetime.now() + timedelta(minutes=15)
+        data = {"instance": ArztApi.INSTANCE,
+                "terminSucheIdent": id,
+                "dateAppointment": date,
+                "duration": int(duration),
+                "dateExpiry": inutc(expires),
+                "doctorIds": doctors}
+        response = requests.post(url, headers=ArztApi.HEADERS, json=data)
+        if response.status_code == 200:
+            try:
+                expires = datetime.strptime(response.json()["reservation"]["dateExpiry"], "%Y-%m-%dT%H:%M:%S.%fZ")
+                expires = pytz.utc.localize(expires)
+            except Exception as e:
+                print("Cant parse expiry date "+e)
+                pass
+        return response.status_code, expires, response.json()
 
 
 # Telegram Bot Token
-bot = telebot.TeleBot(BOT_TOKEN)
-api = HyApi()
+ui = TelegramUI(CHAT_ID, BOT_TOKEN)
+bot = ui.bot
+api = ArztApi()
+service = ArztService(ui, CHECK_PATTERN, CHECK_INTERVAL)
 
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    print(message.chat.id)
-    bot.reply_to(message, "Hello! I'll notify you if there are available openings for Hygieia")
+    print(f"User started: {message.chat.id}")
+    ui.reply(message,
+             f"Hello! I'll notify you if there are available openings for ArztDirect\nYour chat: {message.chat.id}")
+
+
+@bot.message_handler(commands=['trigger'])
+def trigger(message):
+    try:
+        service.poll_and_check(True)
+    except Exception as e:
+        ui.error(f"Triggering failed", e)
 
 
 @bot.message_handler(commands=['check'])
 def check_message(message):
     try:
-        data = api.get_appointments()
-        if data:
-            joined = "\n".join(map(lambda x: str(x), data))
-            bot.reply_to(message, f"These are all the openings:\n{joined}", parse_mode='Markdown')
-            for d in data:
-                try:
-                    ops = api.get_openings(d.searchId)[:10]
-                    if (not ops): continue
-                    bot.reply_to(message, f"These are all the openings for {d.name}:\n" + "\n".join(map(lambda x: str(x), ops)))
-                    time.sleep(5)
-                except Exception as e:
-                    bot.reply_to(message, f"Error while getting openings: {e}")
-        else:
-            bot.reply_to(message, "No openings available at the moment.")
+        data = api.get_categories()
+        if not data:
+            ui.reply(message, "No appointment categories available at the moment. 😟")
+            return
+
+        service.notify_appointments(data, "", "", True)
     except Exception as e:
-        bot.reply_to(message, f"Error while checking: {e}")
+        ui.error(f"Checking failed", e)
 
 
 @bot.message_handler(commands=['check_raw'])
@@ -159,100 +363,76 @@ def check_raw_message(message):
         file.name = "response.json"  # Set a filename for the file
         bot.send_document(message.chat.id, file)
     except Exception as e:
-        bot.reply_to(message, f"Error while fetching raw data: {e}")
+        ui.error(f"Fetching raw data failed", e)
 
 
 @bot.message_handler(commands=['latest'])
 def latest(message):
-    global LATEST
     try:
-        last = LATEST[:10]
-        joined = "\n".join(map(lambda x: str(x), last))
-        bot.reply_to(message, joined)
+        last = service.latest[:20]
+        ui.reply(message, format_appointments(last, True), parse_mode="HTML")
     except Exception as e:
-        bot.reply_to(message, f"Error while fetching raw data: {e}")
-
-
-@bot.message_handler(commands=['trigger'])
-def trigger(message):
-    try:
-        poll_and_check()
-    except Exception as e:
-        bot.reply_to(message, f"Error while fetching raw data: {e}")
+        ui.error(f"Fetching latest failed", e)
 
 
 @bot.message_handler(commands=['set_interval'])
 def set_interval_message(message):
-    global CHECK_INTERVAL
     try:
         # Extract interval from the message
         parts = message.text.split()
         if len(parts) != 2 or not parts[1].isdigit():
-            bot.reply_to(message, "Usage: /set_interval <seconds>")
+            ui.reply(message, "Usage: /set_interval <minutes>")
             return
 
-        CHECK_INTERVAL = int(parts[1])
-        bot.reply_to(message, f"Interval set to {CHECK_INTERVAL} seconds.")
+        new_interval = int(parts[1])
+        old_interval = service.interval
+        service.interval = new_interval
+        ui.reply(message, f"Interval set from `{old_interval}` -> `{new_interval}` minutes", parse_mode='Markdown')
     except Exception as e:
-        bot.reply_to(message, f"Error while setting interval: {e}")
+        ui.error(f"Setting interval failed", e)
 
 
 @bot.message_handler(commands=['set_filter'])
 def set_filter(message):
-    global CHECK_PATTERN
     try:
         # Extract interval from the message
         parts = message.text.split()
         if len(parts) != 2:
-            bot.reply_to(message, "Usage: /set_filter <pattern>")
+            ui.reply(message, "Usage: /set_filter <pattern>")
             return
 
-        CHECK_PATTERN = parts[1]
-        if CHECK_PATTERN == "*":
-            CHECK_PATTERN = ""
-        bot.reply_to(message, f"Filter set to `{CHECK_PATTERN}`.", parse_mode='Markdown')
+        pattern = parts[1]
+        if pattern == "*": pattern = ""
+        previous = service.pattern
+        service.pattern = pattern
+        ui.reply(message, f"Filter set from `{previous}` -> `{pattern}`", parse_mode='Markdown')
     except Exception as e:
-        bot.reply_to(message, f"Error while setting pattern: {e}")
+        ui.error(f"Setting pattern failed", e)
 
+@bot.callback_query_handler(func=lambda call: True)
+def callback_query(call):
+    try:
+        if call.data.startswith("appoint;"):
+            _, id, name, patient, has_openings  = tuple(call.data.split(";"))
+            bot.answer_callback_query(call.id)
+            ui.send(f"{id}, {name}, {patient}, {has_openings}")
+            appointment = Appointment(name, bool(int(has_openings)), "", patient, datetime.now(), id, datetime.now())
+            service.select_for_reserve(appointment, f"Reserve <i><b>{appointment.name}</b></i>", "")
+        if call.data.startswith("o;"):
+            bot.answer_callback_query(call.id)
+            _, ids, search_id, duration, date = tuple(call.data.split(";"))
+            date += ":00.000Z"
+            duration = int(float(duration)) * 5
+            ids = ids.split(",")
+            ui.send(f"Opening {call.data}: \n {ids}, {search_id}, {duration}, {date}")
+            status, expiry, json = api.reserve(ids, search_id, date, duration)
+            if status == 200:
+                ui.send(f"Successfully reserved {readable_time(date)}\nReserved until: {readable_precise_time(expiry)}")
+            else:
+                ui.send(f"Something went wrong when reserving {readable_time(date)}\nTried to reserve until {readable_precise_time(expiry)}\nResponse:{json}")
+    except Exception as e:
+        ui.error(f"Failed to answer callback {call.data}", e)
 
-def find_target(appointments, name):
-    for a in appointments:
-        if name in a.name:
-            yield a
-
-
-def poll_and_check():
-    global CHECK_PATTERN, LATEST
-    result = api.get_appointments()
-    print(f"Got appointments {result} for {CHECK_PATTERN}")
-    for a in find_target(result, CHECK_PATTERN):
-        LATEST.append(a)
-        if (a.hasOpenings):
-            s = str(a).replace("_", "\\_")
-            bot.send_message(CHAT_ID,
-                             f"📅 There is an available opening !\n\n {s}\n\nhttps://www.hygieia.net/leipzig/terminvereinbarung/",
-                             parse_mode='Markdown')
-            try:
-                ops = api.get_openings(a.searchId)
-                if (not ops): continue
-                bot.send_message(CHAT_ID,
-                             f"These are all the openings for {a.name}:\n" + "\n".join(map(lambda x: str(x), ops)))
-            except Exception as e:
-                bot.send_message(CHAT_ID, f"Error while getting openings: {e}")
-
-
-# Function to check the URL
-def check_for_openings():
-    global CHECK_INTERVAL
-    while True:
-        print(f"Checking at {datetime.now()}")
-        poll_and_check()
-        print(f"Next check in {CHECK_INTERVAL}s")
-        time.sleep(CHECK_INTERVAL)
-
-
-# Start the periodic check in a separate thread
-Thread(target=check_for_openings, daemon=True).start()
-# Polling for Telegram bot commands
-print("Bot is running...")
-bot.infinity_polling()
+service.start()
+time.sleep(0.1)
+ui.start_blocking()
