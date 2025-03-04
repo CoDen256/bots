@@ -25,6 +25,8 @@ def inutc(datetime):
 def readable_precise_time(datetime):
     return str(datetime.astimezone(TZ).strftime("%d.%m.%y at %H:%M:%S"))
 
+def readable_hours(datetime):
+    return str(datetime.astimezone(TZ).strftime("%H:%M:%S"))
 
 def readable_time(datetime):
     return str(datetime.astimezone(TZ).strftime("🗓️ %b %d, %Y 🕒 %H:%M"))
@@ -203,7 +205,7 @@ class ArztService:
             body += format_openings(self.get_openings_or_empty(appoint), appoint, sync)
             if appoint.has_openings:
                 if not appoint.patient: appoint.patient = "u"
-                markup.add(InlineKeyboardButton(f"📌 ({appoint.patient[0].upper()}) {appoint.name}",
+                markup.add(InlineKeyboardButton(f"🔓 ({appoint.patient[0].upper()}) {appoint.name}",
                                                 callback_data=f"appoint;{appoint.search_id};{appoint.name};{appoint.patient};{int(appoint.has_openings)}"))
 
         self.ui.send(
@@ -215,6 +217,13 @@ class ArztService:
         markup = InlineKeyboardMarkup()
         markup.row_width = 1
         openings = self.get_openings_or_empty(appointment)
+        for (search_id, date, expiry) in self.reserves:
+            if search_id != appointment.search_id: continue
+            if expiry < TZ.localize(datetime.now()): continue
+            data = f"r;"
+            markup.add(InlineKeyboardButton(f"                       {readable_time(date)} 🔒 {readable_hours(expiry)}",
+                                            callback_data=data))
+
         for opening in openings:
             data = f"o;{opening.search_id};{','.join(opening.doctor_ids)};{int(int(opening.duration) / 5)};{inutc(opening.date)}"
             markup.add(InlineKeyboardButton(f"{readable_time(opening.date)}",
@@ -225,6 +234,17 @@ class ArztService:
             parse_mode='HTML',
             reply_markup=markup)
 
+    def reserve(self, data):
+        _, search_id, ids, duration, date = tuple(data.split(";"))
+        date += ":00.000Z"
+        duration = int(duration) * 5
+        ids = ids.split(",")
+        # ui.send(f"Opening {call.data}: \n {ids}, {search_id}, {duration}, {date}")
+        status, expiry, json = api.reserve(ids, search_id, date, duration)# True, TZ.localize(datetime.now() + timedelta(minutes=1)), {}  # api.reserve(ids, search_id, date, duration) #
+        date = pytz.utc.localize(datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ"))
+        if status: self.reserves.append((search_id, date, expiry))
+
+        return status, date, expiry, json
 
 class ArztApi:
     LOCALITIES = ["94418895887138817", "94418856297627649", "94418877937614849", "136244910254196738",
@@ -430,22 +450,16 @@ def callback_query(call):
                                        "")
         if call.data.startswith("o;"):
             bot.answer_callback_query(call.id)
-            _, search_id, ids, duration, date = tuple(call.data.split(";"))
-            date += ":00.000Z"
-            duration = int(duration) * 5
-            ids = ids.split(",")
-            # ui.send(f"Opening {call.data}: \n {ids}, {search_id}, {duration}, {date}")
-            status, expiry, json = api.reserve(ids, search_id, date, duration)# True, pytz.utc.localize(datetime.now() + timedelta(minutes=15)), {}  # api.reserve(ids, search_id, date, duration)
-            date = pytz.utc.localize(datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ"))
+            status, date, expiry, body = service.reserve(call.data)
             if status:
-                ui.edit(
-                    call.message.message_id,
-                    f"🔥 Successfully reserved!\n\n{readable_time(date)}\n\nReservation expires: {readable_precise_time(expiry)}",
-                reply_markup=None
+                ui.edit(call.message.message_id,
+                    f"🔥 Successfully reserved!\n\n{readable_time(date)}\n\nReservation expires: {readable_precise_time(expiry)}", reply_markup=None
                 )
             else:
                 ui.send(
-                    f"‼️ Something went wrong when reserving\n\n{readable_time(date)}\n\nTried to reserve until {readable_precise_time(expiry)}\nResponse:{json}")
+                    f"‼️ Something went wrong when reserving\n\n{readable_time(date)}\n\nTried to reserve until {readable_precise_time(expiry)}\nResponse:{body}")
+        if call.data.startswith("r;"):
+            bot.answer_callback_query(call.id)
     except Exception as e:
         ui.error(f"Failed to answer callback {call.data}", e)
 
