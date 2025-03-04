@@ -17,6 +17,7 @@ CHAT_ID = 283382228  # -1002193480523 # 283382228
 TZ = pytz.timezone("Europe/Berlin")
 
 
+
 def inutc(datetime):
     return datetime.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
@@ -119,6 +120,12 @@ class TelegramUI:
         except Exception as e:
             self.error("Could not send a message", e)
 
+    def edit(self, id, text, **kwargs):
+        try:
+            self.bot.edit_message_text(text, self.chat_id, id, **kwargs)
+        except Exception as e:
+            self.error("Could not send a message", e)
+
     def reply(self, message, text, **kwargs):
         try:
             self.bot.send_message(self.chat_id, text, **kwargs)
@@ -136,6 +143,7 @@ class ArztService:
         self.pattern = pattern
         self.interval = interval
         self.latest = []
+        self.reserves = []
 
     def set_filter(self, pattern):
         prev = self.pattern
@@ -195,7 +203,7 @@ class ArztService:
             body += format_openings(self.get_openings_or_empty(appoint), appoint, sync)
             if appoint.has_openings:
                 if not appoint.patient: appoint.patient = "u"
-                markup.add(InlineKeyboardButton(f"({appoint.patient[0].upper()}) {appoint.name}",
+                markup.add(InlineKeyboardButton(f"📌 ({appoint.patient[0].upper()}) {appoint.name}",
                                                 callback_data=f"appoint;{appoint.search_id};{appoint.name};{appoint.patient};{int(appoint.has_openings)}"))
 
         self.ui.send(
@@ -208,15 +216,14 @@ class ArztService:
         markup.row_width = 1
         openings = self.get_openings_or_empty(appointment)
         for opening in openings:
-            data = f"o;{opening.search_id};{','.join(opening.doctor_ids)};{int(opening.duration)/5};{inutc(opening.date)}"
+            data = f"o;{opening.search_id};{','.join(opening.doctor_ids)};{int(int(opening.duration) / 5)};{inutc(opening.date)}"
             markup.add(InlineKeyboardButton(f"{readable_time(opening.date)}",
-                                                callback_data=data[:-8])) # ':00.000Z'
+                                            callback_data=data[:-8]))  # ':00.000Z'
 
         self.ui.send(
             f"{header}\n\n{footer}",
             parse_mode='HTML',
             reply_markup=markup)
-
 
 
 class ArztApi:
@@ -314,10 +321,11 @@ class ArztApi:
             try:
                 expires = datetime.strptime(response.json()["reservation"]["dateExpiry"], "%Y-%m-%dT%H:%M:%S.%fZ")
                 expires = pytz.utc.localize(expires)
+                return True, expires, response.json()
             except Exception as e:
-                print("Cant parse expiry date "+e)
-                pass
-        return response.status_code, expires, response.json()
+                print(f"Cant parse expiry date {e}")
+                return False, expires, response.json()
+        return False, expires, response.json()
 
 
 # Telegram Bot Token
@@ -409,29 +417,38 @@ def set_filter(message):
     except Exception as e:
         ui.error(f"Setting pattern failed", e)
 
+
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
     try:
         if call.data.startswith("appoint;"):
-            _, id, name, patient, has_openings  = tuple(call.data.split(";"))
+            _, id, name, patient, has_openings = tuple(call.data.split(";"))
             bot.answer_callback_query(call.id)
-            ui.send(f"{id}, {name}, {patient}, {has_openings}")
+            # ui.send(f"{id}, {name}, {patient}, {has_openings}")
             appointment = Appointment(name, bool(int(has_openings)), "", patient, datetime.now(), id, datetime.now())
-            service.select_for_reserve(appointment, f"Reserve <i><b>{appointment.name}</b></i>", "")
+            service.select_for_reserve(appointment, f"Reserve <i><b>{appointment.name} ({appointment.patient})</b></i>",
+                                       "")
         if call.data.startswith("o;"):
             bot.answer_callback_query(call.id)
-            _, ids, search_id, duration, date = tuple(call.data.split(";"))
+            _, search_id, ids, duration, date = tuple(call.data.split(";"))
             date += ":00.000Z"
-            duration = int(float(duration)) * 5
+            duration = int(duration) * 5
             ids = ids.split(",")
-            ui.send(f"Opening {call.data}: \n {ids}, {search_id}, {duration}, {date}")
-            status, expiry, json = api.reserve(ids, search_id, date, duration)
-            if status == 200:
-                ui.send(f"Successfully reserved {readable_time(date)}\nReserved until: {readable_precise_time(expiry)}")
+            # ui.send(f"Opening {call.data}: \n {ids}, {search_id}, {duration}, {date}")
+            status, expiry, json = api.reserve(ids, search_id, date, duration)# True, pytz.utc.localize(datetime.now() + timedelta(minutes=15)), {}  # api.reserve(ids, search_id, date, duration)
+            date = pytz.utc.localize(datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ"))
+            if status:
+                ui.edit(
+                    call.message.message_id,
+                    f"🔥 Successfully reserved!\n\n{readable_time(date)}\n\nReservation expires: {readable_precise_time(expiry)}",
+                reply_markup=None
+                )
             else:
-                ui.send(f"Something went wrong when reserving {readable_time(date)}\nTried to reserve until {readable_precise_time(expiry)}\nResponse:{json}")
+                ui.send(
+                    f"‼️ Something went wrong when reserving\n\n{readable_time(date)}\n\nTried to reserve until {readable_precise_time(expiry)}\nResponse:{json}")
     except Exception as e:
         ui.error(f"Failed to answer callback {call.data}", e)
+
 
 service.start()
 time.sleep(0.1)
