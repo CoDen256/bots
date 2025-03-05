@@ -13,7 +13,7 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 BOT_TOKEN = "7763823252:AAHRToFwss4-dqbB-f-rzo9fEACefFNnPd8"
 CHECK_INTERVAL = 10
 CHECK_PATTERN = ""  # check any
-CHAT_ID = -1002193480523 # 283382228
+CHAT_ID = 283382228 # -1002193480523 # 283382228
 TZ = pytz.timezone("Europe/Berlin")
 
 
@@ -206,9 +206,9 @@ class ArztService:
             if appoint.has_openings:
                 if not appoint.patient: appoint.patient = "u"
                 data = f"a;{appoint.search_id};{appoint.patient[0]};{int(appoint.has_openings)};{appoint.name}"
-                if len(data) > 64:
-                    data = data[:63] + "."
-                markup.add(InlineKeyboardButton(f"🔓 ({appoint.patient[0].upper()}) {appoint.name}",callback_data=data))
+                if len(data) > 63:
+                    data = data.replace("Dr. ", "").replace("med. ", "")[:62] + "."
+                markup.add(InlineKeyboardButton(f"📒 ({appoint.patient[0].upper()}) {appoint.name}",callback_data=data))
 
         self.ui.send(
             f"{header}\n{body}\n{footer}",
@@ -446,10 +446,11 @@ def callback_query(call):
         if call.data.startswith("a;"):
             _, id, patient, has_openings, name = tuple(call.data.split(";"))
             bot.answer_callback_query(call.id)
-            # ui.send(f"{id}, {name}, {patient}, {has_openings}")
+            #ui.send(f"{id}, {name}, {patient}, {has_openings}")
             if (name.endswith(".")): name = name + ".."
+            patienttypes = {"k": "known", "b": "both", "n": "new", "u": "N/A"}
             appointment = Appointment(name, bool(int(has_openings)), "", patient, datetime.now(), id, datetime.now())
-            service.select_for_reserve(appointment, f"Reserve <i><b>{appointment.name} ({appointment.patient})</b></i>",
+            service.select_for_reserve(appointment, f"<i><b>{appointment.name} ({patienttypes[appointment.patient]} patients)</b></i>",
                                        "")
         if call.data.startswith("o;"):
             bot.answer_callback_query(call.id)
