@@ -205,8 +205,10 @@ class ArztService:
             body += format_openings(self.get_openings_or_empty(appoint), appoint, sync)
             if appoint.has_openings:
                 if not appoint.patient: appoint.patient = "u"
-                markup.add(InlineKeyboardButton(f"🔓 ({appoint.patient[0].upper()}) {appoint.name}",
-                                                callback_data=f"appoint;{appoint.search_id};{appoint.name};{appoint.patient};{int(appoint.has_openings)}"))
+                data = f"a;{appoint.search_id};{appoint.patient[0]};{int(appoint.has_openings)};{appoint.name}"
+                if len(data) > 64:
+                    data = data[:63] + "."
+                markup.add(InlineKeyboardButton(f"🔓 ({appoint.patient[0].upper()}) {appoint.name}",callback_data=data))
 
         self.ui.send(
             f"{header}\n{body}\n{footer}",
@@ -221,7 +223,7 @@ class ArztService:
             if search_id != appointment.search_id: continue
             if expiry < TZ.localize(datetime.now()): continue
             data = f"r;"
-            markup.add(InlineKeyboardButton(f"                  {readable_time(date)} 🔒 {readable_hours(expiry)}",
+            markup.add(InlineKeyboardButton(f"{readable_hours(expiry)} 🔒 {readable_time(date)}",
                                             callback_data=data))
 
         for opening in openings:
@@ -441,10 +443,11 @@ def set_filter(message):
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
     try:
-        if call.data.startswith("appoint;"):
-            _, id, name, patient, has_openings = tuple(call.data.split(";"))
+        if call.data.startswith("a;"):
+            _, id, patient, has_openings, name = tuple(call.data.split(";"))
             bot.answer_callback_query(call.id)
             # ui.send(f"{id}, {name}, {patient}, {has_openings}")
+            if (name.endswith(".")): name = name + ".."
             appointment = Appointment(name, bool(int(has_openings)), "", patient, datetime.now(), id, datetime.now())
             service.select_for_reserve(appointment, f"Reserve <i><b>{appointment.name} ({appointment.patient})</b></i>",
                                        "")
