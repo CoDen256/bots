@@ -1,0 +1,223 @@
+{
+  "ecommerce": {
+    "currencyCode": "EUR",
+    "impressions": [
+      {
+        "name": "3 Tage in einem a&o Hostel deiner Wahl: 25 St\u00e4dte - 9 L\u00e4nder - 39 Hostels",
+        "id": "SW10172",
+        "price": 59,
+        "brand": "a&o Hotels und Hostels",
+        "position": 1,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "Italien: Kurzurlaub in S\u00fcdtirol inkl. Fr\u00fchst\u00fcck & Pool (Dolomiten)",
+        "id": "SW10085",
+        "price": 69,
+        "brand": "Hotel alle Piramidi",
+        "position": 2,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "St\u00e4dtreise in die Hafenstadt Hamburg - direkt am Hauptbahnhof",
+        "id": "SW10188",
+        "price": 69,
+        "brand": "a&o Hamburg Hauptbahnhof",
+        "position": 3,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "Prag: Exklusive St\u00e4dtereise in die Stadt der hundert T\u00fcrme",
+        "id": "SW10991",
+        "price": 80,
+        "brand": "Clarion Congress Hotel Prag",
+        "position": 4,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "Reise nach Paris: Zeit zu zweit in der romantischen Metropole inkl. Fr\u00fchst\u00fcck",
+        "id": "SW11326",
+        "price": 92,
+        "brand": "Le Bon H\u00f4tel",
+        "position": 5,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "1 Gutschein f\u00fcr 100 Hotels in 44 St\u00e4dten und 13 L\u00e4ndern",
+        "id": "SW10124",
+        "price": 98,
+        "brand": "Dein St\u00e4dtetrip Gutschein",
+        "position": 6,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "Perfekter Wellnessurlaub inklusive Spa & \"VenusVital\u201d Therme",
+        "id": "SW10068",
+        "price": 99,
+        "brand": "Hotel Residenz Bad Frankenhausen",
+        "position": 7,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "St\u00e4dtetrip nach Graz - Urlaub in der sch\u00f6nen Steiermark",
+        "id": "SW10815",
+        "price": 109,
+        "brand": "Harry's Home Hotel Graz",
+        "position": 8,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "Auf in den Norden: Ruhiges Hotel in Achim bei Bremen inkl. Fr\u00fchst\u00fcck",
+        "id": "SW10125",
+        "price": 117,
+        "brand": "Best Western Hotel Achim Bremen",
+        "position": 9,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "Kurzurlaub in einer Stadt deiner Wahl: 25 St\u00e4dte - 9 L\u00e4nder - 40 Hotels",
+        "id": "SW10169",
+        "price": 119,
+        "brand": "a&o Hotels und Hostels",
+        "position": 10,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "St\u00e4dtetrip nach Frankfurt, Salzburg oder Venedig",
+        "id": "SW10949",
+        "price": 119,
+        "brand": "a&o Hotels und Hostels",
+        "position": 11,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "Luxuri\u00f6ser Wellnessurlaub direkt am See inkl. Spa (West-Polen)",
+        "id": "SW10920",
+        "price": 220,
+        "brand": "Navigator Hotel",
+        "position": 12,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "Prag St\u00e4dtetrip: Luxuri\u00f6ses Hotel in zentraler Lage",
+        "id": "SW11045",
+        "price": 129,
+        "brand": "Hotel Duo",
+        "position": 13,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "Aktivurlaub im gr\u00fcnen Rheinland - Lahnstein bei Koblenz",
+        "id": "SW10854",
+        "price": 134,
+        "brand": "Wyndham Garden Lahnstein Koblenz",
+        "position": 14,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "Romantischer Kurzurlaub: Schlosshotel inkl. Wellnessbereich (Hessen)",
+        "id": "SW10022.1",
+        "price": 299,
+        "brand": "Schlosshotel Wolfsbrunnen",
+        "position": 15,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "St\u00e4dtetrip Schwerin: Zentrales Hotel inkl. Fr\u00fchst\u00fcck & \u00d6PNV",
+        "id": "SW10103",
+        "price": 159,
+        "brand": "Intercity Hotel Schwerin",
+        "position": 16,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "Designhotel in Innsbruck - Spa, Fr\u00fchst\u00fcck & ph\u00e4nomenale Aussicht",
+        "id": "SW10819",
+        "price": 159,
+        "brand": "aDLERS Design Hotel",
+        "position": 17,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "St\u00e4dtetrip in das wundersch\u00f6ne Z\u00fcrich in der Schweiz",
+        "id": "SW10904",
+        "price": 159,
+        "brand": "Harry\u2019s Home Z\u00fcrich-Wallisellen",
+        "position": 18,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "Wellnessurlaub in Waldm\u00fcnchen inklusive 2 Massagen und Treatment",
+        "id": "SW10820",
+        "price": 189,
+        "brand": "Wellnesshaus Waldm\u00fcnchen",
+        "position": 19,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "Ausspannen an der M\u00fcritz - Kurzurlaub f\u00fcr zwei in Mecklenburg-Vorpommern",
+        "id": "SW10811",
+        "price": 197,
+        "brand": "Ringhotel Villa Margarete",
+        "position": 20,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "\u00d6sterreich: Wellnessauszeit im Gasteinertal inklusive Solarbad & Wellness",
+        "id": "SW10946",
+        "price": 198,
+        "brand": "smartHOTEL Dorfgastein",
+        "position": 21,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "Wellness-Kurzurlaub im Bayerischen Wald inkl. SPA & Top-Hotel",
+        "id": "SW10167",
+        "price": 199,
+        "brand": "Posthotel Donaustauf",
+        "position": 22,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "Wellnessurlaub im Taunus inkl. Eintritt in die Rhein-Main-Therme",
+        "id": "SW10893",
+        "price": 209,
+        "brand": "Hotel Concorde Bad Soden",
+        "position": 23,
+        "list": "Category",
+        "category": "Top-Angebote"
+      },
+      {
+        "name": "Schweiz: Wellness-Kurzurlaub inkl. Walliser Alpentherme",
+        "id": "SW10717",
+        "price": 218,
+        "brand": "Thermal Hotels & Walliser Alpentherme Leukerbad",
+        "position": 24,
+        "list": "Category",
+        "category": "Top-Angebote"
+      }
+    ]
+  }
+}

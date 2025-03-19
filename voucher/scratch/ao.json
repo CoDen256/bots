@@ -1,0 +1,69 @@
+{
+  "products": [
+    {
+      "id": 16,
+      "name": "a&o Hotelgutschein",
+      "status": "active",
+      "categories_fk": "[\"1\"]",
+      "stock": 9822,
+      "type": 1,
+      "voucher_fk": 3867,
+      "shipping": 2,
+      "price": 99,
+      "tax": 19,
+      "save_money": 0,
+      "created_at": "2025-01-07 12:13:33",
+      "updated_at": "2025-03-14 08:03:59",
+      "image": {
+        "id": 44,
+        "shop_product_fk": 16,
+        "path": "https:\/\/cdn.aohostels.com\/img\/aoshop\/1_voucher-ohnefruehstueck.png",
+        "img_name": "voucher-ohnefruehstueck.png",
+        "order": 1
+      },
+      "language": {
+        "id": 91,
+        "sys_id": 1,
+        "shop_product_fk": 16,
+        "title": "a&o digital hotel voucher",
+        "description": "<p><span style=\"font-size:16px\"><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#172b4d\">2 nights for 2 people in a double or family room at an a&amp;o location of your choice. You can choose between 40 locations in these cities:<\/span><\/span><\/span><\/p>\r\n\r\n<p><span style=\"font-size:16px\"><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#172b4d\">Aachen, Antwerp, Berlin, Bremen, Brighton, Budapest, Dortmund, Dresden, D&uuml;sseldorf, Edinburgh, Florence, Frankfurt, Graz, Hamburg, Cologne, Copenhagen, Leipzig, Munich, Nuremberg, Prague, Salzburg, Stuttgart, Venice, Warsaw, Weimar, Vienna.<\/span><\/span><\/span><\/p>\r\n\r\n<p><span style=\"font-size:16px\"><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#172b4d\"><strong>Conveniently redeemable online:<\/strong><\/span><\/span><\/span><\/p>\r\n\r\n<p><span style=\"font-size:16px\"><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#172b4d\">The voucher will be sent to you by e-mail after purchase. You can easily check availability at <\/span><\/span><a href=\"https:\/\/voucher.aohostels.com\/\" style=\"text-decoration:none\"><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#1155cc\">voucher.aohostels.com<\/span><\/span><\/a><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#172b4d\"> and then book with just a few clicks. Please note that it is not possible to book by telephone.<\/span><\/span><\/span><\/p>\r\n\r\n<p><span style=\"font-size:16px\"><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#172b4d\"><strong>Please take note:<\/strong><\/span><\/span><\/span><\/p>\r\n\r\n<p><span style=\"font-size:16px\"><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#172b4d\">We ask for your understanding that the voucher cannot be redeemed on selected dates (e.g. trade fairs, public holidays and busy weekends). Bookings can also be made outside the voucher contingent for an upgrade fee. The voucher is valid for 3 years from the date of purchase. The voucher is non-refundable. A maximum of four children or grandchildren can stay in the family room free of charge, bed linen and towels included. Breakfast can be booked as an option for all travellers when redeeming the voucher. The general terms and conditions of a&amp;o apply, which can be viewed at&nbsp;<\/span><\/span><a href=\"https:\/\/www.aohostels.com\/en\/gtc\/\" style=\"text-decoration:none\"><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#1155cc\">aohostels.com\/en\/gtc\/<\/span><\/span><\/a>.<\/span><\/p>",
+        "meta_description": null,
+        "url": "ao-digital-hotel-voucher-copy"
+      },
+      "show": true
+    },
+    {
+      "id": 15,
+      "name": "a&o Hotelgutschein mit Fr\u00fchst\u00fcck",
+      "status": "active",
+      "categories_fk": "[\"1\"]",
+      "stock": 9763,
+      "type": 1,
+      "voucher_fk": 3866,
+      "shipping": 2,
+      "price": 129,
+      "tax": 0,
+      "save_money": 0,
+      "created_at": "2025-01-07 12:11:20",
+      "updated_at": "2025-03-16 11:51:22",
+      "image": {
+        "id": 43,
+        "shop_product_fk": 15,
+        "path": "https:\/\/cdn.aohostels.com\/img\/aoshop\/2_voucher-fruehstueck.jpg",
+        "img_name": "voucher-fruehstueck.jpg",
+        "order": 1
+      },
+      "language": {
+        "id": 82,
+        "sys_id": 1,
+        "shop_product_fk": 15,
+        "title": "a&o digital hotel voucher with breakfast",
+        "description": "<p><span style=\"font-size:16px\"><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#172b4d\">2 nights for 2 people in a double or family room at an a&amp;o location of your choice. Our popular all-you-can-eat breakfast buffet is already included. You can choose between 40 locations in these cities:<\/span><\/span><\/span><\/p>\r\n\r\n<p><span style=\"font-size:16px\"><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#172b4d\">Aachen, Antwerp, Berlin, Bremen, Brighton, Budapest, Dortmund, Dresden, D&uuml;sseldorf, Edinburgh, Florence, Frankfurt, Graz, Hamburg, Cologne, Copenhagen, Leipzig, Munich, Nuremberg, Prague, Salzburg, Stuttgart, Venice, Warsaw, Weimar, Vienna.<\/span><\/span><\/span><\/p>\r\n\r\n<p><span style=\"font-size:16px\"><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#172b4d\"><strong>Conveniently redeemable online:<\/strong><\/span><\/span><\/span><\/p>\r\n\r\n<p><span style=\"font-size:16px\"><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#172b4d\">The voucher will be sent to you by e-mail after purchase. You can easily check availability at <\/span><\/span><a href=\"https:\/\/voucher.aohostels.com\/\" style=\"text-decoration:none\"><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#1155cc\">voucher.aohostels.com<\/span><\/span><\/a><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#172b4d\"> and then book with just a few clicks. Please note that it is not possible to book by telephone.<\/span><\/span><\/span><\/p>\r\n\r\n<p><span style=\"font-size:16px\"><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#172b4d\"><strong>Please take note:<\/strong><\/span><\/span><br \/>\r\n<span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#172b4d\">We ask for your understanding that the voucher cannot be redeemed on selected dates (e.g. trade fairs, public holidays and busy weekends). Bookings can also be made outside the voucher contingent for an upgrade fee. The voucher is valid for 3 years from the date of purchase. The voucher is non-refundable. A maximum of four children or grandchildren can stay in the family room free of charge, bed linen and towels included. The voucher with breakfast option includes breakfast for two travellers. If children are travelling with you, breakfast for them must be paid for separately. The general terms and conditions of a&amp;o apply, which can be viewed at&nbsp; <\/span><\/span><a href=\"https:\/\/www.aohostels.com\/en\/gtc\/\" style=\"text-decoration:none\"><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#1155cc\">aohostels.com\/en\/gtc\/<\/span><\/span><\/a><span style=\"font-family:Calibri,sans-serif\"><span style=\"color:#172b4d\">.<\/span><\/span><\/span><\/p>",
+        "meta_description": null,
+        "url": "ao-digital-hotel-voucher-with-breakfast-copy"
+      },
+      "show": true
+    }
+  ],
+  "basket": []
+}
