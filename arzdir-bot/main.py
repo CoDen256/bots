@@ -471,3 +471,4 @@ def callback_query(call):
 service.start()
 time.sleep(0.1)
 ui.start_blocking()
+
