@@ -13,7 +13,7 @@ from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 BOT_TOKEN = "7763823252:AAHRToFwss4-dqbB-f-rzo9fEACefFNnPd8"
 CHECK_INTERVAL = 10
 CHECK_PATTERN = ""  # check any
-CHAT_ID = 283382228 # -1002193480523 # 283382228 #
+CHAT_ID = -1002193480523 # 283382228 #
 TZ = pytz.timezone("Europe/Berlin")
 
 
