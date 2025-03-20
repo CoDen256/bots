@@ -1,0 +1,169 @@
+#!/bin/bash
+
+#PROXY=http://45.124.125.93:8080
+export http_proxy=$PROXY
+export https_proxy=$PROXY
+UA="Mozilla/5.0 (Windows NT 6.1; WOW64; rv:77.0) Gecko/20190101 Firefox/77.0"
+
+trasho=('$$#!!@#!@##' '^^^!@##!!##' '####^!!##!@@' '@@@@@!##!^^^' '$$!!@$$@^!@#$$@')
+trash=()
+for (( t=((${#trasho[@]}-1)); t>=0; t-- )); do
+    trash+=( "//_//$(printf "${trasho[$t]}"|openssl enc -a)" )
+done
+
+dmenu()
+{
+    COLUMNS=1
+    local mm=()
+    readarray  -t mm
+    PS3="$1 "
+    select item in "${mm[@]}"
+    do
+        echo "$item"
+        break
+    done < "$(tty 0>&2)"
+    unset PS3
+}
+
+decrypt_streams()
+{
+    local encrypted="$1"
+    local i
+    local decrypted=""
+    encrypted=$(echo "$encrypted" | sed -e 's|#h||;s|\\||g' )
+    for i in ${trash[*]}; do
+        encrypted=${encrypted/${i}/}
+    done
+    decrypted=$(echo "$encrypted"| openssl enc -d -a -A)
+    echo "$decrypted"
+}
+
+usage() {
+    cat << EOF
+Usage: $(basename $0) [options] <url>
+  -p  Don't download, play in player
+  -q  Manualy select quality
+  -v  Manualy select voice
+  -b  Best quality
+EOF
+    exit 2
+}
+
+download=1
+best_quality=0
+def_quality=1
+def_voice=1
+
+while getopts ":pqbv" opt; do
+    case "$opt" in
+        p) download=0 ;;
+        q) def_quality=0 ;;
+        b) best_quality=1 ;;
+        v) def_voice=0 ;;
+        *) usage ;;
+    esac
+done
+
+shift $((OPTIND - 1))
+
+[ -z $1 ] && usage
+
+die() { echo $1; exit 1; }
+get() { [ -z $2 ] || dopt=" -d $2"; curl --compressed -s -L -A "${UA}" $1 $dopt; }
+voice() { echo $page | grep -oP '(?<=class=\"b-translator__item).*?(?=</li>)'|grep -oP '(?<=">).*?(?=$)'|sed -e 's/img title.*alt=\"\(.*\)\" style.*/"\1"/g;s/<span.*title="\(.*\)">.*/"\1"/g'| show "Voice" | sed 's/(/\\\(/g; s/)/\\\)/g; s/\+/\\\+/g;s/\"/.*?/g'; }
+defvoice() { echo $page | grep -oP '(?<=class=\"b-translator__item active).*?(?=</li>)'|grep -oP '(?<=">).*?(?=$)'|sed -e 's/img title.*alt=\"\(.*\)\" style.*/"\1"/g;s/<span.*title="\(.*\)">.*/"\1"/g'|sed 's/(/\\\(/g; s/)/\\\)/g; s/\+/\\\+/g;s/\"/.*?/g'; }
+show() { dmenu "$1:"; }
+
+url=$1
+api_url="$(echo $url | grep -oE '(http|https)://[^/"]+')/ajax/get_cdn_series/" || die "This is not a link"
+page=$(get $url) || die "Page loading error"
+id=$(echo $url | grep -oE '/[0-9]+-' | tr -d '/-')
+name=$(echo $page | grep -oP '(?<=h1 itemprop="name">).*?(?=<\/h1)')
+year=$(echo $url | grep -oP '(?<=-)[0-9]+(?=\.html)')
+favs=$(echo $page | grep -oP '(?<=ctrl_favs\" value=\").*?(?=")')
+
+if echo $page |grep -q 'b-player__restricted__block'; then
+    block_msg=$(echo "$page" | grep -oP '(?<=b-player__restricted__block_message\">).*?(?=<)')
+    die "$block_msg"
+fi
+
+if echo $page | grep -q 'translators-list'; then
+    voices=1
+else
+    voices=0
+fi
+
+if echo $page | grep -q 'initCDNMovies'; then
+    series=0
+elif echo $page | grep -q 'initCDNSeries'; then
+    series=1
+else
+    die 'Video not found'
+fi
+
+if [ $series == 1 ]; then
+    if [ $voices == 1 ]; then
+        if [ $def_voice == 1 ]; then
+            voice_name="$(defvoice)"
+        else
+            voice_name="$(voice)"
+        fi
+        voice_id=$(echo $page | grep -oP "(?<=data-translator_id=\").*?(?=/li>)" | grep -oE "^[0-9]+?\".*>$voice_name<" | grep -oP "^[0-9]+")
+    else
+        voice_id=$(echo $page | grep -oP "(?<=initCDNSeriesEvents\($id, ).*?(?=,)")
+    fi
+
+    info=$(get $api_url "id=$id&translator_id=$voice_id&action=get_episodes")
+    season=$(echo $info | grep -oP '(?<=data-tab_id=\\").*?(?=\\")' | cat | show "Season")
+    episode=$(echo $info | grep -oP '(?<=data-season_id=\\"'$season'\\" data-episode_id=\\").*?(?=\\")' | cat | show "Episode")
+    data=$(get $api_url "id=$id&season=$season&episode=$episode&translator_id=$voice_id&favs=$favs&action=get_stream")
+
+    filename="${season}x$episode ($name)"
+
+elif [ $series == 0 ]; then
+    if [ $voices == 1 ]; then
+        if [ $def_voice == 1 ]; then
+            voice_name="$(defvoice)"
+        else
+            voice_name="$(voice)"
+        fi
+        voice_id=$(echo $page | grep -oP "(?<=data-translator_id=\").*?(?=/li>)" | grep -oE "^[0-9]+?\".*>$voice_name<" | grep -oP "^[0-9]+")
+        director_id=$(echo $page | grep -oP "(?<=data-director=\").*?(?=/li>)" | grep -oE "^[0-9]+?\".*>$voice_name<" | grep -oP "^[0-9]+")
+        data=$(get $api_url "id=$id&translator_id=$voice_id&is_director=$director_id&favs=$favs&action=get_movie")
+    else
+        data=$(echo $page | grep -oP '(?<=initCDNMoviesEvents).*?(?=;)')
+    fi
+
+    filename="$name ($year)"
+fi
+
+encstreams=$(echo $data | grep -oP '(url|streams)":".*' | cut -d',' -f1 | cut -d':' -f2 | tr -d '"' )
+streams=$(decrypt_streams "$encstreams" | tr ',' '\n')
+
+if [ -z "$streams" ]; then
+    die "Stream's decryption failed. Something went wrong. Please enable debug mode."
+fi
+
+qualities=$(echo "$streams" | sed -nr 's/^\[([0-9]+.*)\].*/\1/p')
+default_quality=$(echo $data | grep -oP '(url|streams)":".*'|cut -d',' -f2|grep -Eo 'quality":[[:space:]]*".*?"' | awk -F[\"\"] '{print $3}')
+
+if [ $best_quality == 1 ]; then
+    quality=$(echo "$qualities" | tail -1)
+elif [ $def_quality == 1 ]; then
+    quality=$default_quality
+else
+    quality=$(echo "$qualities" | cat | show "Quality")
+fi
+
+if [ $download == 1 ]; then
+    stream_url=$(echo $streams | grep -oP "(?<=\[$quality\]).*?(?=:hls)")
+    unset http_proxy
+    unset https_proxy
+    echo "$stream_url"
+    curl -# -C - -L -o "$filename.mp4" "$stream_url"
+else
+    stream_url=$(echo $streams | grep -oP "(?<=\[$quality\]).*?(?= or )")
+    unset http_proxy
+    unset https_proxy
+    mpv --title="$filename" "$stream_url"
+fi
