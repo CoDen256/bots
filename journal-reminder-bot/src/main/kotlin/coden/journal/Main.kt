@@ -35,7 +35,7 @@ data class Config(
 
 fun config(): Config{
     return ConfigLoaderBuilder.default()
-        .addFileSource("application.yml")
+        .addResourceSource("/application.yml")
         .build()
         .loadConfigOrThrow<Config>()
 }
