@@ -1,0 +1,9 @@
+[submodule "brother-bot"]
+	path = brother-bot
+	url = git@github.com:CoDen256/brother-bot.git
+[submodule "alec-bot"]
+	path = alec-bot
+	url = git@github.com:CoDen256/alec.git
+[submodule "anxiety-debunker-bot"]
+	path = anxiety-debunker-bot
+	url = git@github.com:CoDen256/anxiety-debunker.git

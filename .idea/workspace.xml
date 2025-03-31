@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="40f559cf-a116-4c50-a48d-ce6d7cddbf4a" name="Changes" comment="move stuff around">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auto-gpt-corrector/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/auto-gpt-corrector/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/journal-reminder-bot/src/test/kotlin/io/github/coden256/journal/notion/NotionDairyTableTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/journal-reminder-bot/src/test/kotlin/io/github/coden256/journal/notion/NotionDairyTableTest.kt" afterDir="false" />
-    </list>
+    <list default="true" id="40f559cf-a116-4c50-a48d-ce6d7cddbf4a" name="Changes" comment="move stuff around" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -184,7 +180,7 @@
       <workItem from="1743451784438" duration="65000" />
       <workItem from="1743451854175" duration="41000" />
       <workItem from="1743451930079" duration="1423000" />
-      <workItem from="1743453359456" duration="714000" />
+      <workItem from="1743453359456" duration="850000" />
     </task>
     <task id="LOCAL-00001" summary="add voucher grabber">
       <option name="closed" value="true" />
@@ -426,7 +422,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743453963054</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="move stuff around">
+      <option name="closed" value="true" />
+      <created>1743454112647</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1743454112647</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
