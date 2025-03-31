@@ -42,3 +42,4 @@ build/
 .DS_Store
 application.yml
 ./application.yml
+src/main/resources/application.yml
