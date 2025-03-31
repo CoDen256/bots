@@ -4,14 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="40f559cf-a116-4c50-a48d-ce6d7cddbf4a" name="Changes" comment="small fixes">
-      <change beforePath="$PROJECT_DIR$/journal-reminder-bot/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/journal-reminder-bot/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/journal-reminder-bot/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/journal-reminder-bot/src/main/resources/application.yml" afterDir="false" />
+    <list default="true" id="40f559cf-a116-4c50-a48d-ce6d7cddbf4a" name="Changes" comment="move stuff around">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auto-gpt-corrector/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/auto-gpt-corrector/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-reminder-bot/src/test/kotlin/io/github/coden256/journal/notion/NotionDairyTableTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/journal-reminder-bot/src/test/kotlin/io/github/coden256/journal/notion/NotionDairyTableTest.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="module" />
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -44,11 +50,13 @@
   "keyToString": {
     "JUnit.NotionPathTest.executor": "Run",
     "JUnit.NotionPathTest.path.executor": "Run",
+    "JUnit.kotlin in journal-reminder.executor": "Run",
     "Kotlin.MainKt (1).executor": "Run",
     "Kotlin.MainKt.executor": "Run",
     "Maven.focus-observer-bot [install].executor": "Run",
     "Maven.focus-observer-bot [test].executor": "Run",
     "Maven.journal-reminder [test].executor": "Run",
+    "Maven.journal-reminder-bot [install].executor": "Run",
     "NIXITCH_NIXPKGS_CONFIG": "/etc/nix/nixpkgs-config.nix",
     "NIXITCH_NIX_CONF_DIR": "",
     "NIXITCH_NIX_OTHER_STORES": "",
@@ -87,17 +95,17 @@
       <recent name="$PROJECT_DIR$/voucher-grabber" />
     </key>
   </component>
-  <component name="RunManager" selected="Kotlin.MainKt">
+  <component name="RunManager" selected="JUnit.kotlin in journal-reminder">
     <configuration name="NotionPathTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="journal-reminder" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="coden.journal.notion.*" />
+          <option name="PATTERN" value="coden256.journal.notion.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="coden.journal.notion" />
-      <option name="MAIN_CLASS_NAME" value="coden.journal.notion.NotionPathTest" />
+      <option name="MAIN_CLASS_NAME" value="coden256.journal.notion.NotionPathTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -107,14 +115,22 @@
       <module name="journal-reminder" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="coden.journal.notion.*" />
+          <option name="PATTERN" value="coden256.journal.notion.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="coden.journal.notion" />
-      <option name="MAIN_CLASS_NAME" value="coden.journal.notion.NotionPathTest" />
+      <option name="MAIN_CLASS_NAME" value="coden256.journal.notion.NotionPathTest" />
       <option name="METHOD_NAME" value="path" />
       <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="kotlin in journal-reminder" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="journal-reminder" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/journal-reminder-bot/src/test/kotlin" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -127,42 +143,19 @@
       </method>
     </configuration>
     <configuration name="MainKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="coden.journal.MainKt" />
+      <option name="MAIN_CLASS_NAME" value="coden256.journal.MainKt" />
       <module name="journal-reminder" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="arzdir-bot" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/arzdir-bot" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/arzdir-bot/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.kotlin in journal-reminder" />
         <item itemvalue="Kotlin.MainKt" />
         <item itemvalue="JUnit.NotionPathTest.path" />
         <item itemvalue="JUnit.NotionPathTest" />
         <item itemvalue="Kotlin.MainKt (1)" />
-        <item itemvalue="Python.main (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -191,7 +184,7 @@
       <workItem from="1743451784438" duration="65000" />
       <workItem from="1743451854175" duration="41000" />
       <workItem from="1743451930079" duration="1423000" />
-      <workItem from="1743453359456" duration="341000" />
+      <workItem from="1743453359456" duration="714000" />
     </task>
     <task id="LOCAL-00001" summary="add voucher grabber">
       <option name="closed" value="true" />
@@ -417,7 +410,23 @@
       <option name="project" value="LOCAL" />
       <updated>1743453634828</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="small fixes">
+      <option name="closed" value="true" />
+      <created>1743453704522</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1743453704522</updated>
+    </task>
+    <task id="LOCAL-00030" summary="move stuff around">
+      <option name="closed" value="true" />
+      <created>1743453963054</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1743453963054</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -468,7 +477,8 @@
     <MESSAGE value="MIGRATE focus-observer" />
     <MESSAGE value="MIGRATE focus-observer" />
     <MESSAGE value="small fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="small fixes" />
+    <MESSAGE value="move stuff around" />
+    <option name="LAST_COMMIT_MESSAGE" value="move stuff around" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/bots$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1742494615336" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/arzdir-bot" />

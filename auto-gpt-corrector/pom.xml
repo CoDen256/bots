@@ -4,12 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>corrector</artifactId>
-    <groupId>org.example</groupId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>auto-gpt-corrector</artifactId>
+    <groupId>io.github.coden256</groupId>
     <packaging>jar</packaging>
-
-    <name>consoleApp</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
