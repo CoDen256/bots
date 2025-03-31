@@ -9,8 +9,9 @@
       <list>
         <option value="$PROJECT_DIR$/auto-gpt-corrector/pom.xml" />
         <option value="$PROJECT_DIR$/journal-reminder-bot/pom.xml" />
+        <option value="$PROJECT_DIR$/focus-observer/pom.xml" />
       </list>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12 (zmk-config)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_24" project-jdk-name="21" project-jdk-type="JavaSDK" />
 </project>

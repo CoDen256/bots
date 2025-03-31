@@ -10,5 +10,8 @@
         <module name="corrector" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="focus-observer-bot" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

@@ -8,7 +8,7 @@ class NotionPathTest{
     @Test
     fun path() {
         assertEquals("Test Table", NotionPath("/Other/Test Table").title())
-        assertEquals("\\Other\\Test Table", NotionPath("/Other/Test Table").path())
+        assertEquals("/Other/Test Table", NotionPath("/Other/Test Table").path())
         assertEquals(NotionPath("/Other/"), NotionPath("/Other/Test Table").parent())
         assertEquals(null, NotionPath("/Other").parent())
         assertTrue(NotionPath("/Other").isTopLevel())

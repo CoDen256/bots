@@ -2,6 +2,7 @@ package io.github.coden256.focus
 
 import com.sksamuel.hoplite.ConfigLoaderBuilder
 import com.sksamuel.hoplite.addFileSource
+import com.sksamuel.hoplite.addResourceSource
 import io.github.coden256.database.database
 import io.github.coden256.focus.core.impl.DefaultActionDefiner
 import io.github.coden256.focus.core.impl.DefaultAttentionGiver
@@ -26,7 +27,8 @@ data class Config(
 
 fun config(): Config {
     return ConfigLoaderBuilder.default()
-        .addFileSource("application.yml")
+        .addFileSource("application.yml", optional = true)
+        .addResourceSource("/application.yml", optional = true)
         .build()
         .loadConfigOrThrow<Config>()
 }

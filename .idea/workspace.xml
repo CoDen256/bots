@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="40f559cf-a116-4c50-a48d-ce6d7cddbf4a" name="Changes" comment="MIGRATE focus-observer">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-reminder-bot/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/journal-reminder-bot/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-reminder-bot/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/journal-reminder-bot/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/journal-reminder-bot/src/test/kotlin/coden/journal/notion/NotionPathTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/journal-reminder-bot/src/test/kotlin/coden/journal/notion/NotionPathTest.kt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="masterfocus" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitRewordedCommitMessages">
+    <option name="commitMessagesMapping">
+      <RewordedCommitMessageMapping>
+        <option name="originalMessage" value="MIGRATE journal-reminder-bot" />
+        <option name="rewordedMessage" value="MIGRATE journal-reminder-bot" />
+      </RewordedCommitMessageMapping>
+    </option>
+    <option name="currentCommit" value="1" />
+    <option name="onto" value="48b5cc3b60e1b93509a40c43db2e7981421bf1ad" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2uXwGHIPS4Y5WBEN9e488HkyfhW" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.NotionPathTest.executor": "Run",
+    "Kotlin.MainKt (1).executor": "Run",
+    "Kotlin.MainKt.executor": "Run",
+    "Maven.focus-observer-bot [install].executor": "Run",
+    "Maven.focus-observer-bot [test].executor": "Run",
+    "Maven.journal-reminder [test].executor": "Run",
+    "NIXITCH_NIXPKGS_CONFIG": "/etc/nix/nixpkgs-config.nix",
+    "NIXITCH_NIX_CONF_DIR": "",
+    "NIXITCH_NIX_OTHER_STORES": "",
+    "NIXITCH_NIX_PATH": "nixpkgs=flake:nixpkgs:/nix/var/nix/profiles/per-user/root/channels",
+    "NIXITCH_NIX_PROFILES": "/run/current-system/sw /nix/var/nix/profiles/default /etc/profiles/per-user/coden /home/coden/.local/state/nix/profile /home/coden/.local/state/nix/profile /home/coden/.nix-profile /var/lib/flatpak/exports /home/coden/.local/share/flatpak/exports",
+    "NIXITCH_NIX_REMOTE": "",
+    "NIXITCH_NIX_USER_PROFILE_DIR": "/nix/var/nix/profiles/per-user/coden",
+    "Python.bot.executor": "Run",
+    "Python.main (1).executor": "Run",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/coden/dev/bots/focus-observer/pom.xml",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "MavenSettings"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/voucher-bot" />
+      <recent name="$PROJECT_DIR$/parent" />
+      <recent name="$PROJECT_DIR$/arzt-direkt" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/journal-reminder-bot/src/main/resources" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/voucher" />
+      <recent name="$PROJECT_DIR$/voucher-grabber/scratch" />
+      <recent name="$PROJECT_DIR$/voucher-grabber" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.NotionPathTest.path">
+    <configuration name="NotionPathTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="journal-reminder" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="coden.journal.notion.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="coden.journal.notion" />
+      <option name="MAIN_CLASS_NAME" value="coden.journal.notion.NotionPathTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="NotionPathTest.path" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="journal-reminder" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="coden.journal.notion.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="coden.journal.notion" />
+      <option name="MAIN_CLASS_NAME" value="coden.journal.notion.NotionPathTest" />
+      <option name="METHOD_NAME" value="path" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MainKt (1)" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="io.github.coden256.focus.MainKt" />
+      <module name="focus-observer-bot" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="arzdir-bot" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/arzdir-bot" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/arzdir-bot/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="bots" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/arzt-direkt" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/arzt-direkt/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.NotionPathTest.path" />
+        <item itemvalue="JUnit.NotionPathTest" />
+        <item itemvalue="Kotlin.MainKt (1)" />
+        <item itemvalue="Python.main (1)" />
+        <item itemvalue="Python.main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26053.27" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26053.27" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="40f559cf-a116-4c50-a48d-ce6d7cddbf4a" name="Changes" comment="" />
+      <created>1742408130021</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1742408130021</updated>
+      <workItem from="1742493902218" duration="555000" />
+      <workItem from="1742494492108" duration="176000" />
+      <workItem from="1742494769587" duration="86000" />
+      <workItem from="1742495532686" duration="4000" />
+      <workItem from="1743451263806" duration="185000" />
+      <workItem from="1743451451610" duration="328000" />
+      <workItem from="1743451784438" duration="65000" />
+      <workItem from="1743451854175" duration="41000" />
+      <workItem from="1743451930079" duration="1239000" />
+    </task>
+    <task id="LOCAL-00001" summary="add voucher grabber">
+      <option name="closed" value="true" />
+      <created>1742408286479</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1742408286479</updated>
+    </task>
+    <task id="LOCAL-00002" summary="add voucher grabber">
+      <option name="closed" value="true" />
+      <created>1742408318548</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1742408318548</updated>
+    </task>
+    <task id="LOCAL-00003" summary="add voucher grabber">
+      <option name="closed" value="true" />
+      <created>1742408387541</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1742408387541</updated>
+    </task>
+    <task id="LOCAL-00004" summary="add voucher grabber">
+      <option name="closed" value="true" />
+      <created>1742408661004</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1742408661004</updated>
+    </task>
+    <task id="LOCAL-00005" summary="add voucher grabber">
+      <option name="closed" value="true" />
+      <created>1742408780101</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1742408780101</updated>
+    </task>
+    <task id="LOCAL-00006" summary="add voucher grabber">
+      <option name="closed" value="true" />
+      <created>1742408783890</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1742408783890</updated>
+    </task>
+    <task id="LOCAL-00007" summary="add ci for docker deployment">
+      <option name="closed" value="true" />
+      <created>1742410401249</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1742410401249</updated>
+    </task>
+    <task id="LOCAL-00008" summary="add deploy to ci scripts">
+      <option name="closed" value="true" />
+      <created>1742413897193</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1742413897193</updated>
+    </task>
+    <task id="LOCAL-00009" summary="add deploy to ci scripts">
+      <option name="closed" value="true" />
+      <created>1742414036977</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1742414036977</updated>
+    </task>
+    <task id="LOCAL-00010" summary="add ci/cd for voucher bot">
+      <option name="closed" value="true" />
+      <created>1742414495370</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1742414495370</updated>
+    </task>
+    <task id="LOCAL-00011" summary="remove unspecific to this project ci/cd scriptsi">
+      <option name="closed" value="true" />
+      <created>1742418111307</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1742418111307</updated>
+    </task>
+    <task id="LOCAL-00012" summary="add rezka-syncer bot">
+      <option name="closed" value="true" />
+      <created>1742490107322</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1742490107322</updated>
+    </task>
+    <task id="LOCAL-00013" summary="add rezka-syncer bot">
+      <option name="closed" value="true" />
+      <created>1742490121516</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1742490121516</updated>
+    </task>
+    <task id="LOCAL-00014" summary="MIGRATE immo-crawler">
+      <option name="closed" value="true" />
+      <created>1742490497694</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1742490497694</updated>
+    </task>
+    <task id="LOCAL-00015" summary="MIGRATE immo-crawler">
+      <option name="closed" value="true" />
+      <created>1742490576654</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1742490576654</updated>
+    </task>
+    <task id="LOCAL-00016" summary="MIGRATE auto-photo-sorter">
+      <option name="closed" value="true" />
+      <created>1742491936409</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1742491936409</updated>
+    </task>
+    <task id="LOCAL-00017" summary="MIGRATE auto-gpt-corrector">
+      <option name="closed" value="true" />
+      <created>1742492210398</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1742492210398</updated>
+    </task>
+    <task id="LOCAL-00018" summary="add modules">
+      <option name="closed" value="true" />
+      <created>1742494030238</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1742494030238</updated>
+    </task>
+    <task id="LOCAL-00019" summary="add modules">
+      <option name="closed" value="true" />
+      <created>1742494175030</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1742494175030</updated>
+    </task>
+    <task id="LOCAL-00020" summary="add modules">
+      <option name="closed" value="true" />
+      <created>1742494209536</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1742494209536</updated>
+    </task>
+    <task id="LOCAL-00021" summary="add modules">
+      <option name="closed" value="true" />
+      <created>1742494408185</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1742494408185</updated>
+    </task>
+    <task id="LOCAL-00022" summary="add application.yml">
+      <option name="closed" value="true" />
+      <created>1743451580553</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1743451580553</updated>
+    </task>
+    <task id="LOCAL-00023" summary="MIGRATE focus-observer">
+      <option name="closed" value="true" />
+      <created>1743452586796</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1743452586796</updated>
+    </task>
+    <task id="LOCAL-00024" summary="MIGRATE focus-observer">
+      <option name="closed" value="true" />
+      <created>1743452634281</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1743452634281</updated>
+    </task>
+    <task id="LOCAL-00025" summary="MIGRATE focus-observer">
+      <option name="closed" value="true" />
+      <created>1743453093699</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1743453093699</updated>
+    </task>
+    <task id="LOCAL-00026" summary="MIGRATE focus-observer">
+      <option name="closed" value="true" />
+      <created>1743453123296</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1743453123296</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/rezka-syncer" />
+      <path value="$PROJECT_DIR$/photo-sorter" />
+      <path value="$PROJECT_DIR$/auto-gpt-corrector" />
+      <path value="$PROJECT_DIR$/journal-reminder" />
+    </ignored-roots>
+    <MESSAGE value="add voucher grabber" />
+    <MESSAGE value="add ci for docker deployment" />
+    <MESSAGE value="add deploy to ci scripts" />
+    <MESSAGE value="add ci/cd for voucher bot" />
+    <MESSAGE value="remove unspecific to this project ci/cd scriptsi" />
+    <MESSAGE value="add rezka-syncer bot" />
+    <MESSAGE value="MIGRATE immo-crawler" />
+    <MESSAGE value="MIGRATE auto-photo-sorter" />
+    <MESSAGE value="MIGRATE auto-gpt-corrector" />
+    <MESSAGE value="add modules" />
+    <MESSAGE value="MIGRATE focus-observer-bot" />
+    <MESSAGE value="add application.yml" />
+    <MESSAGE value="MIGRATE focus-observer" />
+    <MESSAGE value="MIGRATE focus-observer" />
+    <option name="LAST_COMMIT_MESSAGE" value="MIGRATE focus-observer" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/bots$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1742494615336" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/arzdir-bot" />
+  </component>
+</project>

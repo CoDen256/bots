@@ -1,0 +1,12 @@
+schedule:
+  cron: "0 14 1-7 * *"
+  enabled: true
+
+
+oracle:
+  start: 2024-03
+  # - now is 04-24
+  # - gotta add for 04, not 05
+  # - 04.24 minus 25 (its 31.03) -> last pending is 03)
+  # - 04.25 minus 25 (its 01.04) -> last pending is 04)
+  offset: -25
