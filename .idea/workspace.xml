@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="40f559cf-a116-4c50-a48d-ce6d7cddbf4a" name="Changes" comment="move stuff around" />
+    <list default="true" id="40f559cf-a116-4c50-a48d-ce6d7cddbf4a" name="Changes" comment="add submodules">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/anxiety-debunker-bot/src/main/kotlin/io/github/coden256/anxiety/debunker/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/anxiety-debunker-bot/src/main/kotlin/io/github/coden256/anxiety/debunker/Main.kt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,8 +46,10 @@
   <component name="ProjectId" id="2uXwGHIPS4Y5WBEN9e488HkyfhW" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
+    <option name="foldersAlwaysOnTop" value="false" />
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
+    <option name="sortKey" value="BY_TIME_ASCENDING" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
@@ -67,7 +76,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/coden/dev/bots/focus-observer-bot/pom.xml",
+    "last_opened_file_path": "/home/coden/dev/bots/brother-bot/pom.xml",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -93,7 +102,7 @@
   </component>
   <component name="RunManager" selected="JUnit.kotlin in journal-reminder">
     <configuration name="NotionPathTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="journal-reminder" />
+      <module name="journal-reminder-bot" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="coden256.journal.notion.*" />
@@ -108,7 +117,7 @@
       </method>
     </configuration>
     <configuration name="NotionPathTest.path" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="journal-reminder" />
+      <module name="journal-reminder-bot" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="coden256.journal.notion.*" />
@@ -124,7 +133,7 @@
       </method>
     </configuration>
     <configuration name="kotlin in journal-reminder" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="journal-reminder" />
+      <module name="journal-reminder-bot" />
       <option name="TEST_OBJECT" value="directory" />
       <dir value="$PROJECT_DIR$/journal-reminder-bot/src/test/kotlin" />
       <method v="2">
@@ -140,7 +149,13 @@
     </configuration>
     <configuration name="MainKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="coden256.journal.MainKt" />
-      <module name="journal-reminder" />
+      <module name="journal-reminder-bot" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="auto-gpt-corrector" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -181,6 +196,7 @@
       <workItem from="1743451854175" duration="41000" />
       <workItem from="1743451930079" duration="1423000" />
       <workItem from="1743453359456" duration="850000" />
+      <workItem from="1743454347079" duration="954000" />
     </task>
     <task id="LOCAL-00001" summary="add voucher grabber">
       <option name="closed" value="true" />
@@ -430,7 +446,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743454112647</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="add submodules">
+      <option name="closed" value="true" />
+      <created>1743455125149</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1743455125149</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -482,7 +506,8 @@
     <MESSAGE value="MIGRATE focus-observer" />
     <MESSAGE value="small fixes" />
     <MESSAGE value="move stuff around" />
-    <option name="LAST_COMMIT_MESSAGE" value="move stuff around" />
+    <MESSAGE value="add submodules" />
+    <option name="LAST_COMMIT_MESSAGE" value="add submodules" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/bots$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1742494615336" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/arzdir-bot" />

@@ -7,8 +7,10 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="focus-observer-bot" />
-        <module name="journal-reminder" />
-        <module name="corrector" />
+        <module name="anxiety-debunker-bot" />
+        <module name="brother-bot" />
+        <module name="journal-reminder-bot" />
+        <module name="auto-gpt-corrector" />
       </profile>
     </annotationProcessing>
   </component>
