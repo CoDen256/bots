@@ -6,12 +6,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="focus-observer-bot" />
         <module name="journal-reminder" />
         <module name="corrector" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="focus-observer-bot" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

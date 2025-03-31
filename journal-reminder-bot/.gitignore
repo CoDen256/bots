@@ -11,6 +11,10 @@ target/
 *.iws
 *.iml
 *.ipr
+.idea/
+.idea/*
+.idea
+./.idea
 
 ### Eclipse ###
 .apt_generated
@@ -30,11 +34,13 @@ target/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
+
 ### VS Code ###
 .vscode/
 
 ### Mac OS ###
 .DS_Store
-.idea
 application.yml
+./application.yml
 src/main/resources/application.yml
+observer
