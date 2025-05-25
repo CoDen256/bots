@@ -1,3 +1,5 @@
+import '~/.justfile'
+
 dev PROJECT TAG="latest":
     docker run -d -v "$PWD"/{{PROJECT}}/main.py:/app/main.py coden256/{{PROJECT}}:{{TAG}}
 
