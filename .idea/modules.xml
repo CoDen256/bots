@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/arzdir-bot/py.arzdir-bot.iml" filepath="$PROJECT_DIR$/arzdir-bot/py.arzdir-bot.iml" />
       <module fileurl="file://$PROJECT_DIR$/voucher-bot/py.voucher-bot.iml" filepath="$PROJECT_DIR$/voucher-bot/py.voucher-bot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tools-bot/py.tools-bot.iml" filepath="$PROJECT_DIR$/tools-bot/py.tools-bot.iml" />
     </modules>
   </component>
 </project>
