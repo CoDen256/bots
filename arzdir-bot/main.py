@@ -13,7 +13,7 @@ import configparser
 
 
 parser = configparser.RawConfigParser()
-parser.read("./res/bot.ini")
+parser.read("bot.ini")
 cfg = parser["main"]
 BOT_TOKEN = cfg["token"]
 CHECK_INTERVAL = 10
