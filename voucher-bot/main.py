@@ -9,10 +9,14 @@ import telebot
 import requests
 import time
 
+import configparser
 
-BOT_TOKEN = "7856434133:AAFJ2g9AFQGY--XwWaUwN6rhlAU9jFYN5DM"
+parser = configparser.RawConfigParser()
+parser.read("bot.ini")
+cfg = parser["main"]
+BOT_TOKEN = cfg["token"]
+CHAT_ID = int(cfg["chat"])
 CHECK_INTERVAL = 5
-CHAT_ID = 283382228
 TZ = pytz.timezone("Europe/Berlin")
 
 

@@ -2,8 +2,14 @@ import datetime
 import pytz
 import telebot
 
-BOT_TOKEN = "7847302395:AAGfNwAwInE4eFW51CTSJZSQjHOPWAhHOx4"
-CHAT_ID = 283382228
+
+import configparser
+
+parser = configparser.RawConfigParser()
+parser.read("bot.ini")
+cfg = parser["main"]
+BOT_TOKEN = cfg["token"]
+CHAT_ID = int(cfg["chat"])
 TZ = pytz.timezone("Europe/Berlin")
 
 
