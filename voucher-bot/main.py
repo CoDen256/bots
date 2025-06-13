@@ -51,7 +51,7 @@ class Voucher:
     brand: str = field(hash=True)
     url: str = field(hash=True)
     created: datetime = field(hash=True)
-    updated: datetime = field(hash=True)
+    updated: datetime = field(hash=True,compare=False)
     queried: datetime = field(hash=False,compare=False)
 
 
