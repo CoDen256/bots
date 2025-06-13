@@ -8,21 +8,16 @@
         <outputRelativeToContentRoot value="true" />
         <module name="jvm.brother-bot" />
         <module name="jvm.journal-reminder-bot" />
-        <module name="alec-interactors" />
+        <module name="alec.alec-interactors" />
         <module name="jvm.focus-observer-bot" />
-        <module name="alec-main" />
-        <module name="alec-data" />
-        <module name="alec-gateway-inmemory" />
+        <module name="alec.alec-main" />
+        <module name="alec.alec-data" />
+        <module name="alec.alec-gateway-inmemory" />
         <module name="jvm.anxiety-debunker-bot" />
-        <module name="alec-core" />
-        <module name="alec-utils" />
-        <module name="alec-data-generator" />
+        <module name="alec.alec-core" />
+        <module name="alec.alec-utils" />
+        <module name="alec.alec-data-generator" />
       </profile>
     </annotationProcessing>
-  </component>
-  <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="alec-main" options="-parameters" />
-    </option>
   </component>
 </project>
