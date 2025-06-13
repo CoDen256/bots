@@ -6,11 +6,23 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="jvm.anxiety-debunker-bot" />
         <module name="jvm.brother-bot" />
         <module name="jvm.journal-reminder-bot" />
+        <module name="alec-interactors" />
         <module name="jvm.focus-observer-bot" />
+        <module name="alec-main" />
+        <module name="alec-data" />
+        <module name="alec-gateway-inmemory" />
+        <module name="jvm.anxiety-debunker-bot" />
+        <module name="alec-core" />
+        <module name="alec-utils" />
+        <module name="alec-data-generator" />
       </profile>
     </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="alec-main" options="-parameters" />
+    </option>
   </component>
 </project>
