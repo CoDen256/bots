@@ -2,7 +2,7 @@ import datetime
 import pytz
 import telebot
 
-BOT_TOKEN = "8182900541:AAGLbCWAsKeB3-jVLDtdSCw-0KdxSj4rOzc"
+BOT_TOKEN = "7847302395:AAGfNwAwInE4eFW51CTSJZSQjHOPWAhHOx4"
 CHAT_ID = 283382228
 TZ = pytz.timezone("Europe/Berlin")
 

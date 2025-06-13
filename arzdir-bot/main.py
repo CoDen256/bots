@@ -9,13 +9,17 @@ import requests
 import time
 
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+import configparser
 
-BOT_TOKEN = "7763823252:AAHRToFwss4-dqbB-f-rzo9fEACefFNnPd8"
+
+parser = configparser.RawConfigParser()
+parser.read("./res/bot.ini")
+cfg = parser["main"]
+BOT_TOKEN = cfg["token"]
 CHECK_INTERVAL = 10
 CHECK_PATTERN = ""  # check any
-CHAT_ID = -1002193480523 # 283382228 #
+CHAT_ID = cfg["chat"]
 TZ = pytz.timezone("Europe/Berlin")
-
 
 
 def inutc(datetime):
