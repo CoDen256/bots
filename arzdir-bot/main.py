@@ -18,7 +18,7 @@ cfg = parser["main"]
 BOT_TOKEN = cfg["token"]
 CHECK_INTERVAL = 10
 CHECK_PATTERN = ""  # check any
-CHAT_ID = cfg["chat"]
+CHAT_ID = int(cfg["chat"])
 TZ = pytz.timezone("Europe/Berlin")
 
 
