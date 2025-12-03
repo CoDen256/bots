@@ -1,7 +1,8 @@
+import re
+
 import datetime
 import pytz
 import telebot
-
 
 import configparser
 
@@ -9,11 +10,13 @@ parser = configparser.RawConfigParser()
 parser.read("bot.ini")
 cfg = parser["main"]
 BOT_TOKEN = cfg["token"]
+CHAT_ID = cfg["chat"]
 TZ = pytz.timezone("Europe/Berlin")
 
 
 class TelegramUI:
-    def __init__(self, token):
+    def __init__(self, chat_id, token):
+        self.chat_id = chat_id
         self.bot = telebot.TeleBot(token)
 
     def start_blocking(self):
@@ -21,9 +24,15 @@ class TelegramUI:
         print("Bot is running...")
         self.bot.infinity_polling()
 
+    def delete(self, message):
+        try:
+            self.bot.delete_message(message.chat.id, message.message_id)
+        except Exception as e:
+            self.error("Could not delete a message", e)
+
     def send(self, text, **kwargs):
         try:
-            self.bot.send_message(self.chat_id, text, **kwargs)
+            return self.bot.send_message(self.chat_id, text, **kwargs)
         except Exception as e:
             self.error("Could not send a message", e)
 
@@ -46,70 +55,118 @@ class TelegramUI:
 
 ui = TelegramUI(CHAT_ID, BOT_TOKEN)
 bot = ui.bot
-
+tag_to_id = {
+    "test": 3
+}
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
     print(f"User started: {message.chat.id}")
     ui.reply(message,
              f"Hello! I'll help you with stuff\nYour chat: `{message.chat.id}`", parse_mode="Markdown")
+    ui.delete(message)
 
+@bot.message_handler(commands=["pin"])
+def pin(message):
+    pin_or_edit(message, message.text.removeprefix("/pin").strip(), message_thread_id=message.message_thread_id)
+    ui.delete(message)
 
-def calc_savings(current, per_week, investment=216, investment_day=2, income_day=27, dayOfWeek=2):
-    today = datetime.date.today()
-    year = today.year
-    month = today.month
+tag_regex = r'^\s*#(\w+)\s+.*|.*\s+#(\w+)\s*$'
+def extract_tag(text):
+    if not (match:= re.match(tag_regex, text)): return None
+    return next(g for g in match.groups() if g)
 
-    # Determine the next income date (27th of this month or next month)
-    if today.day < income_day or (today.day == income_day and datetime.datetime.now().hour <= 15):
-        next_income_date = datetime.date(year, month, income_day)
-    else:
-        if month == 12:
-            next_income_date = datetime.date(year + 1, 1, income_day)
-        else:
-            next_income_date = datetime.date(year, month + 1, income_day)
-
-    # Calculate the number of Wednesdays (dayOfWeek) from today (inclusive) to next_income_date (exclusive)
-    wednesdays = []
-    current_date = today
-    while current_date < next_income_date:
-        if current_date.weekday() == dayOfWeek:
-            wednesdays.append(current_date)
-        current_date += datetime.timedelta(days=1)
-
-    # Check if investment day for this month has passed
-    if investment_day < today.day < income_day:
-        investment_cost = 0
-    else:
-        investment_cost = investment
-
-    total_weekly_left = len(wednesdays) * per_week
-    remaining_savings = current - (investment_cost + total_weekly_left)
-
-    return next_income_date, wednesdays, total_weekly_left, investment_cost, remaining_savings
-
-@bot.message_handler(commands=['savings'])
-def set_interval(message):
+is_general = lambda message: message.message_thread_id is None or (message.text and re.match(tag_regex, message.text))
+@bot.edited_message_handler(func=is_general)
+@bot.message_handler(func=is_general)
+def forward(message):
     try:
-        # Extract interval from the message
-        parts = message.text.split()
-        if len(parts) != 3 or not (parts[1].replace(".","").isdigit()) or not (parts[2].replace(".","").isdigit()):
-            ui.reply(message, "Usage: /savings <amount in eur> <per_week>")
-            return
+        if not (tag:=extract_tag(message.text)): return
+        new, topic_id = get_or_create_topic(tag, message)
 
-        sum = float(parts[1])
-        per_week = float(parts[2])
-        income_date, wednesdays, needed_expenses, investment, savings = calc_savings(sum, per_week)
-        plan = '\n'.join([str(w) + ': '+str(per_week)+' EUR' for w in wednesdays])
-        ui.reply(message, f"Your total current sum: `{sum}` EUR"
-                          f"\nYour savings left: `{round(savings, 2)}` EUR\n"
-                          f"\nNext income date: `{income_date}` "
-                          f"\nWednesdays until new income: `{len(wednesdays)}` "
-                          f"\nNeeded total weekly allowance: `{per_week}` EUR x `{len(wednesdays)}` = `{needed_expenses}` EUR"
-                          f"\nNeed still to invest: `{round(investment, 2)}` EUR"
-                          f"\n\nPlan:\n{plan}", parse_mode='Markdown')
+        msg = ui.send(re.sub(fr"\s?#{tag}\s?", "", message.text), message_thread_id=topic_id)
+        ui.delete(message)
+        if new:
+            bot.unpin_chat_message(message.chat.id, msg.message_id)
     except Exception as e:
-        ui.error(f"Calculating savings failed", e)
+        ui.error(f"Forwarding failed", e)
+
+
+is_topic = lambda message: message.message_thread_id is not None and message.reply_to_message is not None and message.reply_to_message.forum_topic_created is not None
+@bot.message_handler(commands=["update"], func=is_topic)
+def upd_topics_id(message):
+    created = message.reply_to_message
+    id = created.message_thread_id
+    append_topic(message.text.removeprefix("/update").strip(), id, message)
+    ui.delete(message)
+
+@bot.message_handler(commands=["remove"], func=is_topic)
+def remove_topics_id(message):
+    created = message.reply_to_message
+    id = created.message_thread_id
+    rm_topic(id, message)
+    ui.delete(message)
+
+@bot.message_handler(commands=["id"], func=is_topic)
+def get_id(message):
+    id = message.reply_to_message.message_thread_id
+    ui.send(str(id), message_thread_id=id)
+    ui.delete(message)
+
+@bot.message_handler(func=is_topic)
+def upd_topic(message):
+    created = message.reply_to_message
+    id = created.message_thread_id
+    if created.chat.title != created.forum_topic_created.name:
+        append_topic(created.forum_topic_created.name, id, message)
+        ui.send(message.text, message_thread_id=id)
+        ui.delete(message)
+
+def rm_topic(id, message):
+    topics, compiled = get_topics(message)
+    if id not in topics.values(): return
+
+    compiled = list(filter(lambda s: not s.endswith(str(id)), compiled))
+    pin_or_edit(message, "\n".join(compiled))
+
+def append_topic(name, id, message):
+    if not name: return
+    topics, compiled = get_topics(message)
+    if (name, id) in topics.items():
+        return
+
+    compiled = list(filter(lambda s: not s.endswith(str(id)), compiled))
+    compiled = compiled + [f"{name} -> {id}"]
+    pin_or_edit(message, "\n".join(compiled))
+
+def pin_or_edit(message, text, **kwargs):
+    chat = bot.get_chat(message.chat.id)
+    if not chat.pinned_message:
+        new = ui.send(text)
+        bot.pin_chat_message(chat.id, new.message_id, **kwargs)
+    else:
+        ui.edit(chat.pinned_message.message_id, text)
+
+
+def get_topics(message):
+    chat = bot.get_chat(message.chat.id)
+    if not chat.pinned_message: return {},[]
+    if " -> " not in chat.pinned_message.text:
+        bot.unpin_chat_message(message.chat.id, chat.pinned_message.message_id)
+        return get_topics(message)
+    compiled = chat.pinned_message.text.split("\n")
+    return dict({(topic.split(" -> ")[0], int(topic.split(" -> ")[1])) for topic in compiled}), compiled
+
+
+def get_or_create_topic(tag, message):
+    topics, _ = get_topics(message)
+    if tag not in topics.keys():
+        topic = bot.create_forum_topic(message.chat.id, tag)
+        append_topic(tag, topic.message_thread_id, message)
+        return True, topic.message_thread_id
+    return False, topics[tag]
+
+
 
 
 ui.start_blocking()
