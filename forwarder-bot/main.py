@@ -71,12 +71,12 @@ def pin(message):
     pin_or_edit(message, message.text.removeprefix("/pin").strip(), message_thread_id=message.message_thread_id)
     ui.delete(message)
 
-tag_regex = r'^\s*#(\w+)\s+.*|.*\s+#(\w+)\s*$'
+tag_regex = r'^\s*#(\w+).+|.+#(\w+)\s*$'
 def extract_tag(text):
-    if not (match:= re.match(tag_regex, text)): return None
+    if not (match:= re.match(tag_regex, text, re.RegexFlag.DOTALL)): return None
     return next(g for g in match.groups() if g)
 
-is_general = lambda message: message.message_thread_id is None or (message.text and re.match(tag_regex, message.text))
+is_general = lambda message: message.message_thread_id is None or (message.text and extract_tag(message.text))
 @bot.edited_message_handler(func=is_general)
 @bot.message_handler(func=is_general)
 def forward(message):
@@ -84,7 +84,7 @@ def forward(message):
         if not (tag:=extract_tag(message.text)): return
         new, topic_id = get_or_create_topic(tag, message)
 
-        msg = ui.send(re.sub(fr"\s?#{tag}\s?", "", message.text), message_thread_id=topic_id)
+        msg = ui.send(re.sub(fr"\s*#{tag}\s*", "", message.text, re.RegexFlag.DOTALL), message_thread_id=topic_id)
         ui.delete(message)
         if new:
             bot.unpin_chat_message(message.chat.id, msg.message_id)
@@ -119,8 +119,16 @@ def upd_topic(message):
     id = created.message_thread_id
     if created.chat.title != created.forum_topic_created.name:
         append_topic(created.forum_topic_created.name, id, message)
-        ui.send(message.text, message_thread_id=id)
-        ui.delete(message)
+    ui.send(message.text, message_thread_id=id)
+    ui.delete(message)
+
+@bot.message_handler(func=lambda message: message.reply_to_message is not None and message.reply_to_message.forum_topic_created is None)
+def reply_edit(message):
+    origin = message.reply_to_message
+    id = origin.message_thread_id
+    ui.send(message.text, message_thread_id=id)
+    ui.delete(origin)
+    ui.delete(message)
 
 def rm_topic(id, message):
     topics, compiled = get_topics(message)
