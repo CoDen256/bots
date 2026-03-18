@@ -1,4 +1,4 @@
-FROM coden256/bot-parent:1.0
+FROM coden256/bot-parent:latest
 
 COPY requirements.txt /app
 RUN python3 -m pip install -r ./requirements.txt

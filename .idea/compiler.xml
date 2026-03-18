@@ -6,17 +6,17 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="jvm.focus-observer-bot" />
+        <module name="alec.alec-data-generator" />
+        <module name="alec.alec-utils" />
+        <module name="jvm.anxiety-debunker-bot" />
+        <module name="alec.alec-data" />
         <module name="jvm.brother-bot" />
         <module name="jvm.journal-reminder-bot" />
         <module name="alec.alec-interactors" />
-        <module name="jvm.focus-observer-bot" />
         <module name="alec.alec-main" />
-        <module name="alec.alec-data" />
-        <module name="alec.alec-gateway-inmemory" />
-        <module name="jvm.anxiety-debunker-bot" />
         <module name="alec.alec-core" />
-        <module name="alec.alec-utils" />
-        <module name="alec.alec-data-generator" />
+        <module name="alec.alec-gateway-inmemory" />
       </profile>
     </annotationProcessing>
   </component>
