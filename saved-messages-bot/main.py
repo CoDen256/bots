@@ -14,12 +14,11 @@ Commands (send from any managed chat):
 """
 import argparse
 import asyncio
-import configparser
 import logging
-import os
 import re
 import sys
 
+from core_bots import Cfg, add_cfg_argument
 from telethon import TelegramClient, events, utils
 from telethon.errors import (
     ChannelPrivateError,
@@ -41,37 +40,6 @@ log = logging.getLogger(__name__)
 CONTROL_CHAT = "#control"
 SAVED_MESSAGES_CHAT = "#saved"
 TAG_RE       = re.compile(r"^#([\w-]+)$", re.IGNORECASE)
-def parse_args() -> str:
-    p = argparse.ArgumentParser(description="Telegram Notes Manager")
-    p.add_argument(
-        "workdir",
-        nargs="?",
-        default=os.path.dirname(__file__),
-        help="Directory containing config.ini and session file (default: cwd)",
-    )
-    return os.path.abspath(p.parse_args().workdir)
-
-DIR = parse_args()
-
-# ══════════════════════════════════════════════════════════════════════════════
-#  Config
-# ══════════════════════════════════════════════════════════════════════════════
-
-class Config:
-    def __init__(self, path: str = os.path.join(DIR, "config.ini")):
-        if not os.path.exists(path):
-            sys.exit(f"[ERROR] Config file not found: {path}")
-        cfg = configparser.ConfigParser()
-        cfg.read(path)
-        t = cfg["telegram"]
-        self.api_id      = int(t["api_id"])
-        self.api_hash    = t["api_hash"]
-        self.folder_name = t["folder_name"]
-        raw = t.get("saved_messages_backlink", "off").strip().lower()
-        if raw not in ("off", "reply", "forward"):
-            sys.exit(f"[ERROR] saved_messages_backlink must be 'off', 'reply', or 'forward', got: '{raw}'")
-        self.backlink = raw
-
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  Auth
@@ -298,11 +266,9 @@ class CommandHandler:
 # ══════════════════════════════════════════════════════════════════════════════
 
 class NotesManager:
-    def __init__(self, cfg: Config):
+    def __init__(self, cfg: Cfg):
         self.cfg    = cfg
-        self.client = TelegramClient(
-            os.path.join(DIR, "me"), cfg.api_id, cfg.api_hash
-        )
+        self.client = TelegramClient(cfg.session_file, cfg.api_id, cfg.api_hash)
 
     async def run(self):
         await self.client.connect()
@@ -339,4 +305,10 @@ class NotesManager:
 # ══════════════════════════════════════════════════════════════════════════════
 
 if __name__ == "__main__":
-    asyncio.run(NotesManager(Config()).run())
+    p = argparse.ArgumentParser(description="Telegram Notes Manager")
+
+    add_cfg_argument(p)
+
+    cfg = Cfg.from_file(p.parse_args().config)
+    manager = NotesManager(cfg)
+    asyncio.run(manager.run())

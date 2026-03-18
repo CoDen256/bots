@@ -1,9 +1,8 @@
 import importlib.util
-import os
-import inspect, types
+import os, inspect, types, re, argparse
 
 
-class Config:
+class Cfg:
     """
     Populated dynamically from a .py config file.
     Keys are lowercased, accessed as attributes: cfg.api_id
@@ -41,12 +40,12 @@ class Config:
             raise ValueError(f"Config is missing required keys: {missing}")
 
     @classmethod
-    def from_file(cls, path: str) -> "Config":
+    def from_file(cls, path: str) -> "Cfg":
         path = os.path.abspath(path)
         if not os.path.exists(path):
             raise FileNotFoundError(f"Config file not found: {path}")
 
-        spec   = importlib.util.spec_from_file_location("_user_config", path)
+        spec = importlib.util.spec_from_file_location("_user_config", path)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
 
@@ -56,9 +55,9 @@ class Config:
             if not k.startswith("_")
                and k not in cls._SKIP
                and not isinstance(v, types.ModuleType)
+               and not isinstance(v, types.FunctionType)
         }
         return cls(data)
-
 
 
 def add_cfg_argument(parser: argparse.ArgumentParser):
@@ -69,3 +68,13 @@ def add_cfg_argument(parser: argparse.ArgumentParser):
         default=os.path.join(caller_dir, "cfg.py"),
         help="Path to config .py file (default: <caller dir>/cfg.py)",
     )
+
+
+def verify_enum(value, options: list):
+    if value not in options:
+        # read the calling source line to extract the argument name
+        frame = inspect.stack()[1]
+        source = (frame.code_context or [""])[0].strip()
+        match = re.search(r"verify_enum\(([^,]+)", source)
+        name = match.group(1).strip() if match else "value"
+        raise ValueError(f"'{name}' must be one of {options}, got '{value!r}'")

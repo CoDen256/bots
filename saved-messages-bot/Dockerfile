@@ -1,9 +1,10 @@
-FROM coden256/bot-parent:latest
+FROM coden256/core-bots:latest
 
 COPY requirements.txt /app
+COPY main.py /app
+COPY cfg.py /app
+WORKDIR /app
+
 RUN python3 -m pip install -r ./requirements.txt
 
-COPY main.py /app/main.py
-COPY config.ini /app/config.ini
-
-ENTRYPOINT ["python3", "./main.py", "./config"]
+ENTRYPOINT ["python3", "./main.py" ]
