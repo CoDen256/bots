@@ -1,0 +1,8 @@
+[project]
+name = "volk-bot"
+version = "0.1.0"
+description = "Telegram bot to generate volk quotes"
+requires-python = ">=3.14"
+dependencies = [
+    "core-bots", "Pillow"
+]

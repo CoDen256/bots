@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="tools-bot" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
+    <deployment type="dockerfile">
+      <settings>
+        <option name="imageTag" value="coden256/tools-bot:latest" />
+        <option name="containerName" value="tools-bot" />
+        <option name="contextFolderPath" value="." />
+        <option name="sourceFilePath" value="tools-bot/Dockerfile" />
+      </settings>
+    </deployment>
+    <method v="2" />
+  </configuration>
+</component>

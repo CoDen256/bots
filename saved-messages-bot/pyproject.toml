@@ -8,3 +8,6 @@ dependencies = [
     "telethon",
     "core-bots"
 ]
+
+[tool.uv]
+exclude-dependencies = ["pyTelegramBotAPI"]

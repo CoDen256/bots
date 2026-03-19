@@ -1,0 +1,8 @@
+[project]
+name = "arztdir-bot"
+version = "0.1.0"
+description = "Arzt Direkt Monitor"
+requires-python = ">=3.14"
+dependencies = [
+    "core-bots", "configparser"
+]

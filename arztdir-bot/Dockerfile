@@ -1,7 +1,7 @@
 FROM python:3.14-slim
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
-ENV APP_NAME="voucher-bot"
+ENV APP_NAME="arztdir-bot"
 
 WORKDIR /app
 COPY pyproject.toml uv.lock /app/

@@ -1,60 +1,24 @@
+import argparse
 import datetime
-import pytz
-import telebot
+import logging
 
+from core_bots import add_cfg_argument, Cfg, TelegramBot
 
-import configparser
+p = argparse.ArgumentParser(description="Topic Message Forwarder Bot")
+add_cfg_argument(p)
+cfg = Cfg.from_file(p.parse_args().config)
 
-parser = configparser.RawConfigParser()
-parser.read("bot.ini")
-cfg = parser["main"]
-BOT_TOKEN = cfg["token"]
-CHAT_ID = int(cfg["chat"])
-TZ = pytz.timezone("Europe/Berlin")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+log = logging.getLogger(__name__)
 
-
-class TelegramUI:
-    def __init__(self, chat_id, token):
-        self.bot = telebot.TeleBot(token)
-        self.chat_id = chat_id
-
-    def start_blocking(self):
-        # Polling for Telegram bot commands
-        print("Bot is running...")
-        self.bot.infinity_polling()
-
-    def send(self, text, **kwargs):
-        try:
-            self.bot.send_message(self.chat_id, text, **kwargs)
-        except Exception as e:
-            self.error("Could not send a message", e)
-
-    def edit(self, id, text, **kwargs):
-        try:
-            self.bot.edit_message_text(text, self.chat_id, id, **kwargs)
-        except Exception as e:
-            self.error("Could not send a message", e)
-
-    def reply(self, message, text, **kwargs):
-        try:
-            self.bot.send_message(self.chat_id, text, **kwargs)
-        except Exception as e:
-            self.error(f"Could not reply to a message {message.text}", e)
-
-    def error(self, message, error):
-        print(f"Error! {message}: {error}")
-        self.bot.send_message(self.chat_id, f"Error! {message}:\n{error}")
-
-
-ui = TelegramUI(CHAT_ID, BOT_TOKEN)
-bot = ui.bot
+bot = TelegramBot(cfg.token)
 
 
 @bot.message_handler(commands=['start'])
 def start_message(message):
-    print(f"User started: {message.chat.id}")
-    ui.reply(message,
-             f"Hello! I'll help you with stuff\nYour chat: `{message.chat.id}`", parse_mode="Markdown")
+    log.info(f"User started: {message.chat.id}")
+    bot.reply(message,
+              f"Hello! I'll help you with stuff\nYour chat: `{message.chat.id}`", parse_mode="Markdown")
 
 
 def calc_savings(current, per_week, investment=216, investment_day=2, income_day=27, dayOfWeek=2):
@@ -90,28 +54,27 @@ def calc_savings(current, per_week, investment=216, investment_day=2, income_day
 
     return next_income_date, wednesdays, total_weekly_left, investment_cost, remaining_savings
 
+
 @bot.message_handler(commands=['savings'])
-def set_interval(message):
-    try:
-        # Extract interval from the message
-        parts = message.text.split()
-        if len(parts) != 3 or not (parts[1].replace(".","").isdigit()) or not (parts[2].replace(".","").isdigit()):
-            ui.reply(message, "Usage: /savings <amount in eur> <per_week>")
-            return
+def calculate_savings(message):
+    # Extract interval from the message
+    parts = message.text.split()
+    if len(parts) != 3 or not (parts[1].replace(".", "").isdigit()) or not (parts[2].replace(".", "").isdigit()):
+        bot.reply(message, "Usage: /savings <amount in eur> <per_week>")
+        return
 
-        sum = float(parts[1])
-        per_week = float(parts[2])
-        income_date, wednesdays, needed_expenses, investment, savings = calc_savings(sum, per_week)
-        plan = '\n'.join([str(w) + ': '+str(per_week)+' EUR' for w in wednesdays])
-        ui.reply(message, f"Your total current sum: `{sum}` EUR"
-                          f"\nYour savings left: `{round(savings, 2)}` EUR\n"
-                          f"\nNext income date: `{income_date}` "
-                          f"\nWednesdays until new income: `{len(wednesdays)}` "
-                          f"\nNeeded total weekly allowance: `{per_week}` EUR x `{len(wednesdays)}` = `{needed_expenses}` EUR"
-                          f"\nNeed still to invest: `{round(investment, 2)}` EUR"
-                          f"\n\nPlan:\n{plan}", parse_mode='Markdown')
-    except Exception as e:
-        ui.error(f"Calculating savings failed", e)
+    sum = float(parts[1])
+    per_week = float(parts[2])
+    income_date, wednesdays, needed_expenses, investment, savings = calc_savings(sum, per_week)
+    plan = '\n'.join([str(w) + ': ' + str(per_week) + ' EUR' for w in wednesdays])
+    bot.reply(message, f"Your total current sum: `{sum}` EUR"
+                       f"\nYour savings left: `{round(savings, 2)}` EUR\n"
+                       f"\nNext income date: `{income_date}` "
+                       f"\nWednesdays until new income: `{len(wednesdays)}` "
+                       f"\nNeeded total weekly allowance: `{per_week}` EUR x `{len(wednesdays)}` = `{needed_expenses}` EUR"
+                       f"\nNeed still to invest: `{round(investment, 2)}` EUR"
+                       f"\n\nPlan:\n{plan}", parse_mode='Markdown')
 
 
-ui.start_blocking()
+if __name__ == '__main__':
+    bot.start_blocking()

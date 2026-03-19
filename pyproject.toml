@@ -9,9 +9,18 @@ dependencies = []
 members = [
     "core-bots",
     "saved-messages-bot",
+    "arztdir-bot",
+    "voucher-bot",
+    "volk-bot",
+    "tools-bot",
+    "rezka-syncer-bot",
+    "forwarder-bot",
+    "demotivator-bot",
 ]
 
 # tells uv: when any member depends on "core-bots",
 # use the local workspace version — no -e needed
 [tool.uv.sources]
 core-bots = { workspace = true }
+
+# uv sync --all-packages

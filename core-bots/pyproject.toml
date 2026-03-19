@@ -6,7 +6,9 @@ authors = [
     { name = "Denys Chernyshov", email = "den.blackshov@gmail.com" }
 ]
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "pyTelegramBotAPI", "pytz"
+]
 
 [build-system]
 requires = ["setuptools" ]

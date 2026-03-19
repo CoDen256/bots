@@ -1,0 +1,9 @@
+[project]
+name = "voucher-bot"
+version = "0.1.0"
+description = "Telegram Bot to monitor vouchers"
+requires-python = ">=3.14"
+dependencies = [
+    "core-bots",
+    "configparser"
+]

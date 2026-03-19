@@ -1,0 +1,10 @@
+[project]
+name = "demotivator-bot"
+version = "0.1.0"
+description = "Telegram Bot generating iconic demotivator images!"
+requires-python = ">=3.14"
+dependencies = [
+    "core-bots",
+    "configparser"
+    , "Pillow"
+]

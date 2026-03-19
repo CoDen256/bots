@@ -1,0 +1,9 @@
+[project]
+name = "forwarder-bot"
+version = "0.1.0"
+description = "Telegram Bot to forward and manage notes in a group with topics"
+requires-python = ">=3.14"
+dependencies = [
+    "core-bots",
+    "configparser"
+]

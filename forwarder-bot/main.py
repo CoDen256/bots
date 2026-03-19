@@ -1,95 +1,19 @@
-import configparser
-import pytz
+import argparse
+import logging
 import re
-import telebot
-from telebot.types import Message
 
-parser = configparser.RawConfigParser()
-parser.read("bot.ini")
-cfg = parser["main"]
-BOT_TOKEN = cfg["token"]
-TZ = pytz.timezone("Europe/Berlin")
+from core_bots import Cfg, add_cfg_argument
+from core_bots import TelegramBot
 
-class TelegramUI:
-    def __init__(self, token):
-        self.bot = telebot.TeleBot(token)
+p = argparse.ArgumentParser(description="Topic Message Forwarder Bot")
+add_cfg_argument(p)
+cfg = Cfg.from_file(p.parse_args().config)
 
-    def start_blocking(self):
-        # Polling for Telegram bot commands
-        print("Bot is running...")
-        self.bot.infinity_polling()
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+log = logging.getLogger(__name__)
 
-    def pin(self, message, **kwargs):
-        try:
-            return self.bot.pin_chat_message(message.chat.id, message.message_id, **kwargs)
-        except Exception as e:
-            self.error(message, e, "Could not pin")
-
-    def unpin(self, message, **kwargs):
-        try:
-            return self.bot.unpin_chat_message(message.chat.id, message.message_id, **kwargs)
-        except Exception as e:
-            self.error(message, e, "Could not unpin")
-
-    def get_chat(self, message):
-        try:
-            return self.bot.get_chat(message.chat.id)
-        except Exception as e:
-            self.error(message, e, "Could not get chat: " + message.chat.id)
-
-    def create_topic(self, message, topic, **kwargs):
-        try:
-            return self.bot.create_forum_topic(message.chat.id, topic, **kwargs)
-        except Exception as e:
-            self.error(message, e, f"Could not create forum: {topic}")
-
-    def delete(self, message, **kwargs):
-        try:
-            return self.bot.delete_message(message.chat.id, message.message_id, **kwargs)
-        except Exception as e:
-            self.error(message, e, "Could not delete")
-
-    def copy(self, message, **kwargs):
-        try:
-            id = self.bot.copy_message(message.chat.id, message.chat.id, message.message_id, **kwargs).message_id
-            new = Message.de_json(message.json)
-            new.id = id
-            new.message_id = id
-            return new
-        except Exception as e:
-            self.error(message, e, f"Could not copy message")
-
-    def send(self, message, text, **kwargs):
-        try:
-            return self.bot.send_message(message.chat.id, text, **kwargs)
-        except Exception as e:
-            self.error(message, e, f"Could not send: {text}")
-
-    def edit(self, message, text, **kwargs):
-        try:
-            if message.content_type != "text":
-                if message.caption == text: return None
-                return self.bot.edit_message_caption(text, message.chat.id, message.message_id, **kwargs)
-
-            if message.text == text or not text: return None
-            return self.bot.edit_message_text(text, message.chat.id, message.message_id, **kwargs)
-        except Exception as e:
-            self.error(message, e, f"Could not edit to: {text}")
-
-    def reply(self, message, text, **kwargs):
-        try:
-            return self.bot.reply_to(message, text, **kwargs)
-        except Exception as e:
-            self.error(message, e, f"Could not reply: {text}")
-
-    def error(self, message, error, additional_info=None):
-        result = f"❌ {additional_info if additional_info else ''}\n{error}"
-        print(result.replace("\n", " ") + " Message: " + str(message.text))
-        self.bot.reply_to(message, result)
-
-
-ui = TelegramUI(BOT_TOKEN)
-bot = ui.bot
+bot = TelegramBot(cfg.token)
+inner = bot.delegate
 
 
 def extract_tag(text):
@@ -124,72 +48,72 @@ def is_non_topic_reply_to_bot(message):
             )
 
 
-@bot.edited_message_handler(commands=['start'])
-@bot.message_handler(commands=['start'])
+@inner.edited_message_handler(commands=['start'])
+@inner.message_handler(commands=['start'])
 def start_message(message):
-    print(f"User started: {message.chat.id}")
-    ui.send(message, f"Hello! I'll forward messages\nYour chat: `{message.chat.id}`",
-            parse_mode="Markdown")
-    ui.delete(message)
+    log.info(f"User started: {message.chat.id}")
+    bot.send(message, f"Hello! I'll forward messages\nYour chat: `{message.chat.id}`",
+             parse_mode="Markdown")
+    bot.delete(message)
 
 
-@bot.edited_message_handler(commands=["id"])
-@bot.message_handler(commands=["id"])
+@inner.edited_message_handler(commands=["id"])
+@inner.message_handler(commands=["id"])
 def get_id(message):
     topic_id = None if not message.reply_to_message else message.reply_to_message.message_thread_id
-    ui.send(message, f"`{str(topic_id)}`", message_thread_id=topic_id, parse_mode="Markdown")
-    ui.delete(message)
+    bot.send(message, f"`{str(topic_id)}`", message_thread_id=topic_id, parse_mode="Markdown")
+    bot.delete(message)
 
 
-@bot.edited_message_handler(commands=["pin"])
-@bot.message_handler(commands=["pin"])
+@inner.edited_message_handler(commands=["pin"])
+@inner.message_handler(commands=["pin"])
 def pin(message):
     pin_or_edit(message, message.text.removeprefix("/pin").strip())
-    ui.delete(message)
+    bot.delete(message)
 
 
 all_content = ['audio', 'photo', 'voice', 'video', 'document',
                'text', 'location', 'contact', 'sticker']
 
-@bot.edited_message_handler(func=has_tag_to_forward, content_types=all_content)
-@bot.message_handler(func=has_tag_to_forward, content_types=all_content)
+@inner.edited_message_handler(func=has_tag_to_forward, content_types=all_content)
+@inner.message_handler(func=has_tag_to_forward, content_types=all_content)
 def forward(message):
     if not (tag := extract_tag(message.text)): return
     is_new_topic, topic_id = get_or_create_topic(message, tag)
 
     if message.reply_to_message:
-        forwarded = ui.copy(message.reply_to_message, message_thread_id=topic_id) # copy 1to1 reply message
-        ui.delete(message.reply_to_message)
+        forwarded = bot.copy(message.reply_to_message, message_thread_id=topic_id) # copy 1to1 reply message
+        bot.delete(message.reply_to_message)
     else:
         new_text = re.sub(fr"\s*#{tag}\s*", "", message.text, re.RegexFlag.DOTALL) # remove tag from original
-        forwarded = ui.copy(message, message_thread_id=topic_id)
-        ui.edit(forwarded, new_text)
+        forwarded = bot.copy(message, message_thread_id=topic_id)
+        bot.edit(forwarded, new_text)
 
-    if is_new_topic: ui.unpin(forwarded)
-    ui.delete(message)
+    if is_new_topic: bot.unpin(forwarded)
+    bot.delete(message)
 
-@bot.edited_message_handler(commands=["update"], func=is_topic)
-@bot.message_handler(commands=["update"], func=is_topic)
+@inner.edited_message_handler(commands=["update"], func=is_topic)
+@inner.message_handler(commands=["update"], func=is_topic)
 def update_topic_id(message):
     topic_message = message.reply_to_message
     topic_id = topic_message.message_thread_id
 
     append_topic(message, message.text.removeprefix("/update").strip(), topic_id)
-    ui.delete(message)
+    bot.delete(message)
 
 
-@bot.edited_message_handler(commands=["remove"], func=is_topic)
-@bot.message_handler(commands=["remove"], func=is_topic)
+@inner.edited_message_handler(commands=["remove"], func=is_topic)
+@inner.message_handler(commands=["remove"], func=is_topic)
 def remove_current_topic_id(message):
     topic_message = message.reply_to_message
     topic_id = topic_message.message_thread_id
 
     rm_topic(message, topic_id)
-    ui.delete(message)
+    bot.delete(message)
 
 
-@bot.edited_message_handler(func=is_topic, content_types=all_content)
-@bot.message_handler(func=is_topic, content_types=all_content)
+@inner.edited_message_handler(func=is_topic, content_types=all_content)
+@inner.message_handler(func=is_topic, content_types=all_content)
 def sync_topic_mirror_message(message):
     topic_message = message.reply_to_message
     topic_id = topic_message.message_thread_id
@@ -198,20 +122,20 @@ def sync_topic_mirror_message(message):
         append_topic(message, topic_message.forum_topic_created.name, topic_id)
 
     if not message.forward_from_message_id:
-        ui.send(message, message.text, message_thread_id=topic_id)
-        ui.delete(message)
+        bot.send(message, message.text, message_thread_id=topic_id)
+        bot.delete(message)
 
 
-@bot.edited_message_handler(func=is_non_topic_reply_to_bot, content_types=all_content)
-@bot.message_handler(func=is_non_topic_reply_to_bot, content_types=all_content)
+@inner.edited_message_handler(func=is_non_topic_reply_to_bot, content_types=all_content)
+@inner.message_handler(func=is_non_topic_reply_to_bot, content_types=all_content)
 def edit_on_reply(message):
-    ui.edit(message.reply_to_message, message.text)
-    ui.delete(message)
+    bot.edit(message.reply_to_message, message.text)
+    bot.delete(message)
 
 
-@bot.message_handler(func=lambda msg: True, content_types=all_content)
+@inner.message_handler(func=lambda msg: True, content_types=all_content)
 def debug(message):
-    print(message.__dict__())
+    log.info(message.__dict__())
 
 
 def rm_topic(message, topic_id):
@@ -234,23 +158,23 @@ def append_topic(message, topic, id):
 
 
 def pin_or_edit(message, text):
-    chat = ui.get_chat(message)
+    chat = bot.get_chat(message)
     if not chat.pinned_message:
-        new = ui.send(message, text)
-        ui.pin(new)
+        new = bot.send(message, text)
+        bot.pin(new)
     else:
-        ui.edit(chat.pinned_message, text)
+        bot.edit(chat.pinned_message, text)
 
 
 def get_topics(message):
-    chat = ui.get_chat(message)
+    chat = bot.get_chat(message)
     if not chat: return {}, []
 
     pinned = chat.pinned_message
     if not pinned: return {}, []
 
     if " -> " not in pinned.text:
-        ui.unpin(pinned)
+        bot.unpin(pinned)
         return get_topics(message)
 
     compiled = pinned.text.split("\n")
@@ -261,7 +185,7 @@ def get_or_create_topic(message, topic_name):
     if topic_name.lower() == message.chat.title.lower(): return False, None
     topics, _ = get_topics(message)
     if topic_name not in topics.keys():
-        topic = ui.create_topic(message, topic_name)
+        topic = bot.create_topic(message, topic_name)
         topic_id = topic.message_thread_id
         append_topic(message, topic_name, topic_id)
         return True, topic_id
@@ -269,4 +193,5 @@ def get_or_create_topic(message, topic_name):
     return False, topics[topic_name]
 
 
-ui.start_blocking()
+if __name__ == "__main__":
+    bot.start_blocking()

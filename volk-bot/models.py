@@ -9,7 +9,7 @@ def create_table():
     except:pass
 
 
-connection = sqlite3.connect("demotivator.db")
+connection = sqlite3.connect("volk.db")
 create_table()
 
 
