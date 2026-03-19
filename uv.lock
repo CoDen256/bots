@@ -5,6 +5,8 @@ requires-python = ">=3.14"
 [manifest]
 members = [
     "arztdir-bot",
+    "auto-media-sorter",
+    "auto-tg-media-exporter",
     "bots",
     "core-bots",
     "demotivator-bot",
@@ -29,6 +31,38 @@ dependencies = [
 requires-dist = [
     { name = "configparser" },
     { name = "core-bots", editable = "core-bots" },
+]
+
+[[package]]
+name = "auto-media-sorter"
+version = "0.1.0"
+source = { virtual = "auto-media-sorter" }
+dependencies = [
+    { name = "pillow" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pillow" }]
+
+[[package]]
+name = "auto-tg-media-exporter"
+version = "0.1.0"
+source = { virtual = "auto-tg-media-exporter" }
+dependencies = [
+    { name = "core-bots" },
+    { name = "cryptg" },
+    { name = "hachoir" },
+    { name = "rich" },
+    { name = "telethon" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "core-bots", editable = "core-bots" },
+    { name = "cryptg" },
+    { name = "hachoir" },
+    { name = "rich" },
+    { name = "telethon" },
 ]
 
 [[package]]
@@ -111,6 +145,24 @@ requires-dist = [
 ]
 
 [[package]]
+name = "cryptg"
+version = "0.5.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/41/e0/d1b637d638513191793971b985151b48ac656d5fcce79771f1e5541a7acf/cryptg-0.5.2.tar.gz", hash = "sha256:d1577e219d040695f34ae7c2636c9ed769fe623813009e27dbc735beed69bd16", size = 13347, upload-time = "2025-10-12T08:39:51.185Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/80/7e/b8d7d30484c48fbb7b8d6262052b7bb05fd40b6dd14e044af3624fe2d2f2/cryptg-0.5.2-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:b57ca6c19dbd59eb2dd72d3ca289621b8f06db1073704dc9ac6fba2fbad7b782", size = 211427, upload-time = "2025-10-12T08:57:16.764Z" },
+    { url = "https://files.pythonhosted.org/packages/86/e8/e30eee6f18d5a2f916f4c18d2625dc305df1d9ca08195fa629c46cba1b53/cryptg-0.5.2-cp314-cp314-manylinux_2_28_aarch64.whl", hash = "sha256:a4475a567bf728b85a5c0399f487ec1e683bfb4a5dad9c3f4e771be1caa712fb", size = 243269, upload-time = "2025-10-12T08:57:17.823Z" },
+    { url = "https://files.pythonhosted.org/packages/97/6c/cb0332af4c790f8912abffe5559fc4ffbf71a4471310b8f979cb4eb6429d/cryptg-0.5.2-cp314-cp314-manylinux_2_28_x86_64.whl", hash = "sha256:bffb88636f2d00f8773bb6ae5d90e9963ce2e4dc49d4d108e813ed75ad2fb4c0", size = 254464, upload-time = "2025-10-12T08:57:19.164Z" },
+    { url = "https://files.pythonhosted.org/packages/71/87/a95fc0c1d4f7ccb5c2069b7b54f72d1471042d7922008a0d50b99db84951/cryptg-0.5.2-cp314-cp314-win32.whl", hash = "sha256:721dfb2cd109a89e28d9bb3da892c56b16983cc59cf9b2268bacf94bd4d5abf3", size = 116303, upload-time = "2025-10-12T08:57:20.13Z" },
+    { url = "https://files.pythonhosted.org/packages/71/83/0eb334c3fb563d74a061ee49a568f2cd392f4e0e83c35b67d8fd3111d1ef/cryptg-0.5.2-cp314-cp314-win_amd64.whl", hash = "sha256:9269ad512124dd4a41824ab5dcc0a8e6697f8aa8f5fcd71fb34f8a4eebd5ec67", size = 116433, upload-time = "2025-10-12T08:57:20.966Z" },
+    { url = "https://files.pythonhosted.org/packages/ff/f6/d49eecfbf76150fadfea6b778f396b22b3d779262697cdd94ade7701943a/cryptg-0.5.2-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:cc0e519e31b61633305ffd34803da3ea5c3414221a838ae85b487bcdee71a388", size = 211163, upload-time = "2025-10-12T08:57:21.838Z" },
+    { url = "https://files.pythonhosted.org/packages/1c/ae/251f130b1bd2a54b2345b24a72ec6b69b3798c6bc55e880292f83db78928/cryptg-0.5.2-cp314-cp314t-manylinux_2_28_aarch64.whl", hash = "sha256:b67ce4d22532454aceac6c5afc30ba2cefb4b95fcfe74eea9affdb697fe59cc1", size = 243212, upload-time = "2025-10-12T08:57:22.814Z" },
+    { url = "https://files.pythonhosted.org/packages/a5/1f/8bdda38d198cb8d459909599702361eb49db95c1a182be1b52b08db569cb/cryptg-0.5.2-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:4e2273d41eb8d3be60e190f0ae30c1492db41b6a49d4d3e769f9ba24da4402f5", size = 254612, upload-time = "2025-10-12T08:57:23.792Z" },
+    { url = "https://files.pythonhosted.org/packages/8b/dd/70a10daab5d276a5f1fe5fe500446cff247e2082b971ae07d240a418d1a8/cryptg-0.5.2-cp314-cp314t-win32.whl", hash = "sha256:427ee363344a71882a3ba853c179b1d7d1ed0991e4fa8cf09e6f7418eda86237", size = 115715, upload-time = "2025-10-12T08:57:24.869Z" },
+    { url = "https://files.pythonhosted.org/packages/41/48/f691dc55e4001482120886a84f6db0161c7b1d9e96343203f93d5ec530ca/cryptg-0.5.2-cp314-cp314t-win_amd64.whl", hash = "sha256:ce37d3634b56f5cacc8419f1f907589fee89bd8e2a37aa208a2f0eed32773da3", size = 116271, upload-time = "2025-10-12T08:57:26.048Z" },
+]
+
+[[package]]
 name = "demotivator-bot"
 version = "0.1.0"
 source = { virtual = "demotivator-bot" }
@@ -143,12 +195,42 @@ requires-dist = [
 ]
 
 [[package]]
+name = "hachoir"
+version = "3.3.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/31/e5/3a7d611dc87aab2c088be040f5da2f6937e308044983848e648d97ef388b/hachoir-3.3.0.tar.gz", hash = "sha256:fd7679f649c17ee45ab2ba5eacddc702c667ea5200c0a1fd063d4615fa7270d2", size = 7111887, upload-time = "2023-12-12T10:59:30.986Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ef/96/9570e6604114e9b2b2e1d90a89d01d10646b9cb6f54bba78f6de5fbbceb1/hachoir-3.3.0-py3-none-any.whl", hash = "sha256:9f721af67867d933383398b9605bc388db25f55dde1034d2bfde91f05e5d9910", size = 650439, upload-time = "2023-12-12T10:59:28.091Z" },
+]
+
+[[package]]
 name = "idna"
 version = "3.11"
 source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/6f/6d/0703ccc57f3a7233505399edb88de3cbd678da106337b9fcde432b65ed60/idna-3.11.tar.gz", hash = "sha256:795dafcc9c04ed0c1fb032c2aa73654d8e8c5023a7df64a53f39190ada629902", size = 194582, upload-time = "2025-10-12T14:55:20.501Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/0e/61/66938bbb5fc52dbdf84594873d5b51fb1f7c7794e9c0f5bd885f30bc507b/idna-3.11-py3-none-any.whl", hash = "sha256:771a87f49d9defaf64091e6e6fe9c18d4833f140bd19464795bc32d966ca37ea", size = 71008, upload-time = "2025-10-12T14:55:18.883Z" },
+]
+
+[[package]]
+name = "markdown-it-py"
+version = "4.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "mdurl" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/5b/f5/4ec618ed16cc4f8fb3b701563655a69816155e79e24a17b651541804721d/markdown_it_py-4.0.0.tar.gz", hash = "sha256:cb0a2b4aa34f932c007117b194e945bd74e0ec24133ceb5bac59009cda1cb9f3", size = 73070, upload-time = "2025-08-11T12:57:52.854Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/94/54/e7d793b573f298e1c9013b8c4dade17d481164aa517d1d7148619c2cedbf/markdown_it_py-4.0.0-py3-none-any.whl", hash = "sha256:87327c59b172c5011896038353a81343b6754500a08cd7a4973bb48c6d578147", size = 87321, upload-time = "2025-08-11T12:57:51.923Z" },
+]
+
+[[package]]
+name = "mdurl"
+version = "0.1.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d6/54/cfe61301667036ec958cb99bd3efefba235e65cdeb9c84d24a8293ba1d90/mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba", size = 8729, upload-time = "2022-08-14T12:40:10.846Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl", hash = "sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8", size = 9979, upload-time = "2022-08-14T12:40:09.779Z" },
 ]
 
 [[package]]
@@ -200,6 +282,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pygments"
+version = "2.19.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b0/77/a5b8c569bf593b0140bde72ea885a803b82086995367bf2037de0159d924/pygments-2.19.2.tar.gz", hash = "sha256:636cb2477cec7f8952536970bc533bc43743542f70392ae026374600add5b887", size = 4968631, upload-time = "2025-06-21T13:39:12.283Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c7/21/705964c7812476f378728bdf590ca4b771ec72385c533964653c68e86bdc/pygments-2.19.2-py3-none-any.whl", hash = "sha256:86540386c03d588bb81d44bc3928634ff26449851e99741617ecb9037ee5ec0b", size = 1225217, upload-time = "2025-06-21T13:39:07.939Z" },
+]
+
+[[package]]
 name = "pytelegrambotapi"
 version = "4.32.0"
 source = { registry = "https://pypi.org/simple" }
@@ -239,6 +330,19 @@ wheels = [
 name = "rezka-syncer-bot"
 version = "0.1.0"
 source = { virtual = "rezka-syncer-bot" }
+
+[[package]]
+name = "rich"
+version = "14.3.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "markdown-it-py" },
+    { name = "pygments" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b3/c6/f3b320c27991c46f43ee9d856302c70dc2d0fb2dba4842ff739d5f46b393/rich-14.3.3.tar.gz", hash = "sha256:b8daa0b9e4eef54dd8cf7c86c03713f53241884e814f4e2f5fb342fe520f639b", size = 230582, upload-time = "2026-02-19T17:23:12.474Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/14/25/b208c5683343959b670dc001595f2f3737e051da617f66c31f7c4fa93abc/rich-14.3.3-py3-none-any.whl", hash = "sha256:793431c1f8619afa7d3b52b2cdec859562b950ea0d4b6b505397612db8d5362d", size = 310458, upload-time = "2026-02-19T17:23:13.732Z" },
+]
 
 [[package]]
 name = "rsa"

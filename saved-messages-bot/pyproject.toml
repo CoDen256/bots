@@ -2,7 +2,6 @@
 name = "saved-messages-bot"
 version = "0.1.0"
 description = "Saved Messages Manager Telegram Client"
-readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "telethon",

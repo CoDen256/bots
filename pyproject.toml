@@ -16,6 +16,8 @@ members = [
     "rezka-syncer-bot",
     "forwarder-bot",
     "demotivator-bot",
+    "auto-media-sorter",
+    "auto-tg-media-exporter",
 ]
 
 # tells uv: when any member depends on "core-bots",

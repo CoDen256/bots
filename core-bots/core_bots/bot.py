@@ -2,6 +2,8 @@ import logging
 import telebot
 import functools
 
+from telebot.types import Message
+
 log = logging.getLogger("TelegramBot")
 
 class TelegramBot:
@@ -58,6 +60,12 @@ class TelegramBot:
         except Exception as e:
             self.error(message, e, f"Could not send: {text}")
 
+    def send_to_chat(self, chat, text, **kwargs):
+        try:
+            return self.delegate.send_message(chat, text, **kwargs)
+        except Exception as e:
+            self.error_to_chat(chat, e, f"Could not send: {text}")
+
     def edit(self, message, text, **kwargs):
         try:
             if message.content_type != "text":
@@ -75,15 +83,21 @@ class TelegramBot:
         except Exception as e:
             self.error(message, e, f"Could not reply: {text}")
 
-    def error(self, message, error, additional_info=None):
-        result = f"❌ {additional_info if additional_info else ''}\n{error}"
-        print(result.replace("\n", " ") + " Message: " + str(message.text))
-        self.delegate.reply_to(message, result)
+    def send_document(self, message, doc, **kwargs):
+        try:
+            return self.delegate.send_document(message.chat.id, doc, **kwargs)
+        except Exception as e:
+            self.error(message, e, f"Could not send document: {message.text}, doc: {doc.name}")
 
     def error(self, message, error, additional_info=None):
         result = f"❌ {additional_info if additional_info else ''}\n{error}"
-        print(result.replace("\n", " ") + " Message: " + str(message.text))
+        log.error(result.replace("\n", " ") + " Message: " + str(message.text))
         self.delegate.reply_to(message, result)
+
+    def error_to_chat(self, chat, error, additional_info=None):
+        result = f"❌ {additional_info if additional_info else ''}\n{error}"
+        log.error(result.replace("\n", " "))
+        self.delegate.send_message(chat, result)
 
     def __getattr__(self, name):
         attr = getattr(self.delegate, name)

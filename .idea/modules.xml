@@ -3,9 +3,13 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/arztdir-bot/py.arztdir-bot.iml" filepath="$PROJECT_DIR$/arztdir-bot/py.arztdir-bot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/auto-lumberjack-player/py.auto-lumberjack-player.iml" filepath="$PROJECT_DIR$/auto-lumberjack-player/py.auto-lumberjack-player.iml" />
+      <module fileurl="file://$PROJECT_DIR$/auto-media-sorter/py.auto-media-sorter.iml" filepath="$PROJECT_DIR$/auto-media-sorter/py.auto-media-sorter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/auto-tg-media-exporter/py.auto-tg-media-exporter.iml" filepath="$PROJECT_DIR$/auto-tg-media-exporter/py.auto-tg-media-exporter.iml" />
       <module fileurl="file://$PROJECT_DIR$/core-bots/py.core-bots.iml" filepath="$PROJECT_DIR$/core-bots/py.core-bots.iml" />
       <module fileurl="file://$PROJECT_DIR$/demotivator-bot/py.demotivator-bot.iml" filepath="$PROJECT_DIR$/demotivator-bot/py.demotivator-bot.iml" />
       <module fileurl="file://$PROJECT_DIR$/forwarder-bot/py.forwarder-bot.iml" filepath="$PROJECT_DIR$/forwarder-bot/py.forwarder-bot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/immo-crawler/py.immo-crawler.iml" filepath="$PROJECT_DIR$/immo-crawler/py.immo-crawler.iml" />
       <module fileurl="file://$PROJECT_DIR$/rezka-syncer-bot/py.rezka-syncer-bot.iml" filepath="$PROJECT_DIR$/rezka-syncer-bot/py.rezka-syncer-bot.iml" />
       <module fileurl="file://$PROJECT_DIR$/saved-messages-bot/py.saved-messages-bot.iml" filepath="$PROJECT_DIR$/saved-messages-bot/py.saved-messages-bot.iml" />
       <module fileurl="file://$PROJECT_DIR$/tools-bot/py.tools-bot.iml" filepath="$PROJECT_DIR$/tools-bot/py.tools-bot.iml" />
