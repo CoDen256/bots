@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/arzdir-bot/py.arzdir-bot.iml" filepath="$PROJECT_DIR$/arzdir-bot/py.arzdir-bot.iml" />
       <module fileurl="file://$PROJECT_DIR$/core-bots/py.core-bots.iml" filepath="$PROJECT_DIR$/core-bots/py.core-bots.iml" />
-      <module fileurl="file://$PROJECT_DIR$/forwarder-bot/py.forwarder-bot.iml" filepath="$PROJECT_DIR$/forwarder-bot/py.forwarder-bot.iml" />
       <module fileurl="file://$PROJECT_DIR$/saved-messages-bot/py.saved-messages-bot.iml" filepath="$PROJECT_DIR$/saved-messages-bot/py.saved-messages-bot.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tools-bot/py.tools-bot.iml" filepath="$PROJECT_DIR$/tools-bot/py.tools-bot.iml" />
-      <module fileurl="file://$PROJECT_DIR$/voucher-bot/py.voucher-bot.iml" filepath="$PROJECT_DIR$/voucher-bot/py.voucher-bot.iml" />
     </modules>
   </component>
 </project>

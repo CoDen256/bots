@@ -12,4 +12,4 @@ folder_name = "Notes"
 # forward — plain silent forward of the moved message back to Saved Messages
 backlink = "reply"
 
-session_file = os.environ["SESSION_PATH"]
+session_file = os.environ["SESSION_FILE"]

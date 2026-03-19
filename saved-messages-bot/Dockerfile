@@ -1,10 +1,12 @@
-FROM coden256/core-bots:latest
+FROM python:3.14-slim
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
-COPY requirements.txt /app
-COPY main.py /app
-COPY cfg.py /app
+ENV APP_NAME="saved-messages-bot"
+
 WORKDIR /app
+COPY pyproject.toml uv.lock /app/
+COPY core-bots/ /app/core-bots/
+COPY $APP_NAME/ /app/$APP_NAME/
+RUN uv sync --package $APP_NAME --no-dev --frozen
 
-RUN python3 -m pip install -r ./requirements.txt
-
-ENTRYPOINT ["python3", "./main.py" ]
+CMD .venv/bin/python $APP_NAME/main.py

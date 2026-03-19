@@ -1,8 +1,11 @@
 .idea/workspace.xml
 .idea/gbrowser_project.xml
 /**/.venv
-/**/bot.ini
-/**/bot_.ini
 /**/application_.yml
 /application_.yml
 /**/application.yml
+# Python build artifacts
+**/*.egg-info/
+**/__pycache__/
+**/*.pyc
+.venv/

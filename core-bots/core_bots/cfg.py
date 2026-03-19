@@ -65,8 +65,8 @@ def add_cfg_argument(parser: argparse.ArgumentParser):
     parser.add_argument(
         "-c", "--config",
         metavar="PATH",
-        default=os.path.join(caller_dir, "cfg.py"),
-        help="Path to config .py file (default: <caller dir>/cfg.py)",
+        default=os.path.join(caller_dir, "config.py"),
+        help="Path to config .py file (default: <caller dir>/config.py)",
     )
 
 

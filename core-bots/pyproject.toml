@@ -1,11 +1,17 @@
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "core-bots"
 version = "0.1.0"
-
-dependencies = [
-    "argparse",
+description = "Core bots library"
+authors = [
+    { name = "Denys Chernyshov", email = "den.blackshov@gmail.com" }
 ]
+requires-python = ">=3.14"
+dependencies = []
+
+[build-system]
+requires = ["setuptools" ]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["core_bots*"]
