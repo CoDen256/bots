@@ -5,7 +5,6 @@ from datetime import datetime
 
 
 import argparse
-import datetime
 import logging
 
 from core_bots import add_cfg_argument, Cfg, TelegramBot, pretty_datetime, pretty_time, pretty_precise_time
@@ -104,16 +103,16 @@ def callback_query(call):
             bot.answer_callback_query(call.id)
             status, date, expiry, body = service.reserve(call.data)
             if status:
-                bot.edit(call.message.message_id,
+                bot.edit(call.message,
                     f"🔥 Successfully reserved!\n\n{pretty_datetime(date)}\n\nReservation expires: {pretty_precise_time(expiry)}", reply_markup=None
                          )
             else:
-                bot.send(
+                bot.send(call.message,
                     f"‼️ Something went wrong when reserving\n\n{pretty_datetime(date)}\n\nTried to reserve until {pretty_precise_time(expiry)}\nResponse:{body}")
         if call.data.startswith("r;"):
             bot.answer_callback_query(call.id)
     except Exception as e:
-        bot.error(f"Failed to answer callback {call.data}", e)
+        bot.error(call.message, f"Failed to answer callback {call.data}", e)
 
 
 service.start()

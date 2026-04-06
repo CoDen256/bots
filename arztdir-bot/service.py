@@ -74,7 +74,7 @@ class ArztService:
 
         for appoint in appointments:
             body += "\n"
-            body += format_openings(self.get_openings_or_empty(appoint), appoint, sync)
+            body += format_openings(self.get_openings_or_empty(appoint)[:5], appoint, sync)
             if appoint.has_openings:
                 if not appoint.patient: appoint.patient = "u"
                 data = f"a;{appoint.search_id};{appoint.patient[0]};{int(appoint.has_openings)};{appoint.name}"
@@ -99,7 +99,7 @@ class ArztService:
             markup.add(InlineKeyboardButton(f"{pretty_time(expiry)} 🔒 {pretty_datetime(date)}",
                                             callback_data=data))
 
-        for opening in openings:
+        for opening in openings[:15]:
             data = f"o;{opening.search_id};{','.join(opening.doctor_ids)};{int(int(opening.duration) / 5)};{inutc(opening.date)}"
             markup.add(InlineKeyboardButton(f"{pretty_datetime(opening.date)}",
                                             callback_data=data[:-8]))  # ':00.000Z'

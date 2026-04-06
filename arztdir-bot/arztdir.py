@@ -1,3 +1,4 @@
+import itertools
 from datetime import datetime, timedelta
 
 import pytz
@@ -5,10 +6,7 @@ import requests
 
 
 class ArztApi:
-    LOCALITIES = ["94418895887138817", "94418856297627649", "94418877937614849", "136244910254196738",
-                  "94418986358276097", "94418836904738817", "94418872331403265", "94418864488054785",
-                  "94418868363591681", "94418891544985601", "136244761438717954", "94418842869563393",
-                  "94418992644489217", "157028186179241986"]
+    LOCALITIES = ["74402510195392513","94418895887138817","94418856297627649","94418877937614849","136244910254196738","94418986358276097","94418836904738817","94418872331403265","94418864488054785","94418868363591681","74402499549724673","94418891544985601","136244761438717954","94418842869563393","94418992644489217","157028186179241986","178813507504441344","178813538199930880","179051503938439168","179082468013377536","179082479826110464","179685372400240640","180175908148611072","180303831238707200","185434567097190400"]
     INSTANCE = "5e8d5ff3a6abce001906ae07"
 
     API_HOST = "https://onlinetermine.arzt-direkt.com"
@@ -45,20 +43,32 @@ class ArztApi:
 
     def get_categories(self):
         try:
-            data = self.get_raw_categories()["categories"][0]["appointmentTypes"]
-            return list(map(lambda x: Appointment(
+            raw = self.get_raw_categories()["categories"]
+            data = [(app for app in x["appointmentTypes"]) for x in raw]
+            data= list(itertools.chain(*data))
+            return self.unique_id(list(map(lambda x: Appointment(
                 x["name"]["de"],
                 x["hasOpenings"],
                 x["_id"],
-                x["patientTargetDefault"],
+                x.get("patientTargetDefault", "both"),
                 datetime.strptime(x["lastSync"], "%Y-%m-%dT%H:%M:%S.%fZ"),
                 x["terminSucheIdent"],
                 datetime.now()
-            ), data)
+            ), data))
                         )
         except Exception as e:
             print(f"Error checking categories: {e}")
             raise e
+
+    def unique_id(self, appointments):
+        seen = set()
+        result = []
+
+        for obj in appointments:
+            if obj.id not in seen:
+                seen.add(obj.id)
+                result.append(obj)
+        return result
 
     def get_raw_openings(self, id):
         url = ArztApi.API_HOST + ArztApi.OPENINGS_ENDPOINT.replace("{ident}", id)
@@ -115,7 +125,7 @@ class Appointment:
         self.id = id
         self.patient = patient
         self.sync: datetime = pytz.utc.localize(sync)
-        self.updated = pytz.utc.localize(updated)
+        self.updated = updated
         self.search_id = search_id
 
     def __str__(self):
