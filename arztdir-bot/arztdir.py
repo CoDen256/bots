@@ -130,7 +130,7 @@ class Appointment:
                      .replace(", LL.M.", "")
                      .replace(", MSc", "")
                      .replace("Bestandspatient", "Bestand")
-                     .replace("Neupatient", "Neu")
+                     .replace("Neupatienten", "Neu")
                      .replace("   ", " ")
                      ).strip()
         self.full_name = name
@@ -142,10 +142,14 @@ class Appointment:
         self.search_id = search_id
 
     def __str__(self):
-        return self.name
+        return self.full_name
 
     def __repr__(self):
         return self.__str__()
+
+    def has_type(self, type):
+        if (type == "both" or self.patient == "both"): return True
+        return type == self.patient
 
 
 class Opening:

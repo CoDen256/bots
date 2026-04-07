@@ -105,6 +105,19 @@ def filter(message):
     previous = service.get_and_set_filter(pattern)
     bot.reply(message, f"Filter set from `{previous}` -> `{pattern}`", parse_mode='Markdown')
 
+@bot.message_handler(commands=['patients'])
+def patients(message):
+    log.info(f"Set patients by: {message.chat.id}: {message.text}")
+
+    parts = message.text.split(sep=' ', maxsplit=1)
+    if len(parts) != 2 or parts[1] not in ["both", "new", "known"]:
+        bot.reply(message, "Usage: /patients both|new|known")
+        return
+
+    type = parts[1]
+    previous = service.get_and_set_patient(type)
+    bot.reply(message, f"Patient type filter set from `{previous}` -> `{type}`", parse_mode='Markdown')
+
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("a;"))
 def callback_select_for_reserve(call):

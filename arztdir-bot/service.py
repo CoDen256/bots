@@ -15,6 +15,7 @@ class ArztService:
     def __init__(self, api, bot, pattern, interval):
         self.api = api
         self.bot = bot
+        self.type = "both"
         self.pattern = pattern
         self.interval = interval
         self.subscribers = set()
@@ -24,6 +25,11 @@ class ArztService:
     def get_and_set_filter(self, pattern):
         prev = self.pattern
         self.pattern = pattern
+        return prev
+
+    def get_and_set_patient(self, type):
+        prev = self.type
+        self.type = type
         return prev
 
     def get_and_set_interval(self, interval):
@@ -49,8 +55,8 @@ class ArztService:
         log.info(f"Got for {self.pattern if self.pattern else '*'} appointments: {result}")
         open = []
         filtered = []
-        for a in self.filter(result, self.pattern):
-            filtered.append(filtered)
+        for a in self.filter(result):
+            filtered.append(a)
             self.latest.append(a)
             if a.has_openings:
                 log.info(f"{a} has new openings")
@@ -62,25 +68,25 @@ class ArztService:
             log.warning("No available openings at all!")
             if message: self.notify_empty(message, filtered)
             return
-        self.notify_appointments(message, open, "📅 New available openings!",
+        self.notify_appointments(message, filtered, "📅 New available openings!",
                                  "\nhttps://app.arzt-direkt.de/hygieia-leipzig/booking")
 
     def notify_empty(self, message, filtered):
-        body = format_appointments(filtered)
-        self.bot.send(message, "No available openings! 😔\n\n" + body)
+        body = format_appointments_plain(filtered)
+        self.bot.send(message, "😔 No available openings for: \n\n" + body)
 
-    def filter(self, appointments, pattern):
+    def filter(self, appointments):
         for a in appointments:
-            if re.match(pattern, a.name):
+            if re.match(self.pattern, a.full_name) and a.has_type(self.type):
                 yield a
 
-    def get_openings_or_empty(self, appointment):
+    def get_openings_or_empty(self, message, appointment):
         try:
             log.info(f"Querying {appointment.name} openings")
             return self.api.get_openings(appointment.search_id)
         except Exception as e:
             log.error(f"Failed to get {appointment.name} openings")
-            self.bot.error_to_chat(self.chat, f"Failed to get openings for {appointment.name}", e)
+            self.bot.error(message, f"Failed to get openings for {appointment.name}", e)
             return []
 
     def check_all(self, message):
@@ -98,14 +104,12 @@ class ArztService:
 
         for appoint in appointments:
             body += "\n"
-            body += format_openings(self.get_openings_or_empty(appoint)[:5], appoint, include_sync_time)
+            body += format_openings(self.get_openings_or_empty(message, appoint)[:5], appoint, include_sync_time)
             if appoint.has_openings:
                 if not appoint.patient: appoint.patient = "u"
                 data = f"a;{appoint.search_id};{appoint.patient[0]};{int(appoint.has_openings)};{appoint.name}"
-                if len(data) > 63:
-                    data = data.replace("Dr. ", "").replace("med. ", "")[:62] + "."
-                markup.add(
-                    InlineKeyboardButton(f"🧑‍⚕️ ({appoint.patient[0].upper()}) {appoint.name}", callback_data=data))
+                if len(data) > 63: data = data[:62] + "."
+                markup.add(InlineKeyboardButton(f"🧑‍⚕️ ({appoint.patient[0].upper()}) {appoint.name}", callback_data=data))
 
         text = f"{header}\n{body}\n{footer}"
         if message:
@@ -118,7 +122,7 @@ class ArztService:
     def select_for_reserve(self, message, appointment, header, footer):
         markup = InlineKeyboardMarkup()
         markup.row_width = 1
-        openings = self.get_openings_or_empty(appointment)
+        openings = self.get_openings_or_empty(message, appointment)
         for (search_id, date, expiry) in self.reserves:
             if search_id != appointment.search_id: continue
             if expiry < CET.localize(datetime.now()): continue
@@ -166,6 +170,14 @@ def format_appointment(appointment, queried=False):
 def format_appointments(appointments, queried=False):
     return "\n".join(map(lambda x: format_appointment(x, queried), appointments))
 
+def format_appointment_plain(appointment):
+    mark = "🟢" if appointment.has_openings else "🔴"
+    if not appointment.patient: appointment.patient = "u"
+    return f'{mark} ({appointment.patient[0].upper()}) {appointment.full_name}'
+
+
+def format_appointments_plain(appointments):
+    return "\n".join(map(lambda x: format_appointment_plain(x), appointments))
 
 def format_openings(openings, appointment, sync=False):
     mark = "🟢" if appointment.has_openings else "🔴"
