@@ -1,21 +1,23 @@
 import logging
+import re
 import threading
 import pytz
 import time
 
 from datetime import datetime
 from core_bots import pretty_time, pretty_precise_time, pretty_datetime, CET
-from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, LinkPreviewOptions
 
 log = logging.getLogger(__name__)
 
+
 class ArztService:
-    def __init__(self, api, bot, pattern, interval, chat):
+    def __init__(self, api, bot, pattern, interval):
         self.api = api
         self.bot = bot
         self.pattern = pattern
         self.interval = interval
-        self.chat = chat
+        self.subscribers = set()
         self.latest = []
         self.reserves = []
 
@@ -24,21 +26,31 @@ class ArztService:
         self.pattern = pattern
         return prev
 
+    def get_and_set_interval(self, interval):
+        prev = self.interval
+        self.interval = interval
+        return prev
+
     def start(self):
         threading.Thread(target=self.run_blocking, daemon=True).start()
 
     def run_blocking(self):
         while True:
             log.info(f"Check at {datetime.now()}")
-            self.poll_and_check()
+            if self.subscribers:
+                self.poll_and_check()
+            else:
+                log.warning("No subscribers")
             log.info(f"Next check in {self.interval} min")
             time.sleep(self.interval * 60)
 
-    def poll_and_check(self, notify_empty=False):
+    def poll_and_check(self, message=None):
         result = self.api.get_categories()
         log.info(f"Got for {self.pattern if self.pattern else '*'} appointments: {result}")
         open = []
+        filtered = []
         for a in self.filter(result, self.pattern):
+            filtered.append(filtered)
             self.latest.append(a)
             if a.has_openings:
                 log.info(f"{a} has new openings")
@@ -48,14 +60,18 @@ class ArztService:
 
         if not open:
             log.warning("No available openings at all!")
-            if notify_empty: self.bot.send_to_chat(self.chat, "No available openings!")
+            if message: self.notify_empty(message, filtered)
             return
-        self.notify_appointments(open, "📅 New available openings!",
-                                 "\nhttps://www.hygieia.net/leipzig/terminvereinbarung/")
+        self.notify_appointments(message, open, "📅 New available openings!",
+                                 "\nhttps://app.arzt-direkt.de/hygieia-leipzig/booking")
+
+    def notify_empty(self, message, filtered):
+        body = format_appointments(filtered)
+        self.bot.send(message, "No available openings! 😔\n\n" + body)
 
     def filter(self, appointments, pattern):
         for a in appointments:
-            if pattern in a.name:
+            if re.match(pattern, a.name):
                 yield a
 
     def get_openings_or_empty(self, appointment):
@@ -67,28 +83,39 @@ class ArztService:
             self.bot.error_to_chat(self.chat, f"Failed to get openings for {appointment.name}", e)
             return []
 
-    def notify_appointments(self, appointments, header, footer, sync=False):
+    def check_all(self, message):
+        data = self.api.get_categories()
+        if not data:
+            self.bot.reply(message, "No appointment categories available at the moment. 😟")
+            return
+
+        self.notify_appointments(message, data, "", "", True)
+
+    def notify_appointments(self, message, appointments, header, footer, include_sync_time=False):
         body = ""
         markup = InlineKeyboardMarkup()
         markup.row_width = 1
 
         for appoint in appointments:
             body += "\n"
-            body += format_openings(self.get_openings_or_empty(appoint)[:5], appoint, sync)
+            body += format_openings(self.get_openings_or_empty(appoint)[:5], appoint, include_sync_time)
             if appoint.has_openings:
                 if not appoint.patient: appoint.patient = "u"
                 data = f"a;{appoint.search_id};{appoint.patient[0]};{int(appoint.has_openings)};{appoint.name}"
                 if len(data) > 63:
                     data = data.replace("Dr. ", "").replace("med. ", "")[:62] + "."
-                markup.add(InlineKeyboardButton(f"📒 ({appoint.patient[0].upper()}) {appoint.name}",callback_data=data))
+                markup.add(
+                    InlineKeyboardButton(f"🧑‍⚕️ ({appoint.patient[0].upper()}) {appoint.name}", callback_data=data))
 
-        self.bot.send_to_chat(
-            self.chat,
-            f"{header}\n{body}\n{footer}",
-            parse_mode='HTML',
-            reply_markup=markup)
+        text = f"{header}\n{body}\n{footer}"
+        if message:
+            self.bot.send(message, text, parse_mode='HTML', reply_markup=markup, link_preview_options=LinkPreviewOptions(is_disabled=True))
+            return
 
-    def select_for_reserve(self, appointment, header, footer):
+        for chat in self.subscribers:
+            self.bot.send_to_chat(chat, text, parse_mode='HTML', reply_markup=markup, link_preview_options=LinkPreviewOptions(is_disabled=True))
+
+    def select_for_reserve(self, message, appointment, header, footer):
         markup = InlineKeyboardMarkup()
         markup.row_width = 1
         openings = self.get_openings_or_empty(appointment)
@@ -104,23 +131,26 @@ class ArztService:
             markup.add(InlineKeyboardButton(f"{pretty_datetime(opening.date)}",
                                             callback_data=data[:-8]))  # ':00.000Z'
 
-        self.bot.send_to_chat(
-            self.chat,
-            f"{header}\n\n{footer}",
-            parse_mode='HTML',
-            reply_markup=markup)
+        self.bot.send(message, f"{header}\n\n{footer}", parse_mode='HTML', reply_markup=markup)
 
-    def reserve(self, data):
-        _, search_id, ids, duration, date = tuple(data.split(";"))
-        date += ":00.000Z"
-        duration = int(duration) * 5
-        ids = ids.split(",")
-        # self.bot.send(f"Opening {call.data}: \n {ids}, {search_id}, {duration}, {date}")
-        status, expiry, json = self.api.reserve(ids, search_id, date, duration)# True, TZ.localize(datetime.now() + timedelta(minutes=1)), {}  # api.reserve(ids, search_id, date, duration) #
+    def reserve(self, message, search_id, ids, duration, date):
+        status, expiry, json = self.api.reserve(ids, search_id, date, duration)
         date = pytz.utc.localize(datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ"))
         if status: self.reserves.append((search_id, date, expiry))
 
-        return status, date, expiry, json
+        if status:
+            self.bot.edit(message,
+                          f"🔥 Successfully reserved!\n\n"
+                          f"{pretty_datetime(date)}\n\n"
+                          f"Reservation expires: {pretty_precise_time(expiry)}",
+                          reply_markup=None
+                          )
+        else:
+            self.bot.send(message,
+                          f"‼️ Something went wrong when reserving\n\n"
+                          f"{pretty_datetime(date)}\n\n"
+                          f"Tried to reserve until {pretty_precise_time(expiry)}\n"
+                          f"Response:{json}")
 
 
 def format_appointment(appointment, queried=False):
@@ -163,6 +193,7 @@ def format_openings_if_present(openings, appointment, sync):
 
 def format_opening(opening):
     return f"{pretty_datetime(opening.date)}"
+
 
 def inutc(datetime):
     return datetime.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"

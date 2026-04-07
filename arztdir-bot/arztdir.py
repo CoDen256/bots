@@ -1,9 +1,11 @@
 import itertools
+import logging
 from datetime import datetime, timedelta
 
 import pytz
 import requests
 
+log = logging.getLogger(__name__)
 
 class ArztApi:
     LOCALITIES = ["74402510195392513","94418895887138817","94418856297627649","94418877937614849","136244910254196738","94418986358276097","94418836904738817","94418872331403265","94418864488054785","94418868363591681","74402499549724673","94418891544985601","136244761438717954","94418842869563393","94418992644489217","157028186179241986","178813507504441344","178813538199930880","179051503938439168","179082468013377536","179082479826110464","179685372400240640","180175908148611072","180303831238707200","185434567097190400"]
@@ -36,7 +38,7 @@ class ArztApi:
 
     def get_raw_categories(self):
         url = ArztApi.API_HOST + ArztApi.CATEGORY_ENDPOINT
-        print(f"Running {url}")
+        log.info(f"Running {url}")
         response = requests.post(url, headers=ArztApi.HEADERS, json=ArztApi.CATEGORY_PAYLOAD)
         response.raise_for_status()
         return response.json()
@@ -57,7 +59,7 @@ class ArztApi:
             ), data))
                         )
         except Exception as e:
-            print(f"Error checking categories: {e}")
+            log.info(f"Error checking categories: {e}")
             raise e
 
     def unique_id(self, appointments):
@@ -72,7 +74,7 @@ class ArztApi:
 
     def get_raw_openings(self, id):
         url = ArztApi.API_HOST + ArztApi.OPENINGS_ENDPOINT.replace("{ident}", id)
-        print(f"Running {url}")
+        log.info(f"Running {url}")
         response = requests.get(url, headers=ArztApi.HEADERS)
         response.raise_for_status()  # Raise an exception for HTTP errors
         return response.json()
@@ -91,12 +93,12 @@ class ArztApi:
                             data)
                         )
         except Exception as e:
-            print(f"Error checking openings: {e}")
+            log.info(f"Error checking openings: {e}")
             raise e
 
     def reserve(self, doctors, id, date, duration):
         url = ArztApi.API_HOST + ArztApi.RESERVE_ENDPOINT
-        print(f"Running {url}")
+        log.info(f"Running {url}")
         expires = datetime.now() + timedelta(minutes=15)
         data = {"instance": ArztApi.INSTANCE,
                 "terminSucheIdent": id,
@@ -111,7 +113,7 @@ class ArztApi:
                 expires = pytz.utc.localize(expires)
                 return True, expires, response.json()
             except Exception as e:
-                print(f"Cant parse expiry date {e}")
+                log.info(f"Cant parse expiry date {e}")
                 return False, expires, response.json()
         return False, expires, response.json()
 
@@ -120,7 +122,18 @@ class ArztApi:
 
 class Appointment:
     def __init__(self, name, has_openings, id, patient, sync: datetime, search_id, updated: datetime):
-        self.name = name
+        self.name = (name
+                     .replace("Neurologie", "Neuro")
+                     .replace("Psychiatrie", "Psych")
+                     .replace("Dr.", "")
+                     .replace("med.","")
+                     .replace(", LL.M.", "")
+                     .replace(", MSc", "")
+                     .replace("Bestandspatient", "Bestand")
+                     .replace("Neupatient", "Neu")
+                     .replace("   ", " ")
+                     ).strip()
+        self.full_name = name
         self.has_openings = has_openings
         self.id = id
         self.patient = patient
