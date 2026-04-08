@@ -7,7 +7,7 @@ import argparse
 import logging
 
 from core_bots import add_cfg_argument, Cfg, TelegramBot, pretty_datetime, pretty_time, pretty_precise_time
-from arztdir import ArztApi, Appointment, Opening
+from arztdir import ArztApi, Appointment, Opening, OpeningRequest, Category
 from service import ArztService, format_appointments
 
 p = argparse.ArgumentParser(description="Topic Message Forwarder Bot")
@@ -105,34 +105,29 @@ def filter(message):
     previous = service.get_and_set_filter(pattern)
     bot.reply(message, f"Filter set from `{previous}` -> `{pattern}`", parse_mode='Markdown')
 
-@bot.message_handler(commands=['patients'])
-def patients(message):
-    log.info(f"Set patients by: {message.chat.id}: {message.text}")
 
-    parts = message.text.split(sep=' ', maxsplit=1)
-    if len(parts) != 2 or parts[1] not in ["both", "new", "known"]:
-        bot.reply(message, "Usage: /patients both|new|known")
-        return
-
-    type = parts[1]
-    previous = service.get_and_set_patient(type)
-    bot.reply(message, f"Patient type filter set from `{previous}` -> `{type}`", parse_mode='Markdown')
+@bot.message_handler(commands=['categories'])
+def categories(message):
+    log.info(f"Set categories by: {message.chat.id}")
+    service.select_categories(message, None)
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("a;"))
 def callback_select_for_reserve(call):
+    log.info(f"Selected appointment to see openingns: {call.data}")
+
     bot.answer_callback_query(call.id)
-    _, id, patient, has_openings, name = tuple(call.data.split(";"))
-    if name.endswith("."): name = name + ".."
-    patienttypes = {"k": "known", "b": "both", "n": "new", "u": "N/A"}
-    appointment = Appointment(name, bool(int(has_openings)), "", patient, datetime.now(), id, datetime.now())
-    service.select_for_reserve(call.message, appointment,
-                               f"<i><b>{appointment.name} ({patienttypes[appointment.patient]} patients)</b></i>",
+    _, search_id, has_openings, full_name = tuple(call.data.split(";"))
+    if full_name.endswith("."): full_name = full_name + ".."
+    service.select_for_reserve(call.message, OpeningRequest(search_id, full_name),
+                               f"<i><b>{full_name}</b></i>",
                                "")
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("o;"))
 def callback_reserve_opening(call):
+    log.info(f"Selected opening to reserve: {call.data}")
+
     bot.answer_callback_query(call.id)
     _, search_id, ids, duration, date = tuple(call.data.split(";"))
     date += ":00.000Z"
@@ -143,7 +138,18 @@ def callback_reserve_opening(call):
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith("r;"))
 def callback_reserved_slot_selected(call):
+    log.info(f"Selected reserved slot: {call.data}")
+
     bot.answer_callback_query(call.id)
+
+
+@bot.callback_query_handler(func=lambda call: call.data.startswith("c;"))
+def callback_category_selection(call):
+    log.info(f"Selected category: {call.data}")
+    bot.answer_callback_query(call.id)
+
+    _, name = tuple(call.data.split(";"))
+    service.select_categories(call.message, name)
 
 
 service.start()

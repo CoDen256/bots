@@ -68,6 +68,9 @@ class TelegramBot:
 
     def edit(self, message, text, **kwargs):
         try:
+            if "reply_markup" in kwargs and message.text == text:
+                return self.delegate.edit_message_reply_markup(message.chat.id, message.message_id, **kwargs)
+
             if message.content_type != "text":
                 if message.caption == text: return None
                 return self.delegate.edit_message_caption(text, message.chat.id, message.message_id, **kwargs)

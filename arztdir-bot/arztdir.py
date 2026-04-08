@@ -1,14 +1,22 @@
 import itertools
 import logging
 from datetime import datetime, timedelta
+from typing import List
 
 import pytz
 import requests
 
 log = logging.getLogger(__name__)
 
+
 class ArztApi:
-    LOCALITIES = ["74402510195392513","94418895887138817","94418856297627649","94418877937614849","136244910254196738","94418986358276097","94418836904738817","94418872331403265","94418864488054785","94418868363591681","74402499549724673","94418891544985601","136244761438717954","94418842869563393","94418992644489217","157028186179241986","178813507504441344","178813538199930880","179051503938439168","179082468013377536","179082479826110464","179685372400240640","180175908148611072","180303831238707200","185434567097190400"]
+    LOCALITIES = ["74402510195392513", "94418895887138817", "94418856297627649", "94418877937614849",
+                  "136244910254196738", "94418986358276097", "94418836904738817", "94418872331403265",
+                  "94418864488054785", "94418868363591681", "74402499549724673", "94418891544985601",
+                  "136244761438717954", "94418842869563393", "94418992644489217", "157028186179241986",
+                  "178813507504441344", "178813538199930880", "179051503938439168", "179082468013377536",
+                  "179082479826110464", "179685372400240640", "180175908148611072", "180303831238707200",
+                  "185434567097190400"]
     INSTANCE = "5e8d5ff3a6abce001906ae07"
 
     API_HOST = "https://onlinetermine.arzt-direkt.com"
@@ -38,39 +46,40 @@ class ArztApi:
 
     def get_raw_categories(self):
         url = ArztApi.API_HOST + ArztApi.CATEGORY_ENDPOINT
-        log.info(f"Running {url}")
+        log.info(f"Running categories {url}")
         response = requests.post(url, headers=ArztApi.HEADERS, json=ArztApi.CATEGORY_PAYLOAD)
         response.raise_for_status()
         return response.json()
 
-    def get_categories(self):
+    def get_categories(self) -> List[Category]:
+        updated = datetime.now()
         try:
             raw = self.get_raw_categories()["categories"]
-            data = [(app for app in x["appointmentTypes"]) for x in raw]
-            data= list(itertools.chain(*data))
-            return self.unique_id(list(map(lambda x: Appointment(
-                x["name"]["de"],
-                x["hasOpenings"],
-                x["_id"],
-                x.get("patientTargetDefault", "both"),
-                datetime.strptime(x["lastSync"], "%Y-%m-%dT%H:%M:%S.%fZ"),
-                x["terminSucheIdent"],
-                datetime.now()
-            ), data))
-                        )
+            return [self.parse_category(cat, updated) for cat in raw]
         except Exception as e:
-            log.info(f"Error checking categories: {e}")
+            log.error(f"Error getting categories", exc_info=e)
             raise e
 
-    def unique_id(self, appointments):
-        seen = set()
-        result = []
+    def parse_category(self, json, updated):
+        return Category(
+            id=json["_id"],
+            name=json["name"]["de"],
+            description=json["description"],
+            appointments=[self.parse_appointment(a, updated) for a in json["appointmentTypes"]]
+        )
 
-        for obj in appointments:
-            if obj.id not in seen:
-                seen.add(obj.id)
-                result.append(obj)
-        return result
+    def parse_appointment(self, json, updated):
+        return Appointment(
+            id=json["_id"],
+            name=json["tomTerminSuche"]["name"],
+            full_name=json["name"]["de"],
+            has_openings=json["hasOpenings"],
+            patient=json.get("patientTarget", "N/A"),
+            patient_default=json.get("patientTargetDefault", "N/A"),
+            search_id=json["terminSucheIdent"],
+            sync=datetime.strptime(json["lastSync"], "%Y-%m-%dT%H:%M:%S.%fZ"),
+            updated=updated
+        )
 
     def get_raw_openings(self, id):
         url = ArztApi.API_HOST + ArztApi.OPENINGS_ENDPOINT.replace("{ident}", id)
@@ -82,23 +91,23 @@ class ArztApi:
     def get_openings(self, id):
         try:
             data = self.get_raw_openings(id)["openings"]
-            return list(map(lambda x:
-                            Opening(
-                                x["displayStringNames"],
-                                datetime.strptime(x["date"], "%Y-%m-%dT%H:%M:%S.%fZ"),
-                                x["duration"],
-                                list(map(lambda s: s["kid"], x["kdSet"])),
-                                id
-                            ),
-                            data)
-                        )
+            return [self.parse_opening(o, id) for o in data]
         except Exception as e:
-            log.info(f"Error checking openings: {e}")
+            log.error(f"Error getting openings", exc_info=e)
             raise e
+
+    def parse_opening(self, json, id):
+        return Opening(
+            json["displayStringNames"],
+            datetime.strptime(json["date"], "%Y-%m-%dT%H:%M:%S.%fZ"),
+            json["duration"],
+            list(map(lambda s: s["kid"], json["kdSet"])),
+            id
+        )
 
     def reserve(self, doctors, id, date, duration):
         url = ArztApi.API_HOST + ArztApi.RESERVE_ENDPOINT
-        log.info(f"Running {url}")
+        log.info(f"Running reserve {url}")
         expires = datetime.now() + timedelta(minutes=15)
         data = {"instance": ArztApi.INSTANCE,
                 "terminSucheIdent": id,
@@ -107,36 +116,40 @@ class ArztApi:
                 "dateExpiry": inutc(expires),
                 "doctorIds": doctors}
         response = requests.post(url, headers=ArztApi.HEADERS, json=data)
-        if response.status_code == 200:
-            try:
-                expires = datetime.strptime(response.json()["reservation"]["dateExpiry"], "%Y-%m-%dT%H:%M:%S.%fZ")
-                expires = pytz.utc.localize(expires)
-                return True, expires, response.json()
-            except Exception as e:
-                log.info(f"Cant parse expiry date {e}")
-                return False, expires, response.json()
-        return False, expires, response.json()
+        if response.status_code != 200: return False, expires, response.json()
+        try:
+            expires = datetime.strptime(response.json()["reservation"]["dateExpiry"], "%Y-%m-%dT%H:%M:%S.%fZ")
+            expires = pytz.utc.localize(expires)
+            return True, expires, response.json()
+        except Exception as e:
+            log.error(f"Cant parse expiry date", exc_info=e)
+            return False, expires, response.json()
 
 
+class Category:
+    def __init__(self, id, name, description, appointments: List[Appointment]):
+        self.id = id
+        self.name = name
+        self.description = description
+        self.appointments = appointments[:]
+
+    def __str__(self):
+        return self.name + ":" + str(self.appointments)
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class Appointment:
-    def __init__(self, name, has_openings, id, patient, sync: datetime, search_id, updated: datetime):
-        self.name = (name
-                     .replace("Neurologie", "Neuro")
-                     .replace("Psychiatrie", "Psych")
-                     .replace("Dr.", "")
-                     .replace("med.","")
-                     .replace(", LL.M.", "")
-                     .replace(", MSc", "")
-                     .replace("Bestandspatient", "Bestand")
-                     .replace("Neupatienten", "Neu")
-                     .replace("   ", " ")
-                     ).strip()
-        self.full_name = name
-        self.has_openings = has_openings
+    def __init__(self, id, full_name, name, has_openings, patient, patient_default, search_id, sync: datetime,
+                 updated: datetime):
         self.id = id
+        self.full_name = full_name
+        self.name = name
+        self.simple_name = simple_name(full_name)
+        self.has_openings = has_openings
         self.patient = patient
+        self.patient_default = patient_default
         self.sync: datetime = pytz.utc.localize(sync)
         self.updated = updated
         self.search_id = search_id
@@ -147,9 +160,20 @@ class Appointment:
     def __repr__(self):
         return self.__str__()
 
-    def has_type(self, type):
-        if (type == "both" or self.patient == "both"): return True
-        return type == self.patient
+    def create_opening_request(self):
+        return OpeningRequest(self.search_id, self.full_name)
+
+
+class OpeningRequest:
+    def __init__(self, search_id, appointment_name):
+        self.search_id = search_id
+        self.appointment_name = appointment_name
+
+    def __str__(self):
+        return self.appointment_name
+
+    def __repr__(self):
+        return self.__str__()
 
 
 class Opening:
@@ -166,5 +190,20 @@ class Opening:
     def __repr__(self):
         return self.__str__()
 
+
 def inutc(datetime):
     return datetime.astimezone(pytz.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+
+
+def simple_name(name):
+    return (name
+            .replace("Neurologie", "Neuro")
+            .replace("Psychiatrie", "Psych")
+            .replace("Dr.", "")
+            .replace("med.", "")
+            .replace(", LL.M.", "")
+            .replace(", MSc", "")
+            .replace("Bestandspatient", "Bestand")
+            .replace("Neupatienten", "Neu")
+            .replace("   ", " ")
+            ).strip()
