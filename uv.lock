@@ -10,6 +10,7 @@ members = [
     "bots",
     "core-bots",
     "demotivator-bot",
+    "eversports-bot",
     "forwarder-bot",
     "rezka-syncer-bot",
     "saved-messages-bot",
@@ -177,6 +178,21 @@ requires-dist = [
     { name = "configparser" },
     { name = "core-bots", editable = "core-bots" },
     { name = "pillow" },
+]
+
+[[package]]
+name = "eversports-bot"
+version = "0.1.0"
+source = { virtual = "eversports-bot" }
+dependencies = [
+    { name = "configparser" },
+    { name = "core-bots" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "configparser" },
+    { name = "core-bots", editable = "core-bots" },
 ]
 
 [[package]]
