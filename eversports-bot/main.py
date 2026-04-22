@@ -28,9 +28,18 @@ EMAIL_TEMPLATE = _cfg["email_template"]
 SPORTS_CFG     = _cfg["sports"]
 
 # ── Constants ─────────────────────────────────────────────────────────────────
-# Every bookable hour: 08:00 → 22:00  (last slot = 22:00–23:00)
-ALL_SLOTS      = [f"{h:02d}00" for h in range(8, 23)]   # 15 slots total
-SLOTS_PER_PAGE = 8                                        # 2 pages: 8 + 7
+# 45-minute slots starting at 08:15, stopping before 23:00
+# → 08:15, 09:00, 09:45 … 22:30   (20 slots total, 3 pages of 7)
+def _gen_slots(start_h: int = 8, start_m: int = 15,
+               interval: int = 45, end_h: int = 23) -> list[str]:
+    slots, t = [], start_h * 60 + start_m
+    while t < end_h * 60:
+        slots.append(f"{t // 60:02d}{t % 60:02d}")
+        t += interval
+    return slots
+
+ALL_SLOTS      = _gen_slots()   # ["0815", "0900", "0945", …, "2230"]
+SLOTS_PER_PAGE = 7              # 3 pages: 7 + 7 + 6
 DATES_PER_PAGE = 7
 
 SPORT_EMOJI = {"badminton": "🏸", "squash": "🎾"}

@@ -1,9 +1,10 @@
 [project]
 name = "eversports-bot"
 version = "0.1.0"
-description = "Add your description here"
+description = "Finds a spot to book a court for via eversports"
 requires-python = ">=3.14"
 dependencies = [
     "core-bots",
-    "configparser"
+    "configparser",
+    "yaml"
 ]

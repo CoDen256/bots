@@ -1,0 +1,46 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Sports Court Booking Bot — Configuration
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Your Telegram bot token from @BotFather
+bot_token: "YOUR_TELEGRAM_BOT_TOKEN"
+
+# Base URL of the facility's booking API (no trailing slash)
+api_base_url: "https://your-facility-domain.com"
+
+# Fixed court IDs and facility ID per sport
+sports:
+  badminton:
+    facility_id: 76429
+    courts: [77287, 77288, 77289, 77290]
+  squash:
+    facility_id: 76429
+    courts: [77291, 77292, 77293, 77294]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Email template
+# Available placeholders:
+#   {sport}     — e.g. "Badminton"
+#   {date}      — e.g. "Wed 29 Apr"
+#   {date_iso}  — e.g. "2026-04-29"
+#   {time}      — e.g. "12:00"
+#   {court}     — e.g. "77287"
+# ─────────────────────────────────────────────────────────────────────────────
+email_template: |
+  To: bookings@your-facility-domain.com
+  Subject: Court Booking Request – {sport} on {date}
+
+  Hello,
+
+  I would like to reserve a {sport} court for the following slot:
+
+      Sport  : {sport}
+      Date   : {date} ({date_iso})
+      Time   : {time}
+      Court  : #{court}
+
+  Please confirm this booking at your earliest convenience.
+
+  Kind regards,
+  [Your Name]
+  [Your Phone / Email]
